@@ -15,14 +15,20 @@ namespace MoneyManager.Core
 
         public bool IsReadOnly => false;
 
+        public Transaction this[int index] => transactions[index];
+
         public MoneyValue BalanceAt(Transaction transaction)
         {
             if (!Contains(transaction)) throw new IndexOutOfRangeException();
 
-            var limit = transactions.IndexOf(transaction);
+            return BalanceAtIndex(transactions.IndexOf(transaction));
+        }
+
+        public MoneyValue BalanceAtIndex(int index)
+        {
             MoneyValue total = initialBalance;
 
-            for (int i = 0; i <= limit; i++)
+            for (int i = 0; i <= index; i++)
             {
                 if (transactions[i].IsCleared) total += transactions[i].Value;
             }
@@ -31,6 +37,8 @@ namespace MoneyManager.Core
         }
 
         public void Add(Transaction item) => transactions.Add(item);
+
+        public void AddRange(IEnumerable<Transaction> items) => transactions.AddRange(items);
 
         public void Clear() => transactions.Clear();
 
