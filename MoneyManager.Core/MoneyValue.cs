@@ -1,5 +1,8 @@
 ﻿namespace MoneyManager.Core
 {
+    /// <summary>
+    /// Numeric class representing any value of money. <see cref="ToString"/> automatically returns currency formatting. Implicitly casts from <see cref="decimal"/>.
+    /// </summary>
     public class MoneyValue : IEquatable<MoneyValue>
     {
         private readonly decimal value;
@@ -10,7 +13,7 @@
 
         public override bool Equals(object? obj) => obj is MoneyValue mv && Equals(mv);
 
-        public override int GetHashCode() => value.GetHashCode(); // Since we only have one value, this should work
+        public override int GetHashCode() => value.GetHashCode(); // Since we only wrap around value, this should work
 
         public bool Equals(MoneyValue? other)
         {
@@ -27,7 +30,7 @@
 
         public static bool operator <(MoneyValue mv1, MoneyValue mv2) => mv1.value < mv2.value;
 
-        public static bool operator >=(MoneyValue mv1, MoneyValue mv2) => !(mv1 < mv2);
+        public static bool operator >=(MoneyValue mv1, MoneyValue mv2) => !(mv1 < mv2); // me smorrt
 
         public static bool operator <=(MoneyValue mv1, MoneyValue mv2) => !(mv1 > mv2);
 
