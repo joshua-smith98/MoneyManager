@@ -6,7 +6,7 @@
         public MoneyValue Value { get; set; }
         public DateOnly Date { get; set; }
         public string Payee { get; set; }
-        public string Memo { get; set; }
+        public string? Memo { get; set; }
         //public BudgetCategory? Category { get; } // BudgetCategory yet to be implemented
         public bool IsCleared { get; set; } = true;
 
@@ -35,6 +35,28 @@
             Date = date;
             Payee = payee;
             Memo = memo;
+        }
+
+        public Transaction(MoneyValue value, string payee, string memo)
+        {
+            Value = value;
+            Date = DateOnly.FromDateTime(DateTime.Today);
+            Payee = payee;
+            Memo = memo;
+        }
+
+        public Transaction(MoneyValue value, DateOnly date, string payee)
+        {
+            Value = value;
+            Date = date;
+            Payee = payee;
+        }
+
+        public Transaction(MoneyValue value, string payee)
+        {
+            Value = value;
+            Date = DateOnly.FromDateTime(DateTime.Today);
+            Payee = payee;
         }
     }
 }
