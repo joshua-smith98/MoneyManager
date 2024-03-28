@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyManager.Core", "MoneyManager.Core\MoneyManager.Core.csproj", "{8F5ABF71-E5EB-462D-A3E1-878737B85FD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyManager.Core", "MoneyManager.Core\MoneyManager.Core.csproj", "{8F5ABF71-E5EB-462D-A3E1-878737B85FD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{EE486CF9-EA25-488B-8058-A2DE26FD7BD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8F5ABF71-E5EB-462D-A3E1-878737B85FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F5ABF71-E5EB-462D-A3E1-878737B85FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F5ABF71-E5EB-462D-A3E1-878737B85FD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE486CF9-EA25-488B-8058-A2DE26FD7BD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE486CF9-EA25-488B-8058-A2DE26FD7BD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE486CF9-EA25-488B-8058-A2DE26FD7BD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE486CF9-EA25-488B-8058-A2DE26FD7BD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
