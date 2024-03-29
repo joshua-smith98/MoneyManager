@@ -105,49 +105,49 @@ namespace MoneyManager.Core
             twin.transactions.Add(transfer);
         }
 
-        public void TransferTo(MoneyValue value, Account account)
+        public void TransferTo(Account account, MoneyValue value)
         {
             var transfer = new Transfer(account, this, value, Name);
             AddTransfer(transfer, account);
         }
 
-        public void TransferTo(MoneyValue value, Account account, string memo)
+        public void TransferTo(Account account, MoneyValue value, string memo)
         {
             var transfer = new Transfer(account, this, value, Name, memo);
             AddTransfer(transfer, account);
         }
 
-        public void TransferTo(MoneyValue value, Account account, DateOnly date)
+        public void TransferTo(Account account, MoneyValue value, DateOnly date)
         {
             var transfer = new Transfer(account, this, value, Name, date);
             AddTransfer(transfer, account);
         }
 
-        public void TransferTo(MoneyValue value, Account account, DateOnly date, string memo)
+        public void TransferTo(Account account, MoneyValue value, DateOnly date, string memo)
         {
             var transfer = new Transfer(account, this, value, Name, date, memo);
             AddTransfer(transfer, account);
         }
 
-        public void TransferTo(MoneyValue value, Account account, DateOnly date, string memo, string transactionNumber)
+        public void TransferTo(Account account, MoneyValue value, DateOnly date, string memo, string transactionNumber)
         {
             var transfer = new Transfer(account, this, value, Name, date, memo, transactionNumber);
             AddTransfer(transfer, account);
         }
 
-        public void TransferFrom(MoneyValue value, Account account)
-            => account.TransferTo(value, this);
+        public void TransferFrom(Account account, MoneyValue value)
+            => account.TransferTo(this, value);
 
-        public void TransferFrom(MoneyValue value, Account account, string memo)
-            => account.TransferTo(value, this, memo);
+        public void TransferFrom(Account account, MoneyValue value, string memo)
+            => account.TransferTo(this, value, memo);
 
-        public void TransferFrom(MoneyValue value, Account account, DateOnly date)
-            => account.TransferTo(value, this, date);
+        public void TransferFrom(Account account, MoneyValue value, DateOnly date)
+            => account.TransferTo(this, value, date);
 
-        public void TransferFrom(MoneyValue value, Account account, DateOnly date, string memo)
-            => account.TransferTo(value, this, date, memo);
+        public void TransferFrom(Account account, MoneyValue value, DateOnly date, string memo)
+            => account.TransferTo(this, value, date, memo);
 
-        public void TransferFrom(MoneyValue value, Account account, DateOnly date, string memo, string transactionNumber)
-            => account.TransferTo(value, this, date, memo, transactionNumber);
+        public void TransferFrom(Account account, MoneyValue value, DateOnly date, string memo, string transactionNumber)
+            => account.TransferTo(this, value, date, memo, transactionNumber);
     }
 }
