@@ -16,6 +16,11 @@
         public MoneyValue Value { get; set; }
 
         /// <summary>
+        /// Cleared monetary value of this <see cref="Transaction"/>. Gets $0.00 if <see cref="IsCleared"/> is false.
+        /// </summary>
+        public MoneyValue ClearedValue => IsCleared ? Value : 0;
+
+        /// <summary>
         /// The date this <see cref="Transaction"/> was placed on.
         /// </summary>
         public DateOnly Date { get; set; }

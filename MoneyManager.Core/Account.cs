@@ -6,13 +6,19 @@
     public class Account
     {
         public string Name { get; set; }
-        
+
         /// <summary>
         /// The balance of all cleared <see cref="Transaction"/>s contained within this <see cref="Account"/>.
         /// </summary>
         public MoneyValue Balance => BalanceAt(transactions.Last());
+
+        /// <summary>
+        /// The cleared balance of all cleared <see cref="Transaction"/>s contained within this <see cref="Account"/>.
+        /// </summary>
+        public MoneyValue ClearedBalance => ClearedBalanceAt(transactions.Last());
+
         private readonly MoneyValue initialBalance;
-        
+
         /// <summary>
         /// The collection of <see cref="Transaction"/>s contained within this <see cref="Account"/>.
         /// </summary>
@@ -66,14 +72,48 @@
 
             for (int i = 0; i <= index; i++)
             {
-                // Only count transactions that are cleared
-                if (transactions[i].IsCleared)
-                {
-                    // Special case for Transfers: Their balance is positive if transfer is to this account, negative if transfer is from
-                    if (transactions[i] is Transfer t) total += t.TransfersTo(this) ? t.Value : -(t.Value);
-                    // General transaction case
-                    else total += transactions[i].Value;
-                }
+                // Special case for Transfers: Their balance is positive if transfer is to this account, negative if transfer is from
+                if (transactions[i] is Transfer t) total += t.TransfersTo(this) ? t.Value : -(t.Value);
+                // General transaction case
+                else total += transactions[i].Value;
+            }
+
+            return total;
+        }
+
+        /// <summary>
+        /// Gets the cleared balance of this <see cref="Account"/> at the given <see cref="Transaction"/>.
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException"></exception>
+        public MoneyValue ClearedBalanceAt(Transaction transaction)
+        {
+            // Validity check: transaction must be in this collection
+            if (!transactions.Contains(transaction)) throw new IndexOutOfRangeException();
+
+            return ClearedBalanceAtIndex(transactions.IndexOf(transaction));
+        }
+
+        /// <summary>
+        /// Gets the cleared balance of this <see cref="Account"/> at the given index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public MoneyValue ClearedBalanceAtIndex(int index)
+        {
+            // Validity check: index must be within the bounds of this collection
+            if (index >= transactions.Count) throw new IndexOutOfRangeException();
+
+            // Calculate balance
+            MoneyValue total = initialBalance;
+
+            for (int i = 0; i <= index; i++)
+            {
+                // Special case for Transfers: Their balance is positive if transfer is to this account, negative if transfer is from
+                if (transactions[i] is Transfer t) total += t.TransfersTo(this) ? t.ClearedValue : -(t.ClearedValue);
+                // General transaction case
+                else total += transactions[i].ClearedValue;
             }
 
             return total;
