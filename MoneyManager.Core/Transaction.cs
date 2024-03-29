@@ -13,12 +13,12 @@
         /// <summary>
         /// Monetary value of this <see cref="Transaction"/>.
         /// </summary>
-        public MoneyValue Value { get; set; }
+        public Money Value { get; set; }
 
         /// <summary>
         /// Cleared monetary value of this <see cref="Transaction"/>. Gets $0.00 if <see cref="IsCleared"/> is false.
         /// </summary>
-        public MoneyValue ClearedValue => IsCleared ? Value : 0;
+        public Money ClearedValue => IsCleared ? Value : 0;
 
         /// <summary>
         /// The date this <see cref="Transaction"/> was placed on.
@@ -58,7 +58,7 @@
             }
         }
 
-        public Transaction(MoneyValue value, string payee, DateOnly date, string memo, string number)
+        public Transaction(Money value, string payee, DateOnly date, string memo, string number)
         {
             Number = number;
             Value = value;
@@ -67,7 +67,7 @@
             Memo = memo;
         }
 
-        public Transaction(MoneyValue value, string payee, DateOnly date, string memo)
+        public Transaction(Money value, string payee, DateOnly date, string memo)
         {
             Value = value;
             Date = date;
@@ -75,7 +75,7 @@
             Memo = memo;
         }
 
-        public Transaction(MoneyValue value, string payee, string memo)
+        public Transaction(Money value, string payee, string memo)
         {
             Value = value;
             Date = DateOnly.FromDateTime(DateTime.Today);
@@ -83,14 +83,14 @@
             Memo = memo;
         }
 
-        public Transaction(MoneyValue value, string payee, DateOnly date)
+        public Transaction(Money value, string payee, DateOnly date)
         {
             Value = value;
             Date = date;
             Payee = payee;
         }
 
-        public Transaction(MoneyValue value, string payee)
+        public Transaction(Money value, string payee)
         {
             Value = value;
             Date = DateOnly.FromDateTime(DateTime.Today);

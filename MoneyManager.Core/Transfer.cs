@@ -17,35 +17,35 @@
 
         public override TransactionType TransactionType => TransactionType.Transfer;
 
-        public Transfer(Account to, Account from, MoneyValue value, string payee, DateOnly date, string memo, string number)
+        public Transfer(Account to, Account from, Money value, string payee, DateOnly date, string memo, string number)
             : base(value, payee, date, memo, number)
         {
             To = to;
             From = from;
         }
 
-        public Transfer(Account to, Account from, MoneyValue value, string payee, DateOnly date, string memo)
+        public Transfer(Account to, Account from, Money value, string payee, DateOnly date, string memo)
             : base(value, payee, date, memo)
         {
             To = to;
             From = from;
         }
 
-        public Transfer(Account to, Account from, MoneyValue value, string payee, DateOnly date)
+        public Transfer(Account to, Account from, Money value, string payee, DateOnly date)
             : base(value, payee, date)
         {
             To = to;
             From = from;
         }
 
-        public Transfer(Account to, Account from, MoneyValue value, string payee, string memo)
+        public Transfer(Account to, Account from, Money value, string payee, string memo)
             : base(value, payee, memo)
         {
             To = to;
             From = from;
         }
 
-        public Transfer(Account to, Account from, MoneyValue value, string payee)
+        public Transfer(Account to, Account from, Money value, string payee)
             : base(value, payee)
         {
             To = to;

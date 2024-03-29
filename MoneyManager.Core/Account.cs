@@ -10,14 +10,14 @@
         /// <summary>
         /// The balance of all cleared <see cref="Transaction"/>s contained within this <see cref="Account"/>.
         /// </summary>
-        public MoneyValue Balance => BalanceAt(transactions.Last());
+        public Money Balance => BalanceAt(transactions.Last());
 
         /// <summary>
         /// The cleared balance of all cleared <see cref="Transaction"/>s contained within this <see cref="Account"/>.
         /// </summary>
-        public MoneyValue ClearedBalance => ClearedBalanceAt(transactions.Last());
+        public Money ClearedBalance => ClearedBalanceAt(transactions.Last());
 
-        private readonly MoneyValue initialBalance;
+        private readonly Money initialBalance;
 
         /// <summary>
         /// The collection of <see cref="Transaction"/>s contained within this <see cref="Account"/>.
@@ -30,13 +30,13 @@
         /// </summary>
         public int Count => transactions.Count;
 
-        public Account(string name, MoneyValue initialBalance)
+        public Account(string name, Money initialBalance)
         {
             Name = name;
             this.initialBalance = initialBalance;
         }
 
-        public Account(string name, MoneyValue initialBalance, params Transaction[] transactions)
+        public Account(string name, Money initialBalance, params Transaction[] transactions)
         {
             Name = name;
             this.initialBalance = initialBalance;
@@ -49,7 +49,7 @@
         /// <param name="transaction"></param>
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public MoneyValue BalanceAt(Transaction transaction)
+        public Money BalanceAt(Transaction transaction)
         {
             // Validity check: transaction must be in this collection
             if (!transactions.Contains(transaction)) throw new IndexOutOfRangeException();
@@ -62,13 +62,13 @@
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public MoneyValue BalanceAtIndex(int index)
+        public Money BalanceAtIndex(int index)
         {
             // Validity check: index must be within the bounds of this collection
             if (index >= transactions.Count) throw new IndexOutOfRangeException();
 
             // Calculate balance
-            MoneyValue total = initialBalance;
+            Money total = initialBalance;
 
             for (int i = 0; i <= index; i++)
             {
@@ -87,7 +87,7 @@
         /// <param name="transaction"></param>
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public MoneyValue ClearedBalanceAt(Transaction transaction)
+        public Money ClearedBalanceAt(Transaction transaction)
         {
             // Validity check: transaction must be in this collection
             if (!transactions.Contains(transaction)) throw new IndexOutOfRangeException();
@@ -100,13 +100,13 @@
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public MoneyValue ClearedBalanceAtIndex(int index)
+        public Money ClearedBalanceAtIndex(int index)
         {
             // Validity check: index must be within the bounds of this collection
             if (index >= transactions.Count) throw new IndexOutOfRangeException();
 
             // Calculate balance
-            MoneyValue total = initialBalance;
+            Money total = initialBalance;
 
             for (int i = 0; i <= index; i++)
             {
@@ -203,7 +203,7 @@
         /// </summary>
         /// <param name="account"></param>
         /// <param name="value"></param>
-        public void TransferTo(Account account, MoneyValue value)
+        public void TransferTo(Account account, Money value)
         {
             var transfer = new Transfer(account, this, value, Name);
             AddTransfer(transfer, account);
@@ -215,7 +215,7 @@
         /// <param name="account"></param>
         /// <param name="value"></param>
         /// <param name="memo"></param>
-        public void TransferTo(Account account, MoneyValue value, string memo)
+        public void TransferTo(Account account, Money value, string memo)
         {
             var transfer = new Transfer(account, this, value, Name, memo);
             AddTransfer(transfer, account);
@@ -227,7 +227,7 @@
         /// <param name="account"></param>
         /// <param name="value"></param>
         /// <param name="date"></param>
-        public void TransferTo(Account account, MoneyValue value, DateOnly date)
+        public void TransferTo(Account account, Money value, DateOnly date)
         {
             var transfer = new Transfer(account, this, value, Name, date);
             AddTransfer(transfer, account);
@@ -240,7 +240,7 @@
         /// <param name="value"></param>
         /// <param name="date"></param>
         /// <param name="memo"></param>
-        public void TransferTo(Account account, MoneyValue value, DateOnly date, string memo)
+        public void TransferTo(Account account, Money value, DateOnly date, string memo)
         {
             var transfer = new Transfer(account, this, value, Name, date, memo);
             AddTransfer(transfer, account);
@@ -254,7 +254,7 @@
         /// <param name="date"></param>
         /// <param name="memo"></param>
         /// <param name="transactionNumber"></param>
-        public void TransferTo(Account account, MoneyValue value, DateOnly date, string memo, string transactionNumber)
+        public void TransferTo(Account account, Money value, DateOnly date, string memo, string transactionNumber)
         {
             var transfer = new Transfer(account, this, value, Name, date, memo, transactionNumber);
             AddTransfer(transfer, account);
@@ -265,7 +265,7 @@
         /// </summary>
         /// <param name="account"></param>
         /// <param name="value"></param>
-        public void TransferFrom(Account account, MoneyValue value)
+        public void TransferFrom(Account account, Money value)
             => account.TransferTo(this, value);
 
         /// <summary>
@@ -274,7 +274,7 @@
         /// <param name="account"></param>
         /// <param name="value"></param>
         /// <param name="memo"></param>
-        public void TransferFrom(Account account, MoneyValue value, string memo)
+        public void TransferFrom(Account account, Money value, string memo)
             => account.TransferTo(this, value, memo);
 
         /// <summary>
@@ -283,7 +283,7 @@
         /// <param name="account"></param>
         /// <param name="value"></param>
         /// <param name="date"></param>
-        public void TransferFrom(Account account, MoneyValue value, DateOnly date)
+        public void TransferFrom(Account account, Money value, DateOnly date)
             => account.TransferTo(this, value, date);
 
         /// <summary>
@@ -293,7 +293,7 @@
         /// <param name="value"></param>
         /// <param name="date"></param>
         /// <param name="memo"></param>
-        public void TransferFrom(Account account, MoneyValue value, DateOnly date, string memo)
+        public void TransferFrom(Account account, Money value, DateOnly date, string memo)
             => account.TransferTo(this, value, date, memo);
 
         /// <summary>
@@ -304,7 +304,7 @@
         /// <param name="date"></param>
         /// <param name="memo"></param>
         /// <param name="transactionNumber"></param>
-        public void TransferFrom(Account account, MoneyValue value, DateOnly date, string memo, string transactionNumber)
+        public void TransferFrom(Account account, Money value, DateOnly date, string memo, string transactionNumber)
             => account.TransferTo(this, value, date, memo, transactionNumber);
     }
 }
