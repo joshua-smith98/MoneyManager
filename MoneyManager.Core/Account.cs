@@ -101,6 +101,9 @@ namespace MoneyManager.Core
 
         private void AddTransfer(Transfer transfer, Account twin)
         {
+            // Validity check: transfers cannot be between the same account
+            if (ReferenceEquals(this, twin)) throw new TransactionInvalidException();
+            
             transactions.Add(transfer);
             twin.transactions.Add(transfer);
         }
