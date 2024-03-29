@@ -53,7 +53,7 @@
             }
         }
 
-        public Transaction(string number, MoneyValue value, DateOnly date, string payee, string memo)
+        public Transaction(MoneyValue value, string payee, DateOnly date, string memo, string number)
         {
             Number = number;
             Value = value;
@@ -62,7 +62,7 @@
             Memo = memo;
         }
 
-        public Transaction(MoneyValue value, DateOnly date, string payee, string memo)
+        public Transaction(MoneyValue value, string payee, DateOnly date, string memo)
         {
             Value = value;
             Date = date;
@@ -78,7 +78,7 @@
             Memo = memo;
         }
 
-        public Transaction(MoneyValue value, DateOnly date, string payee)
+        public Transaction(MoneyValue value, string payee, DateOnly date)
         {
             Value = value;
             Date = date;

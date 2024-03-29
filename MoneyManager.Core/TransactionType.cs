@@ -5,8 +5,9 @@
     /// </summary>
     public enum TransactionType
     {
+        Null,
         Deposit,
         Withdrawal,
-        Null
+        Transfer,
     }
 }
