@@ -68,8 +68,8 @@ namespace MoneyManager.Core
 
         public void AddTransaction(Transaction transaction)
         {
-            if (transaction is Transfer) throw new TransactionInvalidException();
-            if (transactions.Contains(transaction)) throw new TransactionAlreadyExistsException();
+            if (transaction is Transfer) throw new TransactionInvalidException("Tried to add a Transfer as if it were a Transaction.");
+            if (transactions.Contains(transaction)) throw new TransactionAlreadyExistsException($"Tried to add duplicate transaction to account: \"{Name}\"");
             transactions.Add(transaction);
         }
 
@@ -102,7 +102,7 @@ namespace MoneyManager.Core
         private void AddTransfer(Transfer transfer, Account twin)
         {
             // Validity check: transfers cannot be between the same account
-            if (ReferenceEquals(this, twin)) throw new TransactionInvalidException();
+            if (ReferenceEquals(this, twin)) throw new TransactionInvalidException("Tried to transfer money from an account to itself.");
             
             transactions.Add(transfer);
             twin.transactions.Add(transfer);

@@ -3,5 +3,5 @@
     /// <summary>
     /// Generic Exception for errors related to Transactions.
     /// </summary>
-    public class TransactionException : Exception { }
+    public class TransactionException(string message) : Exception(message) { }
 }
