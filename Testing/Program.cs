@@ -20,7 +20,7 @@ Console.WriteLine($"{"Value",-20}   {"Payee",-20}   {"Type",-20}   {"Memo",-20} 
 Console.WriteLine();
 foreach (Transaction t in testAccount2.Transactions)
 {
-    Console.WriteLine($"{t.Value,20} | {t.Payee,-20} | {t.TransactionType,-20} | {t.Memo,-20} | {testAccount1.BalanceAt(t),20}");
+    Console.WriteLine($"{t.Value,20} | {t.Payee,-20} | {t.TransactionType,-20} | {t.Memo,-20} | {testAccount2.BalanceAt(t),20}");
 }
 
 Console.ReadKey();
