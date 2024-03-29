@@ -21,7 +21,7 @@ namespace MoneyManager.Core
             this.initialBalance = initialBalance;
         }
 
-        public Account(string name, MoneyValue initialBalance, ICollection<Transaction> transactions)
+        public Account(string name, MoneyValue initialBalance, params Transaction[] transactions)
         {
             Name = name;
             this.initialBalance = initialBalance;
@@ -73,7 +73,7 @@ namespace MoneyManager.Core
             transactions.Add(transaction);
         }
 
-        public void AddTransactions(ICollection<Transaction> transactions)
+        public void AddTransactions(params Transaction[] transactions)
             => this.transactions.AddRange(transactions);
 
         public void RemoveTransaction(Transaction transaction)
