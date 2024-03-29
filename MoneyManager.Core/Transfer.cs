@@ -4,7 +4,7 @@
     {
         public Account To { get; }
         public Account From { get; }
-        public new TransactionType TransactionType => TransactionType.Transfer;
+        public override TransactionType TransactionType => TransactionType.Transfer;
 
         public bool TransfersTo(Account account) => ReferenceEquals(account, To);
         public bool TransfersFrom(Account account) => ReferenceEquals(account, From);

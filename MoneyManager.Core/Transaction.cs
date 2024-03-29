@@ -43,7 +43,7 @@
         /// <summary>
         /// Gets the type of this <see cref="Transaction"/> (Withdrawal, Deposit, etc.).
         /// </summary>
-        public TransactionType TransactionType
+        public virtual TransactionType TransactionType
         {
             get
             {
