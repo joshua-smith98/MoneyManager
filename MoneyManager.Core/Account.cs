@@ -134,6 +134,7 @@
             if (transactions.Contains(transaction)) throw new TransactionAlreadyExistsException($"Tried to add duplicate transaction to account: \"{Name}\"");
             
             transactions.Add(transaction);
+            transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
         }
 
         /// <summary>
@@ -141,7 +142,10 @@
         /// </summary>
         /// <param name="transactions"></param>
         public void AddTransactions(params Transaction[] transactions)
-            => this.transactions.AddRange(transactions);
+        {
+            this.transactions.AddRange(transactions);
+            this.transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
+        }
 
         /// <summary>
         /// Removed the given <see cref="Transaction"/> from this <see cref="Account"/>
@@ -164,6 +168,8 @@
                     throw new Exception("Transfer is not in both Accounts as it should be. This should never be the case!");
             }
             else transactions.Remove(transaction);
+
+            transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
         }
 
         /// <summary>
@@ -177,6 +183,7 @@
             if (index >= transactions.Count) throw new IndexOutOfRangeException();
 
             transactions.RemoveAt(index);
+            transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
         }
 
         private void AddTransfer(Transfer transfer, Account twin)
@@ -186,7 +193,9 @@
             
             // Add to both this account, and the twin account
             transactions.Add(transfer);
+            transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
             twin.transactions.Add(transfer);
+            twin.transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list (including this twin!)
         }
 
         /// <summary>
