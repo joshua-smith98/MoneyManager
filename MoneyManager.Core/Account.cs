@@ -3,209 +3,26 @@
     /// <summary>
     /// Represents an account of monetary transactions.
     /// </summary>
-    public class Account
+    public class Account : Balanceable
     {
         public string Name { get; set; }
 
         /// <summary>
-        /// The balance of all cleared <see cref="Transaction"/>s contained within this <see cref="Account"/>.
-        /// </summary>
-        public Money Balance => BalanceAt(transactions.Last());
-
-        /// <summary>
-        /// The cleared balance of all cleared <see cref="Transaction"/>s contained within this <see cref="Account"/>.
-        /// </summary>
-        public Money ClearedBalance => ClearedBalanceAt(transactions.Last());
-
-        private readonly Money initialBalance;
-
-        /// <summary>
         /// The collection of <see cref="Transaction"/>s contained within this <see cref="Account"/>.
         /// </summary>
-        public Transaction[] Transactions => transactions.ToArray();
+        public override Transaction[] Transactions => transactions.ToArray();
         private readonly List<Transaction> transactions = [];
 
-        /// <summary>
-        /// Gets the number of <see cref="Transaction"/>s contained within this <see cref="Account"/>.
-        /// </summary>
-        public int Count => transactions.Count;
-
-        public Account(string name, Money initialBalance)
+        public Account(string name)
         {
             Name = name;
-            this.initialBalance = initialBalance;
         }
 
-        public Account(string name, Money initialBalance, params Transaction[] transactions)
+        public Account(string name, params Transaction[] transactions)
         {
             Name = name;
-            this.initialBalance = initialBalance;
             this.transactions.AddRange(transactions);
             this.transactions.Sort((x, y) => x.Date.CompareTo(y)); // Sort ascending by date at every change to transactions list
-        }
-
-        /// <summary>
-        /// Gets the balance of this <see cref="Account"/> at the given <see cref="Transaction"/>.
-        /// </summary>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException"></exception>
-        public Money BalanceAt(Transaction transaction)
-        {
-            // Validity check: transaction must be in this collection
-            if (!transactions.Contains(transaction)) throw new IndexOutOfRangeException();
-
-            return BalanceAtIndex(transactions.IndexOf(transaction));
-        }
-
-        /// <summary>
-        /// Gets the balance of this <see cref="Account"/> at the given index.
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public Money BalanceAtIndex(int index)
-        {
-            // Validity check: index must be within the bounds of this collection
-            if (index >= transactions.Count) throw new IndexOutOfRangeException();
-
-            // Calculate balance
-            Money total = initialBalance;
-
-            for (int i = 0; i <= index; i++)
-            {
-                // Special case for Transfers: Their balance is positive if transfer is to this account, negative if transfer is from
-                if (transactions[i] is Transfer t) total += t.TransfersTo(this) ? t.Value : -(t.Value);
-                // General transaction case
-                else total += transactions[i].Value;
-            }
-
-            return total;
-        }
-
-        /// <summary>
-        /// Gets the balance between the given <see cref="Transaction"/>s, inclusive.
-        /// </summary>
-        /// <param name="first"></param>
-        /// <param name="last"></param>
-        /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException"></exception>
-        public Money BalanceBetween(Transaction first, Transaction last)
-        {
-            // Validity check: both transactions must be in this account
-            if (!(transactions.Contains(first) && transactions.Contains(last))) throw new IndexOutOfRangeException();
-
-            return BalanceBetweenIndices(transactions.IndexOf(first), transactions.IndexOf(last));
-        }
-
-        /// <summary>
-        /// Gets the balance of the <see cref="Transaction"/>s between the given indicies, inclusive.
-        /// </summary>
-        /// <param name="first"></param>
-        /// <param name="last"></param>
-        /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException"></exception>
-        public Money BalanceBetweenIndices(int first, int last)
-        {
-            // Validity check: both indicies must be within the bounds of this account
-            if (first >= transactions.Count || last >= transactions.Count) throw new IndexOutOfRangeException();
-
-            // Validity check: first must be smaller than last
-            if (first >= last) throw new IndexOutOfRangeException();
-
-            // Calculate balance
-            Money total = 0;
-
-            for (int i = first; i <= last; i++)
-            {
-                // Special case for Transfers: Their balance is positive if transfer is to this account, negative if transfer is from
-                if (transactions[i] is Transfer t) total += t.TransfersTo(this) ? t.Value : -(t.Value);
-                // General transaction case
-                else total += transactions[i].Value;
-            }
-
-            return total;
-        }
-
-        /// <summary>
-        /// Gets the cleared balance of this <see cref="Account"/> at the given <see cref="Transaction"/>.
-        /// </summary>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException"></exception>
-        public Money ClearedBalanceAt(Transaction transaction)
-        {
-            // Validity check: transaction must be in this collection
-            if (!transactions.Contains(transaction)) throw new IndexOutOfRangeException();
-
-            return ClearedBalanceAtIndex(transactions.IndexOf(transaction));
-        }
-
-        /// <summary>
-        /// Gets the cleared balance of this <see cref="Account"/> at the given index.
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public Money ClearedBalanceAtIndex(int index)
-        {
-            // Validity check: index must be within the bounds of this collection
-            if (index >= transactions.Count) throw new IndexOutOfRangeException();
-
-            // Calculate balance
-            Money total = initialBalance;
-
-            for (int i = 0; i <= index; i++)
-            {
-                // Special case for Transfers: Their balance is positive if transfer is to this account, negative if transfer is from
-                if (transactions[i] is Transfer t) total += t.TransfersTo(this) ? t.ClearedValue : -(t.ClearedValue);
-                // General transaction case
-                else total += transactions[i].ClearedValue;
-            }
-
-            return total;
-        }
-
-        /// <summary>
-        /// Gets the cleared balance between the given <see cref="Transaction"/>s, inclusive.
-        /// </summary>
-        /// <param name="first"></param>
-        /// <param name="last"></param>
-        /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException"></exception>
-        public Money ClearedBalanceBetween(Transaction first, Transaction last)
-        {
-            // Validity check: both transactions must be in this account
-            if (!(transactions.Contains(first) && transactions.Contains(last))) throw new IndexOutOfRangeException();
-
-            return ClearedBalanceBetweenIndices(transactions.IndexOf(first), transactions.IndexOf(last));
-        }
-
-        /// <summary>
-        /// Gets the cleared balance of the <see cref="Transaction"/>s between the given indicies, inclusive.
-        /// </summary>
-        /// <param name="first"></param>
-        /// <param name="last"></param>
-        /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException"></exception>
-        public Money ClearedBalanceBetweenIndices(int first, int last)
-        {
-            // Validity check: both indicies must be within the bounds of this account
-            if (first >= transactions.Count || last >= transactions.Count) throw new IndexOutOfRangeException();
-
-            // Validity check: first must be smaller than last
-            if (first >= last) throw new IndexOutOfRangeException();
-
-            // Calculate balance
-            Money total = 0;
-
-            for (int i = first; i <= last; i++)
-            {
-                // Special case for Transfers: Their balance is positive if transfer is to this account, negative if transfer is from
-                if (transactions[i] is Transfer t) total += t.TransfersTo(this) ? t.ClearedValue : -(t.ClearedValue);
-                // General transaction case
-                else total += transactions[i].ClearedValue;
-            }
-
-            return total;
         }
 
         /// <summary>
