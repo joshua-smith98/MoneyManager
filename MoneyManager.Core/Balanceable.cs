@@ -1,10 +1,23 @@
 ﻿namespace MoneyManager.Core
 {
+    /// <summary>
+    /// Base class for anything that contains <see cref="Transaction"/>s and can be balanced. Inherited by <see cref="Account"/> and <see cref="Category"/>.
+    /// </summary>
     public abstract class Balanceable
     {
         public abstract Transaction[] Transactions { get; }
+        
+        /// <summary>
+        /// Gets the Balance, Income and Expenses of this object.
+        /// </summary>
         public virtual BalanceInfo BalanceInfo => new BalanceInfo(Transactions);
 
+        /// <summary>
+        /// Gets the Balance, Income and Expenses of this object, up until the given <see cref="Transaction"/>, inclusive.
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         public virtual BalanceInfo BalanceInfoAt(Transaction transaction)
         {
             // Validity check: transaction must be in Transactions
@@ -13,6 +26,12 @@
             return BalanceInfoAtIndex(Transactions.ToList().IndexOf(transaction));
         }
 
+        /// <summary>
+        /// Gets the Balance, Income and Expenses of this object, up until the given index, inclusive.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         public virtual BalanceInfo BalanceInfoAtIndex(int index)
         {
             // Validity check: index must be within bounds of Transactions[]
@@ -21,6 +40,13 @@
             return new BalanceInfo(Transactions[..(index + 1)]); // End of range is exclusive, but our 'index' is inclusive
         }
 
+        /// <summary>
+        /// Gets the Balance, Income and Expenses of this object, between the given <see cref="Transaction"/>s, inclusive.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         public virtual BalanceInfo BalanceInfoBetween(Transaction from, Transaction to)
         {
             // Validity check: from and to must be within Transactions[]
@@ -30,6 +56,13 @@
             return BalanceInfoBetweenIndices(transactionList.IndexOf(from), transactionList.IndexOf(to));
         }
 
+        /// <summary>
+        /// Gets the Balance, Income and Expenses of this object, between the given indices, inclusive.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public virtual BalanceInfo BalanceInfoBetweenIndices(int from, int to)
         {
             // Validity check, from must be less then to
