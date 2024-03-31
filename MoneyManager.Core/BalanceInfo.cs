@@ -34,10 +34,10 @@
             // Calculate expenses
             var expenses = transactions
                 .Where(x => x.TransactionType is TransactionType.Withdrawal);
-            Expenses = transactions
+            Expenses = expenses
                 .Select(x => x.Value)
                 .Aggregate((total, next) => total + next);
-            ClearedExpenses = transactions
+            ClearedExpenses = expenses
                 .Select(x => x.ClearedValue)
                 .Aggregate((total, next) => total + next);
         }
