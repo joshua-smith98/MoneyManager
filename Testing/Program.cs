@@ -29,7 +29,29 @@ Console.WriteLine();
 
 // Print Income/Expenses table
 Console.WriteLine($"{"Account",-20}   {"Income",-20}   {"Expenses",-20}   {"Balance",-20}");
+Console.WriteLine();
 Console.WriteLine($"{testAccount1.Name,-20} | {testAccount1.BalanceInfo.Income,20} | {testAccount1.BalanceInfo.Expenses,20} | {testAccount1.BalanceInfo.Balance,20}");
 Console.WriteLine($"{testAccount2.Name,-20} | {testAccount2.BalanceInfo.Income,20} | {testAccount2.BalanceInfo.Expenses,20} | {testAccount2.BalanceInfo.Balance,20}");
+Console.WriteLine();
 
-Console.ReadKey();
+// Budget tests
+var budget1 = new Budget(350, Period.Weekly);
+Console.WriteLine($"Daily rent: {budget1.PerDay}");
+Console.WriteLine($"Weekly rent: {budget1.PerWeek}");
+Console.WriteLine($"Fortnightly rent: {budget1.PerFortnight}");
+Console.WriteLine($"Monthly rent: {budget1.PerMonth}");
+Console.WriteLine($"Quarterly rent: {budget1.PerQuarter}");
+Console.WriteLine($"Biannual rent: {budget1.Per6Months}");
+Console.WriteLine($"Annual rent: {budget1.PerYear}");
+Console.WriteLine();
+
+budget1.PerYear = 483.20m;
+Console.WriteLine($"Daily insurance: {budget1.PerDay}");
+Console.WriteLine($"Weekly insurance: {budget1.PerWeek}");
+Console.WriteLine($"Fortnightly insurance: {budget1.PerFortnight}");
+Console.WriteLine($"Monthly insurance: {budget1.PerMonth}");
+Console.WriteLine($"Quarterly insurance: {budget1.PerQuarter}");
+Console.WriteLine($"Biannual insurance: {budget1.Per6Months}");
+Console.WriteLine($"Annual insurance: {budget1.PerYear}");
+Console.WriteLine();
+Console.ReadKey(true);
