@@ -64,9 +64,12 @@
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public virtual BalanceInfo BalanceInfoBetweenIndices(int from, int to)
-        {
+        {   
             // Validity check, from must be less then to
             if (from >= to) throw new ArgumentOutOfRangeException(nameof(from), "Argument 'from' must be less than argument 'to'.");
+
+            // Validity check: from and to must be within the bounds of Transactions[]
+            if (to >= Transactions.Length) throw new IndexOutOfRangeException(); // Since 'from' must be less than 'to', we only need to check 'to' here
 
             return new BalanceInfo(Transactions[from..(to + 1)]); // End of range is exclusive, but our 'to' is inclusive
         }
