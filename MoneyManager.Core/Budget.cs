@@ -247,7 +247,7 @@
                 perQuarter = null;
                 per6Months = null;
 
-                perYear = null; // <-----
+                perYear = value; // <-----
 
                 CurrentPeriod = Period.Annually;
             }
