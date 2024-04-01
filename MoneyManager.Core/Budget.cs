@@ -26,7 +26,7 @@
                 if (per6Months is not null) return (per6Months * 2) / 365;
                 if (perYear is not null) return perYear / 365;
 
-                throw new Exception("All Budget values are empty!");
+                throw new BudgetException("All Budget values are empty!");
             }
             set
             {
@@ -60,7 +60,7 @@
                 if (per6Months is not null) return (per6Months * 2) / 52;
                 if (perYear is not null) return perYear / 52;
 
-                throw new Exception("All Budget values are empty!");
+                throw new BudgetException("All Budget values are empty!");
             }
             set
             {
@@ -95,7 +95,7 @@
                 if (per6Months is not null) return (per6Months * 2) / 26;
                 if (perYear is not null) return perYear / 26;
 
-                throw new Exception("All Budget values are empty!");
+                throw new BudgetException("All Budget values are empty!");
             }
             set
             {
@@ -130,7 +130,7 @@
                 if (per6Months is not null) return per6Months / 6;
                 if (perYear is not null) return perYear / 12;
 
-                throw new Exception("All Budget values are empty!");
+                throw new BudgetException("All Budget values are empty!");
             }
             set
             {
@@ -165,7 +165,7 @@
                 if (per6Months is not null) return per6Months / 2;
                 if (perYear is not null) return perYear / 4;
 
-                throw new Exception("All Budget values are empty!");
+                throw new BudgetException("All Budget values are empty!");
             }
             set
             {
@@ -200,7 +200,7 @@
                 if (perQuarter is not null) return perQuarter * 2;
                 if (perYear is not null) return perYear / 2;
 
-                throw new Exception("All Budget values are empty!");
+                throw new BudgetException("All Budget values are empty!");
             }
             set
             {
@@ -235,7 +235,7 @@
                 if (perQuarter is not null) return perQuarter * 4;
                 if (per6Months is not null) return per6Months * 2;
 
-                throw new Exception("All Budget values are empty!");
+                throw new BudgetException("All Budget values are empty!");
             }
             set
             {
@@ -282,7 +282,7 @@
                     perYear = value;
                     break;
                 default:
-                    throw new Exception("Budget must be defined with a valid period!");
+                    throw new BudgetException("Budget must be defined with a valid period!");
             }
 
             CurrentPeriod = period;
@@ -307,7 +307,7 @@
                 case Period.Annually:
                     return PerYear;
                 default:
-                    throw new Exception("Budget must be accessed with a valid period!");
+                    throw new BudgetException("Budget must be accessed with a valid period!");
             }
         }
     }
