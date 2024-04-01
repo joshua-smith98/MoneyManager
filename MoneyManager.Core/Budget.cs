@@ -1,5 +1,8 @@
 ﻿namespace MoneyManager.Core
 {
+    /// <summary>
+    /// Represents an amount of <see cref="Money"/> budgeted across a certain <see cref="Period"/>, and translated across all other <see cref="Period"/>s.
+    /// </summary>
     public class Budget
     {
         private Money? perDay;
@@ -10,6 +13,9 @@
         private Money? per6Months;
         private Money? perYear;
 
+        /// <summary>
+        /// Gets or sets the amount of money per day.
+        /// </summary>
         public Money PerDay
         {
             get
@@ -40,10 +46,14 @@
                 per6Months = null;
                 perYear = null;
 
+                // Set the base period
                 CurrentPeriod = Period.Daily;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the amount of money per week.
+        /// </summary>
         public Money PerWeek
         {
             get
@@ -75,10 +85,14 @@
                 per6Months = null;
                 perYear = null;
 
+                // Set the base period
                 CurrentPeriod = Period.Weekly;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the amount of money per fortnight.
+        /// </summary>
         public Money PerFortnight
         {
             get
@@ -110,10 +124,14 @@
                 per6Months = null;
                 perYear = null;
 
+                // Set the base period
                 CurrentPeriod = Period.Fortnightly;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the amount of money per month.
+        /// </summary>
         public Money PerMonth
         {
             get
@@ -145,10 +163,14 @@
                 per6Months = null;
                 perYear = null;
 
+                // Set the base period
                 CurrentPeriod = Period.Monthly;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the amount of money per quarter.
+        /// </summary>
         public Money PerQuarter
         {
             get
@@ -180,10 +202,14 @@
                 per6Months = null;
                 perYear = null;
 
+                // Set the base period
                 CurrentPeriod = Period.Quarterly;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the amount of money every 6 months.
+        /// </summary>
         public Money Per6Months
         {
             get
@@ -215,10 +241,14 @@
 
                 perYear = null;
 
+                // Set the base period
                 CurrentPeriod = Period.Biannually;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the amount of money budgeted per year.
+        /// </summary>
         public Money PerYear
         {
             get
@@ -249,10 +279,14 @@
 
                 perYear = value; // <-----
 
+                // Set the base period
                 CurrentPeriod = Period.Annually;
             }
         }
 
+        /// <summary>
+        /// The base period this budget is currently using.
+        /// </summary>
         public Period CurrentPeriod { get; private set; }
 
         public Budget(Money value, Period period)
@@ -285,9 +319,16 @@
                     throw new BudgetException("Budget must be defined with a valid period!");
             }
 
+            // Set the base period
             CurrentPeriod = period;
         }
 
+        /// <summary>
+        /// Gets a <see cref="Money"/> value from this <see cref="Budget"/> for the given <see cref="Period"/>.
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns></returns>
+        /// <exception cref="BudgetException"></exception>
         public Money Get(Period period)
         {
             switch (period)
