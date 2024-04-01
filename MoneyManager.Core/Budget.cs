@@ -287,5 +287,28 @@
 
             CurrentPeriod = period;
         }
+
+        public Money Get(Period period)
+        {
+            switch (period)
+            {
+                case Period.Daily:
+                    return PerDay;
+                case Period.Weekly:
+                    return PerWeek;
+                case Period.Fortnightly:
+                    return PerFortnight;
+                case Period.Monthly:
+                    return PerMonth;
+                case Period.Quarterly:
+                    return PerQuarter;
+                case Period.Biannually:
+                    return Per6Months;
+                case Period.Annually:
+                    return PerYear;
+                default:
+                    throw new Exception("Budget must be accessed with a valid period!");
+            }
+        }
     }
 }
