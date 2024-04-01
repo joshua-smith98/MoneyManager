@@ -36,9 +36,9 @@
         public string? Memo { get; set; }
 
         /// <summary>
-        /// The <see cref="BudgetCategory"/> this <see cref="Transaction"/> falls into in budgets and reports.
+        /// The <see cref="Core.Category"/> this <see cref="Transaction"/> falls under in budgets and reports.
         /// </summary>
-        //public BudgetCategory? Category { get; } // BudgetCategory yet to be implemented
+        public Category? Category { get; set; }
 
         /// <summary>
         /// Whether this <see cref="Transaction"/>'s payment is complete. <see cref="true"/> by default.
