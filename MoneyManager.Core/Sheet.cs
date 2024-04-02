@@ -3,8 +3,10 @@
     /// <summary>
     /// Represents a financial sheet containing Accounts and Categories.
     /// </summary>
-    public class Sheet
+    public class Sheet : Balanceable
     {
+        public override Transaction[] Transactions => Accounts.SelectMany(x => x.Transactions).OrderBy(x => x.Date).ToArray();
+        
         public Account[] Accounts => accounts.ToArray();
         private List<Account> accounts = [];
 
