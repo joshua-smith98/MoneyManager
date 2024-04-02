@@ -35,10 +35,87 @@ namespace Tests
             var firstTransaction = new Transaction(0, "", today.AddDays(-50));
             var account = new Account("", duplicateTransaction, new Transaction(0, "", today), new Transaction(0, "", today.AddDays(1)), new Transaction(0, "", today.AddDays(1)));
 
+            // Aquire transfer
+            var account1 = new Account("");
+            var account2 = new Account("");
+            account1.TransferTo(account2, 10);
+            var transfer = account1.Transactions[0];
+
             // Act and Assert
-            Assert.ThrowsException<TransactionAlreadyExistsException>(() => { account.NewTransaction(duplicateTransaction); });
+            Assert.ThrowsException<TransactionInvalidException>(() => { account.NewTransaction(transfer); }); // Test adding transfer
+            Assert.ThrowsException<TransactionAlreadyExistsException>(() => { account.NewTransaction(duplicateTransaction); }); // Test duplicate transaction
+            
             account.NewTransaction(firstTransaction);
-            Assert.AreEqual(account.Transactions[0], firstTransaction);
+            Assert.AreEqual(account.Transactions[0], firstTransaction); // Test sorting
         }
+
+        [TestMethod]
+        public void NewTransactions_Tests()
+        {
+            // Adding new transactions can throw some exceptions, and also orders transactions by date
+            // Arrange
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var duplicateTransaction = new Transaction(0, "", today.AddDays(3));
+            var firstTransaction = new Transaction(0, "", today.AddDays(-50));
+            var account = new Account("", duplicateTransaction);
+
+            // Aquire transfer
+            var account1 = new Account("");
+            var account2 = new Account("");
+            account1.TransferTo(account2, 10);
+            var transfer = account1.Transactions[0];
+
+            Transaction[] transactions = [new Transaction(0, "", today), new Transaction(0, "", today.AddDays(1)), new Transaction(0, "", today.AddDays(1))];
+            Transaction[] ts_with_duplicate = [.. transactions, duplicateTransaction];
+            Transaction[] ts_with_transfer = [.. transactions, transfer];
+            Transaction[] ts_with_first = [.. transactions, firstTransaction];
+
+            // Act and Assert
+            Assert.ThrowsException<TransactionInvalidException>(() => { account.NewTransactions(ts_with_transfer); }); // Test adding transfer
+            Assert.ThrowsException<TransactionAlreadyExistsException>(() => { account.NewTransactions(ts_with_duplicate); }); // Test duplicate transaction
+
+            account.NewTransactions(ts_with_first);
+            Assert.AreEqual(account.Transactions[0], firstTransaction); // Test sorting
+        }
+
+        [TestMethod]
+        public void DeleteTransaction_Tests()
+        {
+            // DeleteTransaction:
+            //  - Deletes the given transaction and clears its category
+            //  - Throws IndexOutOfRangeException if the given transaction isn't in the account
+
+            // DeleteTransaction also does things with transfers, but we're changing that soon so we'll leave it
+
+            // Arrange
+            var category = new Category("");
+            var insideTransaction = new Transaction(0, "") { Category = category };
+            var outsideTransaction = new Transaction(0, "");
+            var account = new Account("", insideTransaction);
+
+            // Act and Assert
+            Assert.ThrowsException<IndexOutOfRangeException>(() => { account.DeleteTransaction(outsideTransaction); }); // Check IndexOutOfRangeException
+            account.DeleteTransaction(insideTransaction);
+            Assert.IsFalse(account.Transactions.Contains(insideTransaction)); // Check deletion
+            Assert.IsTrue(insideTransaction.Category is null); // Check category removal
+        }
+
+        [TestMethod]
+        public void DeleteTransactionAt_Tests()
+        {
+            // - Throws IndexOutOfRangeException if given index is outside range of Transactions[]
+            // We won't test the rest, because then it just calls DeleteTransaction()
+
+            // Arrange
+            var account = new Account("");
+            account.NewTransactions(new Transaction(0, ""), new Transaction(0, ""));
+
+            // Act and Assert
+            Assert.ThrowsException<IndexOutOfRangeException>(() => account.DeleteTransactionAt(2)); // Check edge
+            Assert.ThrowsException<IndexOutOfRangeException>(() => account.DeleteTransactionAt(5)); // Check out of range
+            Assert.ThrowsException<IndexOutOfRangeException>(() => account.DeleteTransactionAt(-1)); // Check negative
+        }
+
+        // We won't bother with the transfer methods, because we'll be changing that soon
     }
 }
