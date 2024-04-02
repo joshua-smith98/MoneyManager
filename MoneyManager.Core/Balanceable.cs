@@ -35,7 +35,7 @@
         public virtual BalanceInfo BalanceInfoAtIndex(int index)
         {
             // Validity check: index must be within bounds of Transactions[]
-            if (index >= Transactions.Length) throw new IndexOutOfRangeException();
+            if (index < 0 || index >= Transactions.Length) throw new IndexOutOfRangeException();
 
             return new BalanceInfo(Transactions[..(index + 1)]); // End of range is exclusive, but our 'index' is inclusive
         }
