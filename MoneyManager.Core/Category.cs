@@ -6,21 +6,33 @@
     /// <param name="name"></param>
     /// <param name="incomeBudget"></param>
     /// <param name="expensesBudget"></param>
-    public class Category(string name, Budget? incomeBudget, Budget? expensesBudget) : Balanceable
+    public class Category : Balanceable
     {
-        public string Name { get; set; } = name;
+        public string Name { get; set; }
 
         public override Transaction[] Transactions => transactions.ToArray(); // Will be implemented once we implement Sheets
         private List<Transaction> transactions = [];
 
         /// <summary>
-        /// The optional <see cref="Budget"/>ed income for this <see cref="Category"/>.
+        /// Gets or sets the optional <see cref="Budget"/>ed income for this <see cref="Category"/>.
         /// </summary>
-        public Budget? IncomeBudget { get; } = incomeBudget;
+        public Budget? IncomeBudget { get; set; }
         /// <summary>
-        /// The optional <see cref="Budget"/>ed expenses for this <see cref="Category"/>.
+        /// Gets or sets the optional <see cref="Budget"/>ed expenses for this <see cref="Category"/>.
         /// </summary>
-        public Budget? ExpensesBudget { get; } = expensesBudget;
+        public Budget? ExpensesBudget { get; set; }
+
+        public Category(string name)
+        {
+            Name = name;
+        }
+
+        public Category(string name, Budget? incomeBudget, Budget? expensesBudget)
+        {
+            Name = name;
+            IncomeBudget = incomeBudget;
+            ExpensesBudget = expensesBudget;
+        }
 
         internal void AddTransaction(Transaction transaction)
         {
