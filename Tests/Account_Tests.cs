@@ -20,9 +20,9 @@ namespace Tests
             var account = new Account("", transactions);
 
             // Assert
-            Assert.IsTrue(account.Transactions[0] == transaction1); // Check transactions are now in order
-            Assert.IsTrue(account.Transactions[1] == transaction2);
-            Assert.IsTrue(account.Transactions[2] == transaction3);
+            Assert.AreSame(account.Transactions[0], transaction1); // Check transactions are now in order
+            Assert.AreSame(account.Transactions[1], transaction2);
+            Assert.AreSame(account.Transactions[2], transaction3);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace Tests
             Assert.ThrowsException<TransactionAlreadyExistsException>(() => { account.NewTransaction(duplicateTransaction); }); // Test duplicate transaction
             
             account.NewTransaction(firstTransaction);
-            Assert.AreEqual(account.Transactions[0], firstTransaction); // Test sorting
+            Assert.AreSame(account.Transactions[0], firstTransaction); // Test sorting
         }
 
         [TestMethod]
@@ -75,7 +75,7 @@ namespace Tests
             Assert.ThrowsException<TransactionAlreadyExistsException>(() => { account.NewTransactions(ts_with_duplicate); }); // Test duplicate transaction
 
             account.NewTransactions(ts_with_first);
-            Assert.AreEqual(account.Transactions[0], firstTransaction); // Test sorting
+            Assert.AreSame(account.Transactions[0], firstTransaction); // Test sorting
         }
 
         [TestMethod]
