@@ -31,7 +31,7 @@
         /// <param name="transaction"></param>
         /// <exception cref="TransactionInvalidException"></exception>
         /// <exception cref="TransactionAlreadyExistsException"></exception>
-        public void AddTransaction(Transaction transaction)
+        public void NewTransaction(Transaction transaction)
         {
             // Validity check: Can't add a Transfer using this method
             if (transaction is Transfer) throw new TransactionInvalidException("Tried to add a Transfer as if it were a Transaction.");
@@ -47,23 +47,23 @@
         /// Adds the given collection of <see cref="Transaction"/>s to this <see cref="Account"/>.
         /// </summary>
         /// <param name="transactions"></param>
-        public void AddTransactions(params Transaction[] transactions)
+        public void NewTransactions(params Transaction[] transactions)
         {
             this.transactions.AddRange(transactions);
             this.transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
         }
 
         /// <summary>
-        /// Removed the given <see cref="Transaction"/> from this <see cref="Account"/>
+        /// Deletes the given <see cref="Transaction"/> from this <see cref="Account"/>
         /// </summary>
         /// <param name="transaction"></param>
         /// <exception cref="IndexOutOfRangeException"></exception>
         /// <exception cref="Exception"></exception>
-        public void RemoveTransaction(Transaction transaction)
+        public void DeleteTransaction(Transaction transaction)
         {
             // Validity check: transaction must be in this account
             if (!transactions.Contains(transaction)) throw new IndexOutOfRangeException();
-            
+
             // Case: this Transaction is a Transfer
             if (transaction is Transfer t)
             {
@@ -73,23 +73,25 @@
                 if (!twin.transactions.Remove(t))
                     throw new Exception("Transfer is not in both Accounts as it should be. This should never be the case!");
             }
-            else transactions.Remove(transaction);
-
-            transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
+            else
+            {
+                transactions.Remove(transaction);
+                transaction.Category = null; // Remove this transaction from its category
+            }
+            // No need to sort here, as removing an element doesn't change the order of elements
         }
 
         /// <summary>
-        /// Removes the <see cref="Transaction"/> at the given index.
+        /// Deletes the <see cref="Transaction"/> at the given index.
         /// </summary>
         /// <param name="index"></param>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public void RemoveTransactionAt(int index)
+        public void DeleteTransactionAt(int index)
         {
             // Validity check: index must be in range
             if (index >= transactions.Count) throw new IndexOutOfRangeException();
 
-            transactions.RemoveAt(index);
-            transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
+            DeleteTransaction(transactions[index]); // To avoid duplicate code
         }
 
         private void AddTransfer(Transfer transfer, Account twin)

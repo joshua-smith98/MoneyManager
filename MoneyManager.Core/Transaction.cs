@@ -38,7 +38,18 @@
         /// <summary>
         /// The <see cref="Core.Category"/> this <see cref="Transaction"/> falls under in budgets and reports.
         /// </summary>
-        public Category? Category { get; set; }
+        public Category? Category
+        {
+            get => category;
+            set
+            {
+                // Remove transaction from old category and add to new
+                if (category is not null) category.RemoveTransaction(this);
+                if (value is not null) value.AddTransaction(this);
+                category = value;
+            }
+        }
+        private Category? category;
 
         /// <summary>
         /// Whether this <see cref="Transaction"/>'s payment is complete. <see cref="true"/> by default.

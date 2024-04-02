@@ -10,7 +10,8 @@
     {
         public string Name { get; set; } = name;
 
-        public override Transaction[] Transactions => throw new NotImplementedException(); // Will be implemented once we implement Sheets
+        public override Transaction[] Transactions => transactions.ToArray(); // Will be implemented once we implement Sheets
+        private List<Transaction> transactions = [];
 
         /// <summary>
         /// The optional <see cref="Budget"/>ed income for this <see cref="Category"/>.
@@ -20,6 +21,18 @@
         /// The optional <see cref="Budget"/>ed expenses for this <see cref="Category"/>.
         /// </summary>
         public Budget? ExpensesBudget { get; } = expensesBudget;
+
+        internal void AddTransaction(Transaction transaction)
+        {
+            // Since this is just internal, we won't bother with validity checks - if we get something wrong it's on us
+            transactions.Add(transaction);
+            transactions.Sort((x, y) => x.Date.CompareTo(y.Date));
+        }
+
+        internal void RemoveTransaction(Transaction transaction)
+        {
+            transactions.Remove(transaction);
+        }
 
         /// <summary>
         /// Gets the difference between the budgeted income and the actual income for the given period, starting at the given date.
