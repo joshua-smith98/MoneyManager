@@ -37,7 +37,7 @@ namespace MoneyManager.Core
         public void DeleteAccountAt(int index)
         {
             // Validity check: index must be within the range of accounts
-            if (index >= accounts.Count) throw new IndexOutOfRangeException();
+            if (index < 0 || index >= accounts.Count) throw new IndexOutOfRangeException();
 
             accounts.RemoveAt(index);
         }
@@ -72,7 +72,7 @@ namespace MoneyManager.Core
         public void DeleteCategoryAt(int index)
         {
             // Validity check: index must be within the bounds of categories
-            if (index >= categories.Count) throw new IndexOutOfRangeException();
+            if (index < 0 ||index >= categories.Count) throw new IndexOutOfRangeException();
 
             DeleteCategory(categories[index]); // Avoid duplicating purging code
         }
