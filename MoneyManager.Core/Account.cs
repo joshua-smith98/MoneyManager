@@ -24,7 +24,7 @@ namespace MoneyManager.Core
         {
             Name = name;
             this.transactions.AddRange(transactions);
-            this.transactions.Sort((x, y) => x.Date.CompareTo(y)); // Sort ascending by date at every change to transactions list
+            this.transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace MoneyManager.Core
         public void DeleteTransactionAt(int index)
         {
             // Validity check: index must be in range
-            if (index >= transactions.Count) throw new IndexOutOfRangeException();
+            if (index < 0 || index >= transactions.Count) throw new IndexOutOfRangeException();
 
             DeleteTransaction(transactions[index]); // To avoid duplicate code
         }
