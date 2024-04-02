@@ -64,15 +64,9 @@ namespace MoneyManager.Core
 
             categories.Remove(category);
 
-            // Remove all references to this category from all Transactions
+            // Remove all references to this category from its transactions
             // PURGE IT FROM ALL SPACETIME!!
-            foreach (Account account in accounts)
-            {
-                foreach (Transaction transaction in account.Transactions)
-                {
-                    if (transaction.Category == category) transaction.Category = null;
-                }
-            }
+            foreach (Transaction transaction in category.Transactions) transaction.Category = null;
         }
 
         public void DeleteCategoryAt(int index)
