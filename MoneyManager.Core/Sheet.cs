@@ -19,6 +19,14 @@ namespace MoneyManager.Core
 
             accounts.Add(account);
         }
+        public void NewAccounts(params Account[] accounts)
+        {
+            // Validity check: Accounts must not already contain any of accounts
+            foreach (Account account in accounts)
+                if (Accounts.Contains(account)) throw new SheetException($"Account \"{account.Name}\" already exists in sheet.");
+
+            this.accounts.AddRange(accounts);
+        }
         public void DeleteAccount(Account account)
         {
             // Validity check: account must be within Accounts
@@ -40,6 +48,14 @@ namespace MoneyManager.Core
             if (Categories.Contains(category)) throw new SheetException($"Category \"{category.Name}\" already exists in sheet.");
 
             categories.Add(category);
+        }
+        public void NewCategories(params Category[] categories)
+        {
+            // Validity check: Categories must not already contain any of categories
+            foreach (Category category in categories)
+            if (Categories.Contains(category)) throw new SheetException($"Category \"{category.Name}\" already exists in sheet.");
+
+            this.categories.AddRange(categories);
         }
         public void DeleteCategory(Category category)
         {
