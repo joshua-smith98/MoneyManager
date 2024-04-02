@@ -81,7 +81,18 @@
         }
 
         /// <summary>
+        /// Gets the sum of the given budgets with the given period.
+        /// </summary>
+        /// <param name="budget1"></param>
+        /// <param name="budget2"></param>
+        /// <param name="newPeriod"></param>
+        /// <returns></returns>
+        public static Budget Sum(Budget budget1, Budget budget2, Period newPeriod)
+            => new Budget(FromDaily(budget1.perDay + budget2.perDay, newPeriod), newPeriod);
+
+        /// <summary>
         /// Gets the amount of money budgeted for the given period.
+        /// If <see cref="Period.Null"/> is given, then this method will return the default (daily) budget.
         /// </summary>
         /// <param name="period"></param>
         /// <returns></returns>
@@ -89,6 +100,7 @@
         
         /// <summary>
         /// Sets the amount of money budgeted for the given period.
+        /// If <paramref name="period"/> is set to <see cref="Period.Null"/>, then this method will use <paramref name="value"/> as if it were daily, but <see cref="CurrentPeriod"/> will be set to <see cref="Period.Null"/>.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="period"></param>
@@ -98,7 +110,7 @@
             CurrentPeriod = period;
         }
 
-        private Money ToDaily(Money value, Period fromPeriod)
+        private static Money ToDaily(Money value, Period fromPeriod)
         {
             return fromPeriod switch
             {
@@ -109,11 +121,12 @@
                 Period.Quarterly => value * 4 / 365,
                 Period.Biannually => value * 2 / 365,
                 Period.Annually => value / 365,
-                _ => throw new ArgumentOutOfRangeException(nameof(fromPeriod), "Period must not be \"Period.Null\".")
+                Period.Null => value, // Support for budgets with no base period
+                _ => throw new ArgumentOutOfRangeException(nameof(fromPeriod), "Invalid period.")
             };
         }
 
-        private Money FromDaily(Money dailyValue, Period toPeriod)
+        private static Money FromDaily(Money dailyValue, Period toPeriod)
         {
             return toPeriod switch
             {
@@ -124,7 +137,8 @@
                 Period.Quarterly => dailyValue * 365 / 4,
                 Period.Biannually => dailyValue * 365 / 2,
                 Period.Annually => dailyValue * 365,
-                _ => throw new ArgumentOutOfRangeException(nameof(toPeriod), "Period must not be \"Period.Null\".")
+                Period.Null => dailyValue, // Support for budgets with no base period
+                _ => throw new ArgumentOutOfRangeException(nameof(toPeriod), "Invalid period.")
             };
         }
     }
