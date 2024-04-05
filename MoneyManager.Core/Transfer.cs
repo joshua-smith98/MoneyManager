@@ -25,9 +25,9 @@ namespace MoneyManager.Core
             get => base.Number;
             set
             {
-                if (Twin.Number != value)
-                    Twin.Number = value;
                 base.Number = value;
+                if (Twin is not null && Twin.Number != value)
+                    Twin.Number = value;
             }
         }
 
@@ -37,12 +37,12 @@ namespace MoneyManager.Core
             set
             {
                 // Check for change of sign (invalid in Transfers)
-                if (Math.Sign((decimal)base.Value) != Math.Sign((decimal)value))
+                if (base.Value is not null && Math.Sign((decimal)base.Value) != Math.Sign((decimal)value))
                     throw new TransferSignChangedException("Attempted to change the sign of a Transfer. To reverse a transfer, delete this one and create new.");
 
-                if (Twin.Value != -value)
-                    Twin.Value = -value;
                 base.Value = value;
+                if (Twin is not null && Twin.Value != -value)
+                    Twin.Value = -value;
             }
         }
 
@@ -51,9 +51,9 @@ namespace MoneyManager.Core
             get => base.Date;
             set
             {
-                if (Twin.Date != value)
-                    Twin.Date = value;
                 base.Date = value;
+                if (Twin is not null && Twin.Date != value)
+                    Twin.Date = value;
             }
         }
 
@@ -64,9 +64,9 @@ namespace MoneyManager.Core
             get => base.Memo;
             set
             {
-                if (Twin.Memo != value)
-                    Twin.Memo = value;
                 base.Memo = value;
+                if (Twin is not null && Twin.Memo != value)
+                    Twin.Memo = value;
             }
         }
 
@@ -75,9 +75,9 @@ namespace MoneyManager.Core
             get => base.Category;
             set
             {
-                if (Twin.Category != value)
-                    Twin.Category = value;
                 base.Category = value;
+                if (Twin is not null && Twin.Category != value)
+                    Twin.Category = value;
             }
         }
 
@@ -89,7 +89,7 @@ namespace MoneyManager.Core
             To = to;
             From = from;
             if (twin is null)
-                Twin = new Transfer(to, from, value, date, memo, number, this);
+                Twin = new Transfer(to, from, -value, date, memo, number, this);
             else Twin = twin;
         }
 
@@ -99,7 +99,7 @@ namespace MoneyManager.Core
             To = to;
             From = from;
             if (twin is null)
-                Twin = new Transfer(to, from, value, memo, number, twin);
+                Twin = new Transfer(to, from, -value, memo, number, this);
             else Twin = twin;
         }
 
