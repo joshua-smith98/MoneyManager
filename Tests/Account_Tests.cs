@@ -4,9 +4,7 @@ namespace Tests
 {
     [TestClass]
     public class Account_Tests
-    {
-        Random random = new Random();
-        
+    {   
         [TestMethod]
         public void ConstructionSorting_Test()
         {
@@ -123,9 +121,9 @@ namespace Tests
         {
             // Transfers a given amount of money to another account.
             // Arrange
-            var startAmount1 = random.Next();
-            var startAmount2 = random.Next();
-            var transferAmount = random.Next();
+            var startAmount1 = 300;
+            var startAmount2 = 300;
+            var transferAmount = 200;
             var account1 = new Account("");
             var account2 = new Account("");
             account1.NewTransaction(new Transaction(startAmount1, "[Initial Balance]"));
@@ -144,9 +142,9 @@ namespace Tests
         {
             // Transfers a given amount of money from another account to this one
             // Arrange
-            var startAmount1 = random.Next();
-            var startAmount2 = random.Next();
-            var transferAmount = random.Next();
+            var startAmount1 = 300;
+            var startAmount2 = 300;
+            var transferAmount = 200;
             var account1 = new Account("");
             var account2 = new Account("");
             account1.NewTransaction(new Transaction(startAmount1, "[Initial Balance]"));

@@ -5,8 +5,6 @@ namespace Tests
     [TestClass]
     public class Transfer_Tests
     {
-        Random random = new();
-
         [TestMethod]
         public void Metadata_Tests()
         {
@@ -24,9 +22,9 @@ namespace Tests
             Transaction transfer2 = account2.Transactions[^1];
 
             // Act
-            transfer1.Number = random.Next().ToString();
-            transfer1.Date = DateOnly.FromDayNumber(random.Next());
-            transfer1.Memo = random.Next().ToString();
+            transfer1.Number = "12345";
+            transfer1.Date = DateOnly.FromDateTime(DateTime.Now).AddDays(50);
+            transfer1.Memo = "678910";
             transfer1.Category = new Category("");
 
             // Assert
@@ -99,7 +97,7 @@ namespace Tests
 
             // Assert
             Assert.AreEqual(account1.Transactions[^1].Value, -200); // Check value of From is negative
-            Assert.AreEqual(account1.Transactions[^1].Value, 200); // Check value of To is negative
+            Assert.AreEqual(account2.Transactions[^1].Value, 200); // Check value of To is positive
         }
 
         [TestMethod]

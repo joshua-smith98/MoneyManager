@@ -5,15 +5,13 @@ namespace Tests
     [TestClass]
     public class Budget_Tests
     {
-        Random random = new Random();
-        
         [TestMethod]
         public void Sum_Test()
         {
             // Gets a new budget the is the sum of the two given budgets
             // Arrange
-            Money value1 = random.Next();
-            Money value2 = random.Next();
+            Money value1 = 250;
+            Money value2 = 500;
 
             var budget1 = new Budget(value1, Period.Null);
             var budget2 = new Budget(value2, Period.Null);
@@ -38,7 +36,7 @@ namespace Tests
             // Both throw an exception if the period is not valid (null?)
 
             // Arrange
-            var value = random.Next();
+            Money value = 55;
             var budget = new Budget(0, Period.Null);
             int invalidEnum = -50;
 
@@ -49,7 +47,8 @@ namespace Tests
             foreach (Period period in Enum.GetValues(typeof(Period)))
             {
                 budget.Set(value, period);
-                Assert.AreEqual(budget.Get(period), value); // Check value is correctly stored and retrieved
+                var result = budget.Get(period);
+                Assert.AreEqual(result, value); // Check value is correctly stored and retrieved
                 Assert.AreEqual(period, budget.CurrentPeriod); // Check CurrentPeriod is correctly stored
 
                 // We don't need to check all permutations of Period since the class always converts to Daily and back - so if there's a problem we'll see it here.
