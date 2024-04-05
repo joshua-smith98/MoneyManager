@@ -13,7 +13,12 @@
         /// <summary>
         /// Monetary value of this <see cref="Transaction"/>.
         /// </summary>
-        public virtual Money Value { get; set; }
+        public virtual Money Value
+        {
+            get => _value;
+            set => _value = value != 0 ? value : throw new TransactionException("Cannot set a Transaction's value to zero!");
+        }
+        private Money _value;
 
         /// <summary>
         /// Cleared monetary value of this <see cref="Transaction"/>. Gets $0.00 if <see cref="IsCleared"/> is false.
@@ -68,7 +73,8 @@
 
         public Transaction(Money value, DateOnly date, string payee = "", string memo = "", string number = "")
         {
-            Value = value;
+            if (value == 0) throw new TransactionException("Cannot create a Transaction with a value of zero!");
+            _value = value;
             Date = date;
             Payee = payee;
             Memo = memo;
@@ -76,12 +82,6 @@
         }
 
         public Transaction(Money value, string payee = "", string memo = "", string number = "")
-        {
-            Value = value;
-            Date = DateOnly.FromDateTime(DateTime.Today);
-            Payee = payee;
-            Memo = memo;
-            Number = number;
-        }
+            : this(value, DateOnly.FromDateTime(DateTime.Now), payee, memo, number) { }
     }
 }
