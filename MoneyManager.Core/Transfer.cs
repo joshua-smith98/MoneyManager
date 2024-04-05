@@ -23,6 +23,16 @@ namespace MoneyManager.Core
         /// </summary>
         public Transfer Twin { get; }
 
+        /// <summary>
+        /// Gets whether this <see cref="Transfer"/> is incoming or outgoing.
+        /// </summary>
+        public TransferType TransferType => Value switch
+        {
+            var v when v > 0 => TransferType.Incoming,
+            var v when v < 0 => TransferType.Outgoing,
+            _ => TransferType.Null
+        };
+
         public override string Number 
         {
             get => base.Number;
@@ -63,8 +73,8 @@ namespace MoneyManager.Core
             }
         }
 
-        // Automatically set the Payee property based on whether this Transfer is going or coming
-        public override string Payee => Value > 0 ? $"[From {From.Name}]" : $"[To {To.Name}]";
+        // Automatically set the Payee property based on whether this Transfer is incoming or outgoing
+        public override string Payee => TransferType is TransferType.Incoming ? $"[From {From.Name}]" : $"[To {To.Name}]";
 
         public override string Memo
         {
@@ -167,7 +177,7 @@ namespace MoneyManager.Core
         public void Delete()
         {
             // Case: this is the incoming transfer
-            if (Value > 0)
+            if (TransferType is TransferType.Incoming)
             {
                 To.RemoveTransfer(this);
                 From.RemoveTransfer(Twin);
