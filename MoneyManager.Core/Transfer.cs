@@ -5,7 +5,7 @@ namespace MoneyManager.Core
     /// <summary>
     /// A special <see cref="Transaction"/> that represents a transfer of money between two <see cref="Account"/>s.
     /// </summary>
-    internal class Transfer : Transaction
+    public class Transfer : Transaction
     {
         /// <summary>
         /// The <see cref="Account"/> the money was transfered to.
