@@ -128,7 +128,7 @@
 
         private static Money FromDaily(Money dailyValue, Period toPeriod)
         {
-            return toPeriod switch
+            return (toPeriod switch
             {
                 Period.Daily => dailyValue,
                 Period.Weekly => dailyValue * 7,
@@ -139,7 +139,7 @@
                 Period.Annually => dailyValue * 365,
                 Period.Null => dailyValue, // Support for budgets with no base period
                 _ => throw new ArgumentOutOfRangeException(nameof(toPeriod), "Invalid period.")
-            };
+            }).Round(); // Rounding to nearest 2 places, to avoid insignificant rounding errors when bringing value out of budget
         }
     }
 }

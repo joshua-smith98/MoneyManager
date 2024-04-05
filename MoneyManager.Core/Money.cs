@@ -47,6 +47,8 @@
 
         public static Money operator /(Money mv1, decimal v2) => mv1.value / v2; // Only allow division by decimals
 
+        public Money Round(int decimalPlaces = 2) => new Money(decimal.Round(value, decimalPlaces));
+
         public override string ToString() => string.Format("{0:C}", value); // Return currency value when converted to string
     }
 }
