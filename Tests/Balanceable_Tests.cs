@@ -56,7 +56,7 @@ namespace Tests
             // Arrange
             var fromTransaction = new Transaction(-2, "");
             var toTransaction = new Transaction(34, "");
-            var outsideTransaction = new Transaction(0, "");
+            var outsideTransaction = new Transaction(46, "");
             Transaction[] transactions = [
                     new Transaction(5, ""),
                     fromTransaction,

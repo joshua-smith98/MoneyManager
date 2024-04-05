@@ -152,7 +152,7 @@ namespace Tests
                 insideCategory
                 ];
             sheet.NewCategories(categories);
-            var transaction = new Transaction(0, "") { Category = insideCategory };
+            var transaction = new Transaction(1, "") { Category = insideCategory };
 
             // Act and Assert
             sheet.DeleteCategory(insideCategory);

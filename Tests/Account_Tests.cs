@@ -11,9 +11,9 @@ namespace Tests
             // Accounts sort transactions by date upon construction
             // Arrange
             var today = DateOnly.FromDateTime(DateTime.Today);
-            var transaction1 = new Transaction(0, today);
-            var transaction2 = new Transaction(0, today.AddDays(1));
-            var transaction3 = new Transaction(0, today.AddDays(2));
+            var transaction1 = new Transaction(1, today);
+            var transaction2 = new Transaction(1, today.AddDays(1));
+            var transaction3 = new Transaction(1, today.AddDays(2));
             Transaction[] transactions = [transaction3, transaction2, transaction1]; // Add transactions out of order
 
             // Act
@@ -31,9 +31,14 @@ namespace Tests
             // Adding a new transaction can throw some exceptions, and also orders transactions by date
             // Arrange
             var today = DateOnly.FromDateTime(DateTime.Today);
-            var duplicateTransaction = new Transaction(0, today.AddDays(3));
-            var firstTransaction = new Transaction(0, today.AddDays(-50));
-            var account = new Account("", duplicateTransaction, new Transaction(0, today), new Transaction(0, today.AddDays(1)), new Transaction(0, today.AddDays(1)));
+            var duplicateTransaction = new Transaction(1, today.AddDays(3));
+            var firstTransaction = new Transaction(1, today.AddDays(-50));
+            var account = new Account("", 
+                duplicateTransaction,
+                new Transaction(1, today),
+                new Transaction(1, today.AddDays(1)),
+                new Transaction(1, today.AddDays(1))
+                );
 
             // Aquire transfer
             var account1 = new Account("");
@@ -55,8 +60,8 @@ namespace Tests
             // Adding new transactions can throw some exceptions, and also orders transactions by date
             // Arrange
             var today = DateOnly.FromDateTime(DateTime.Today);
-            var duplicateTransaction = new Transaction(0, today.AddDays(3));
-            var firstTransaction = new Transaction(0, today.AddDays(-50));
+            var duplicateTransaction = new Transaction(1, today.AddDays(3));
+            var firstTransaction = new Transaction(1, today.AddDays(-50));
             var account = new Account("", duplicateTransaction);
 
             // Aquire transfer
@@ -65,7 +70,11 @@ namespace Tests
             account1.TransferTo(account2, 10);
             var transfer = account1.Transactions[0];
 
-            Transaction[] transactions = [new Transaction(0, today), new Transaction(0, today.AddDays(1)), new Transaction(0, today.AddDays(1))];
+            Transaction[] transactions = [
+                new Transaction(1, today),
+                new Transaction(1, today.AddDays(1)),
+                new Transaction(1, today.AddDays(1))
+                ];
             Transaction[] ts_with_duplicate = [.. transactions, duplicateTransaction];
             Transaction[] ts_with_transfer = [.. transactions, transfer];
             Transaction[] ts_with_first = [.. transactions, firstTransaction];
@@ -89,8 +98,8 @@ namespace Tests
 
             // Arrange
             var category = new Category("");
-            var insideTransaction = new Transaction(0) { Category = category };
-            var outsideTransaction = new Transaction(0);
+            var insideTransaction = new Transaction(1) { Category = category };
+            var outsideTransaction = new Transaction(1);
             var account = new Account("", insideTransaction);
 
             // Act and Assert
@@ -108,7 +117,7 @@ namespace Tests
 
             // Arrange
             var account = new Account("");
-            account.NewTransactions(new Transaction(0), new Transaction(0));
+            account.NewTransactions(new Transaction(1), new Transaction(1));
 
             // Act and Assert
             Assert.ThrowsException<IndexOutOfRangeException>(() => account.DeleteTransactionAt(2)); // Check edge
