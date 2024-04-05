@@ -82,39 +82,124 @@ namespace MoneyManager.Core
 
         public override TransactionType TransactionType => TransactionType.Transfer;
 
-        public Transfer(Account to, Account from, Money value, DateOnly date, string memo, string number)
+        private Transfer(Account to, Account from, Money value, DateOnly date, string memo, string number)
             : base(value, "", date, memo, number)
         {
             To = to;
             From = from;
+            Twin = new Transfer(to, from, this, -value, date, memo, number);
         }
 
-        public Transfer(Account to, Account from, Money value, DateOnly date, string memo)
+        private Transfer(Account to, Account from, Money value, DateOnly date, string memo)
             : base(value, "", date, memo)
         {
             To = to;
             From = from;
+            Twin = new Transfer(to, from, this, -value, date, memo);
         }
 
-        public Transfer(Account to, Account from, Money value, DateOnly date)
+        private Transfer(Account to, Account from, Money value, DateOnly date)
             : base(value, "", date)
         {
             To = to;
             From = from;
+            Twin = new Transfer(to, from, this, -value, date);
         }
 
-        public Transfer(Account to, Account from, Money value, string memo)
+        private Transfer(Account to, Account from, Money value, string memo)
             : base(value, "", memo)
         {
             To = to;
             From = from;
+            Twin = new Transfer(to, from, this, -value, memo);
         }
 
-        public Transfer(Account to, Account from, Money value)
+        private Transfer(Account to, Account from, Money value)
             : base(value, "")
         {
             To = to;
             From = from;
+            Twin = new Transfer(to, from, this, -value);
+        }
+
+        private Transfer(Account to, Account from, Transfer twin, Money value, DateOnly date, string memo, string number)
+            : base(value, "", date, memo, number)
+        {
+            To = to;
+            From = from;
+            Twin = twin;
+        }
+
+        private Transfer(Account to, Account from, Transfer twin, Money value, DateOnly date, string memo)
+            : base(value, "", date, memo)
+        {
+            To = to;
+            From = from;
+            Twin = twin;
+        }
+
+        private Transfer(Account to, Account from, Transfer twin, Money value, DateOnly date)
+            : base(value, "", date)
+        {
+            To = to;
+            From = from;
+            Twin = twin;
+        }
+
+        private Transfer(Account to, Account from, Transfer twin, Money value, string memo)
+            : base(value, "", memo)
+        {
+            To = to;
+            From = from;
+            Twin = twin;
+        }
+
+        private Transfer(Account to, Account from, Transfer twin, Money value)
+            : base(value, "")
+        {
+            To = to;
+            From = from;
+            Twin = twin;
+        }
+
+        public static void Create(Account from, Account to, Money value, DateOnly date, string memo, string number)
+            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, date, memo, number));
+
+        public static void Create(Account from, Account to, Money value, DateOnly date, string memo)
+            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, date, memo));
+
+        public static void Create(Account from, Account to, Money value, DateOnly date)
+            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, date));
+
+        public static void Create(Account from, Account to, Money value, string memo)
+            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, memo));
+
+        public static void Create(Account from, Account to, Money value)
+            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value));
+
+        private static void CreateFrom(Transfer fromTransfer)
+        {
+            var from = fromTransfer.From;
+            var to = fromTransfer.To;
+            var toTransfer = fromTransfer.Twin;
+            from.AddTransfer(fromTransfer);
+            to.AddTransfer(toTransfer);
+        }
+
+        public void Delete()
+        {
+            if (Value > 0)
+            {
+                To.RemoveTransfer(this);
+                From.RemoveTransfer(Twin);
+                Category = null;
+            }
+            else
+            {
+                From.RemoveTransfer(this);
+                To.RemoveTransfer(Twin);
+                Category = null;
+            }
         }
 
         /// <summary>
