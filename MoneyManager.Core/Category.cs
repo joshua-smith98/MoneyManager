@@ -6,9 +6,9 @@
     /// <param name="name"></param>
     /// <param name="incomeBudget"></param>
     /// <param name="expensesBudget"></param>
-    public class Category : Balanceable
+    public class Category(string name, Budget? incomeBudget = null, Budget? expensesBudget = null) : Balanceable
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = name;
 
         public override Transaction[] Transactions => transactions.ToArray(); // Will be implemented once we implement Sheets
         private List<Transaction> transactions = [];
@@ -16,12 +16,12 @@
         /// <summary>
         /// Gets or sets the optional <see cref="Budget"/>ed income for this <see cref="Category"/>.
         /// </summary>
-        public Budget? IncomeBudget { get; set; }
+        public Budget? IncomeBudget { get; set; } = incomeBudget;
 
         /// <summary>
         /// Gets or sets the optional <see cref="Budget"/>ed expenses for this <see cref="Category"/>.
         /// </summary>
-        public Budget? ExpensesBudget { get; set; }
+        public Budget? ExpensesBudget { get; set; } = expensesBudget;
 
         /// <summary>
         /// Gets the total balance of the <see cref="IncomeBudget"/> and <see cref="ExpensesBudget"/> for this <see cref="Category"/>.
@@ -30,18 +30,6 @@
             => (IncomeBudget is not null && ExpensesBudget is not null)
             ? Budget.Sum(IncomeBudget, ExpensesBudget, Period.Null)
             : null;
-
-        public Category(string name)
-        {
-            Name = name;
-        }
-
-        public Category(string name, Budget? incomeBudget, Budget? expensesBudget)
-        {
-            Name = name;
-            IncomeBudget = incomeBudget;
-            ExpensesBudget = expensesBudget;
-        }
 
         internal void AddTransaction(Transaction transaction)
         {

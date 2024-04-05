@@ -109,36 +109,10 @@ namespace MoneyManager.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="value"></param>
-        public void TransferTo(Account account, Money value)
-            => Transfer.Create(this, account, value);
-
-        /// <summary>
-        /// Adds a Transfer of money from here to the given <see cref="Account"/>.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="value"></param>
         /// <param name="memo"></param>
-        public void TransferTo(Account account, Money value, string memo)
-            => Transfer.Create(this, account, value, memo);
-
-        /// <summary>
-        /// Adds a Transfer of money from here to the given <see cref="Account"/>.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="value"></param>
-        /// <param name="date"></param>
-        public void TransferTo(Account account, Money value, DateOnly date)
-            => Transfer.Create(this, account, value, date);
-
-        /// <summary>
-        /// Adds a Transfer of money from here to the given <see cref="Account"/>.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="value"></param>
-        /// <param name="date"></param>
-        /// <param name="memo"></param>
-        public void TransferTo(Account account, Money value, DateOnly date, string memo)
-            => Transfer.Create(this, account, value, date, memo);
+        /// <param name="transactionNumber"></param>
+        public void TransferTo(Account account, Money value, string memo = "", string transactionNumber = "")
+            => Transfer.Create(this, account, value, memo, transactionNumber);
 
         /// <summary>
         /// Adds a Transfer of money from here to the given <see cref="Account"/>.
@@ -148,7 +122,7 @@ namespace MoneyManager.Core
         /// <param name="date"></param>
         /// <param name="memo"></param>
         /// <param name="transactionNumber"></param>
-        public void TransferTo(Account account, Money value, DateOnly date, string memo, string transactionNumber)
+        public void TransferTo(Account account, Money value, DateOnly date, string memo = "", string transactionNumber = "")
             => Transfer.Create(this, account, value, date, memo, transactionNumber);
 
         /// <summary>
@@ -156,36 +130,10 @@ namespace MoneyManager.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="value"></param>
-        public void TransferFrom(Account account, Money value)
-            => account.TransferTo(this, value);
-
-        /// <summary>
-        /// Adds a Transfer of money from the given <see cref="Account"/> to here.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="value"></param>
         /// <param name="memo"></param>
-        public void TransferFrom(Account account, Money value, string memo)
-            => account.TransferTo(this, value, memo);
-
-        /// <summary>
-        /// Adds a Transfer of money from the given <see cref="Account"/> to here.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="value"></param>
-        /// <param name="date"></param>
-        public void TransferFrom(Account account, Money value, DateOnly date)
-            => account.TransferTo(this, value, date);
-
-        /// <summary>
-        /// Adds a Transfer of money from the given <see cref="Account"/> to here.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="value"></param>
-        /// <param name="date"></param>
-        /// <param name="memo"></param>
-        public void TransferFrom(Account account, Money value, DateOnly date, string memo)
-            => account.TransferTo(this, value, date, memo);
+        /// <param name="transactionNumber"></param>
+        public void TransferFrom(Account account, Money value, string memo = "", string transactionNumber = "")
+            => account.TransferTo(this, value, memo, transactionNumber);
 
         /// <summary>
         /// Adds a Transfer of money from the given <see cref="Account"/> to here.
@@ -195,7 +143,7 @@ namespace MoneyManager.Core
         /// <param name="date"></param>
         /// <param name="memo"></param>
         /// <param name="transactionNumber"></param>
-        public void TransferFrom(Account account, Money value, DateOnly date, string memo, string transactionNumber)
+        public void TransferFrom(Account account, Money value, DateOnly date, string memo = "", string transactionNumber = "")
             => account.TransferTo(this, value, date, memo, transactionNumber);
     }
 }
