@@ -132,19 +132,5 @@ namespace MoneyManager.Core
             }
             Category = null;
         }
-
-        /// <summary>
-        /// Returns <see cref="true"/> if the given <see cref="Account"/> is the one money was transferred to.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public bool TransfersTo(Account account) => ReferenceEquals(account, To);
-
-        /// <summary>
-        /// Returns <see cref="true"/> if the given <see cref="Account"/> is the one money was transferred from.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public bool TransfersFrom(Account account) => ReferenceEquals(account, From);
     }
 }
