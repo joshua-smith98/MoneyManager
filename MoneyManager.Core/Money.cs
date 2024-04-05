@@ -10,6 +10,7 @@
         private Money(decimal v) { value = v; } // Non-constructable
 
         public static implicit operator Money(decimal v) => new Money(v);
+        public static explicit operator decimal(Money mv) => mv.value;
 
         public override bool Equals(object? obj) => obj is Money mv && Equals(mv);
 
