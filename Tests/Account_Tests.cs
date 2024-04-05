@@ -5,6 +5,8 @@ namespace Tests
     [TestClass]
     public class Account_Tests
     {
+        Random random = new Random();
+        
         [TestMethod]
         public void ConstructionSorting_Test()
         {
@@ -115,7 +117,47 @@ namespace Tests
             Assert.ThrowsException<IndexOutOfRangeException>(() => account.DeleteTransactionAt(5)); // Check out of range
             Assert.ThrowsException<IndexOutOfRangeException>(() => account.DeleteTransactionAt(-1)); // Check negative
         }
-        
-        // All Account.TransferTo and TransferFrom methods just call Transfer.Create(), so we don't need to test those here
+
+        [TestMethod]
+        public void TransferTo_Tests()
+        {
+            // Transfers a given amount of money to another account.
+            // Arrange
+            var startAmount1 = random.Next();
+            var startAmount2 = random.Next();
+            var transferAmount = random.Next();
+            var account1 = new Account("");
+            var account2 = new Account("");
+            account1.NewTransaction(new Transaction(startAmount1, "[Initial Balance]"));
+            account2.NewTransaction(new Transaction(startAmount2, "[Initial Balance]"));
+
+            // Act
+            account1.TransferTo(account2, transferAmount);
+
+            // Assert
+            Assert.AreEqual(startAmount1 - transferAmount, account1.BalanceInfo.Balance); // Check account 1 balance
+            Assert.AreEqual(startAmount2 + transferAmount, account2.BalanceInfo.Balance); // Check account 2 balance
+        }
+
+        [TestMethod]
+        public void TransferFrom_Tests()
+        {
+            // Transfers a given amount of money from another account to this one
+            // Arrange
+            var startAmount1 = random.Next();
+            var startAmount2 = random.Next();
+            var transferAmount = random.Next();
+            var account1 = new Account("");
+            var account2 = new Account("");
+            account1.NewTransaction(new Transaction(startAmount1, "[Initial Balance]"));
+            account2.NewTransaction(new Transaction(startAmount2, "[Initial Balance]"));
+
+            // Act
+            account1.TransferFrom(account2, transferAmount);
+
+            // Assert
+            Assert.AreEqual(startAmount1 + transferAmount, account1.BalanceInfo.Balance); // Check account 1 balance
+            Assert.AreEqual(startAmount2 - transferAmount, account2.BalanceInfo.Balance); // Check account 2 balance
+        }
     }
 }
