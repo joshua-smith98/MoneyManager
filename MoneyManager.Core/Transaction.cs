@@ -8,12 +8,12 @@
         /// <summary>
         /// Optional identifier for this <see cref="Transaction"/>.
         /// </summary>
-        public string? Number { get; set; }
+        public virtual string? Number { get; set; }
 
         /// <summary>
         /// Monetary value of this <see cref="Transaction"/>.
         /// </summary>
-        public Money Value { get; set; }
+        public virtual Money Value { get; set; }
 
         /// <summary>
         /// Cleared monetary value of this <see cref="Transaction"/>. Gets $0.00 if <see cref="IsCleared"/> is false.
@@ -23,22 +23,22 @@
         /// <summary>
         /// The date this <see cref="Transaction"/> was placed on.
         /// </summary>
-        public DateOnly Date { get; set; }
+        public virtual DateOnly Date { get; set; }
 
         /// <summary>
         /// The person or entity this <see cref="Transaction"/> was paid to, or by.
         /// </summary>
-        public string Payee { get; set; }
+        public virtual string Payee { get; set; }
 
         /// <summary>
         /// A short description of this <see cref="Transaction"/>.
         /// </summary>
-        public string? Memo { get; set; }
+        public virtual string? Memo { get; set; }
 
         /// <summary>
         /// The <see cref="Core.Category"/> this <see cref="Transaction"/> falls under in budgets and reports.
         /// </summary>
-        public Category? Category
+        public virtual Category? Category
         {
             get => category;
             set
