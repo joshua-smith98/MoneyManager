@@ -109,16 +109,16 @@ namespace Tests
             var account = new Account("");
 
             Transaction[] transactionsInPeriod = [
-                new Transaction(-123, "", today),
-                new Transaction(-234, "", today),
-                new Transaction(345, "", today),
-                new Transaction(-456, "", today)
+                new Transaction(-123, today),
+                new Transaction(-234, today),
+                new Transaction(345, today),
+                new Transaction(-456, today)
                 ];
             Transaction[] transactionsOutsidePeriod = [
-                new Transaction(-321, "", today.AddDays(-1)),
-                new Transaction(-432, "", today.AddDays(1)),
-                new Transaction(-543, "", today.AddYears(1)),
-                new Transaction(654, "", today.AddMonths(5))
+                new Transaction(-321, today.AddDays(-1)),
+                new Transaction(-432, today.AddDays(1)),
+                new Transaction(-543, today.AddYears(1)),
+                new Transaction(654, today.AddMonths(5))
                 ];
             account.NewTransactions([.. transactionsInPeriod, .. transactionsOutsidePeriod]);
 
