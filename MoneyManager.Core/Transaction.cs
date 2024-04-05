@@ -44,8 +44,8 @@
             set
             {
                 // Remove transaction from old category and add to new
-                if (category is not null) category.RemoveTransaction(this);
-                if (value is not null) value.AddTransaction(this);
+                category?.RemoveTransaction(this);
+                value?.AddTransaction(this);
                 category = value;
             }
         }
@@ -59,15 +59,12 @@
         /// <summary>
         /// Gets the type of this <see cref="Transaction"/> (Withdrawal, Deposit, etc.).
         /// </summary>
-        public virtual TransactionType TransactionType
+        public virtual TransactionType TransactionType => Value switch
         {
-            get
-            {
-                if (Value > 0) return TransactionType.Deposit; // Positive value -> Deposit
-                if (Value < 0) return TransactionType.Withdrawal; // Negative value -> Withdrawal
-                return TransactionType.Null; // Default value
-            }
-        }
+            var v when v > 0 => TransactionType.Deposit,
+            var v when v < 0 => TransactionType.Withdrawal,
+            _ => TransactionType.Null
+        };
 
         public Transaction(Money value, DateOnly date, string payee = "", string memo = "", string number = "")
         {
