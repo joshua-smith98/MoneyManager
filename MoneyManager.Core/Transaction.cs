@@ -15,6 +15,7 @@
         /// </summary>
         public virtual Money Value
         {
+            // Expose the private field here so we can do a check for Null transactions
             get => _value;
             set => _value = value != 0 ? value : throw new TransactionException("Cannot set a Transaction's value to zero!");
         }
@@ -66,13 +67,14 @@
         /// </summary>
         public virtual TransactionType TransactionType => Value switch
         {
-            var v when v > 0 => TransactionType.Deposit,
-            var v when v < 0 => TransactionType.Withdrawal,
+            var v when v > 0 => TransactionType.Deposit, // Value > 0 is a Deposit
+            var v when v < 0 => TransactionType.Withdrawal, // Value < 0 is a Withdrawal
             _ => TransactionType.Null
         };
 
         public Transaction(Money value, DateOnly date, string payee = "", string memo = "", string number = "")
         {
+            // Validity check: Transaction Value must not be zero
             if (value == 0) throw new TransactionException("Cannot create a Transaction with a value of zero!");
             _value = value;
             Date = date;

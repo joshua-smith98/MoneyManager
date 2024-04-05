@@ -1,7 +1,7 @@
 ﻿namespace MoneyManager.Core
 {
     /// <summary>
-    /// Generic Exception for errors related to Transactions.
+    /// Represents any <see cref="Exception"/> related to the <see cref="Transaction"/> class.
     /// </summary>
     public class TransactionException(string message) : Exception(message) { }
 }
