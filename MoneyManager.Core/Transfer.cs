@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata.Ecma335;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MoneyManager.Core
 {
@@ -19,7 +20,7 @@ namespace MoneyManager.Core
 
         public Transfer Twin { get; }
 
-        public override string? Number 
+        public override string Number 
         {
             get => base.Number;
             set
@@ -58,7 +59,7 @@ namespace MoneyManager.Core
 
         public override string Payee => Value > 0 ? $"[From {From.Name}]" : $"[To {To.Name}]";
 
-        public override string? Memo
+        public override string Memo
         {
             get => base.Memo;
             set
@@ -82,100 +83,31 @@ namespace MoneyManager.Core
 
         public override TransactionType TransactionType => TransactionType.Transfer;
 
-        private Transfer(Account to, Account from, Money value, DateOnly date, string memo, string number)
-            : base(value, "", date, memo, number)
+        private Transfer(Account to, Account from, Money value, DateOnly date, string memo = "", string number = "", Transfer? twin = null)
+            : base(value, date, "", memo, number)
         {
             To = to;
             From = from;
-            Twin = new Transfer(to, from, this, -value, date, memo, number);
+            if (twin is null)
+                Twin = new Transfer(to, from, value, date, memo, number, this);
+            else Twin = twin;
         }
 
-        private Transfer(Account to, Account from, Money value, DateOnly date, string memo)
-            : base(value, "", date, memo)
+        private Transfer(Account to, Account from, Money value, string memo = "", string number = "", Transfer? twin = null)
+            : base(value, "", memo, number)
         {
             To = to;
             From = from;
-            Twin = new Transfer(to, from, this, -value, date, memo);
+            if (twin is null)
+                Twin = new Transfer(to, from, value, memo, number, twin);
+            else Twin = twin;
         }
 
-        private Transfer(Account to, Account from, Money value, DateOnly date)
-            : base(value, "", date)
-        {
-            To = to;
-            From = from;
-            Twin = new Transfer(to, from, this, -value, date);
-        }
-
-        private Transfer(Account to, Account from, Money value, string memo)
-            : base(value, "", memo)
-        {
-            To = to;
-            From = from;
-            Twin = new Transfer(to, from, this, -value, memo);
-        }
-
-        private Transfer(Account to, Account from, Money value)
-            : base(value, "")
-        {
-            To = to;
-            From = from;
-            Twin = new Transfer(to, from, this, -value);
-        }
-
-        private Transfer(Account to, Account from, Transfer twin, Money value, DateOnly date, string memo, string number)
-            : base(value, "", date, memo, number)
-        {
-            To = to;
-            From = from;
-            Twin = twin;
-        }
-
-        private Transfer(Account to, Account from, Transfer twin, Money value, DateOnly date, string memo)
-            : base(value, "", date, memo)
-        {
-            To = to;
-            From = from;
-            Twin = twin;
-        }
-
-        private Transfer(Account to, Account from, Transfer twin, Money value, DateOnly date)
-            : base(value, "", date)
-        {
-            To = to;
-            From = from;
-            Twin = twin;
-        }
-
-        private Transfer(Account to, Account from, Transfer twin, Money value, string memo)
-            : base(value, "", memo)
-        {
-            To = to;
-            From = from;
-            Twin = twin;
-        }
-
-        private Transfer(Account to, Account from, Transfer twin, Money value)
-            : base(value, "")
-        {
-            To = to;
-            From = from;
-            Twin = twin;
-        }
-
-        public static void Create(Account from, Account to, Money value, DateOnly date, string memo, string number)
+        public static void Create(Account from, Account to, Money value, DateOnly date, string memo = "", string number = "")
             => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, date, memo, number));
 
-        public static void Create(Account from, Account to, Money value, DateOnly date, string memo)
-            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, date, memo));
-
-        public static void Create(Account from, Account to, Money value, DateOnly date)
-            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, date));
-
-        public static void Create(Account from, Account to, Money value, string memo)
-            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, memo));
-
-        public static void Create(Account from, Account to, Money value)
-            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value));
+        public static void Create(Account from, Account to, Money value, string memo = "", string number = "")
+            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, memo, number));
 
         private static void CreateFrom(Transfer fromTransfer)
         {
@@ -192,14 +124,13 @@ namespace MoneyManager.Core
             {
                 To.RemoveTransfer(this);
                 From.RemoveTransfer(Twin);
-                Category = null;
             }
             else
             {
                 From.RemoveTransfer(this);
                 To.RemoveTransfer(Twin);
-                Category = null;
             }
+            Category = null;
         }
 
         /// <summary>

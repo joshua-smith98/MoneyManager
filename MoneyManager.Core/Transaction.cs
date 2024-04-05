@@ -8,7 +8,7 @@
         /// <summary>
         /// Optional identifier for this <see cref="Transaction"/>.
         /// </summary>
-        public virtual string? Number { get; set; }
+        public virtual string Number { get; set; }
 
         /// <summary>
         /// Monetary value of this <see cref="Transaction"/>.
@@ -33,7 +33,7 @@
         /// <summary>
         /// A short description of this <see cref="Transaction"/>.
         /// </summary>
-        public virtual string? Memo { get; set; }
+        public virtual string Memo { get; set; }
 
         /// <summary>
         /// The <see cref="Core.Category"/> this <see cref="Transaction"/> falls under in budgets and reports.
@@ -69,43 +69,22 @@
             }
         }
 
-        public Transaction(Money value, string payee, DateOnly date, string memo, string number)
+        public Transaction(Money value, DateOnly date, string payee = "", string memo = "", string number = "")
         {
+            Value = value;
+            Date = date;
+            Payee = payee;
+            Memo = memo;
             Number = number;
-            Value = value;
-            Date = date;
-            Payee = payee;
-            Memo = memo;
         }
 
-        public Transaction(Money value, string payee, DateOnly date, string memo)
-        {
-            Value = value;
-            Date = date;
-            Payee = payee;
-            Memo = memo;
-        }
-
-        public Transaction(Money value, string payee, string memo)
+        public Transaction(Money value, string payee = "", string memo = "", string number = "")
         {
             Value = value;
             Date = DateOnly.FromDateTime(DateTime.Today);
             Payee = payee;
             Memo = memo;
-        }
-
-        public Transaction(Money value, string payee, DateOnly date)
-        {
-            Value = value;
-            Date = date;
-            Payee = payee;
-        }
-
-        public Transaction(Money value, string payee)
-        {
-            Value = value;
-            Date = DateOnly.FromDateTime(DateTime.Today);
-            Payee = payee;
+            Number = number;
         }
     }
 }
