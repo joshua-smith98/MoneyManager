@@ -11,7 +11,7 @@
         public string Name { get; set; } = name;
 
         public override Transaction[] Transactions => transactions.ToArray(); // Will be implemented once we implement Sheets
-        private List<Transaction> transactions = [];
+        private readonly List<Transaction> transactions = [];
 
         /// <summary>
         /// Gets or sets the optional <see cref="Budget"/>ed income for this <see cref="Category"/>.

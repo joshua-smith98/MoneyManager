@@ -17,7 +17,7 @@
         public BalanceInfo(Transaction[] transactions)
         {
             // Check for empty transactions[]
-            if (!transactions.Any())
+            if (transactions.Length == 0)
             {
                 Balance = 0;
                 ClearedBalance = 0;

@@ -8,10 +8,10 @@
         public override Transaction[] Transactions => Accounts.SelectMany(x => x.Transactions).OrderBy(x => x.Date).ToArray();
         
         public Account[] Accounts => accounts.ToArray();
-        private List<Account> accounts = [];
+        private readonly List<Account> accounts = [];
 
         public Category[] Categories => categories.ToArray();
-        private List<Category> categories = [];
+        private readonly List<Category> categories = [];
 
         public Sheet() { }
 
