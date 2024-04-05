@@ -73,14 +73,7 @@ namespace MoneyManager.Core
             if (!transactions.Contains(transaction)) throw new IndexOutOfRangeException();
 
             // Case: this Transaction is a Transfer
-            if (transaction is Transfer t)
-            {
-                // Get the Transfer's twin account, and remove it from both this and that
-                var twin = t.TransfersFrom(this) ? t.To : t.From;
-                transactions.Remove(t);
-                if (!twin.transactions.Remove(t))
-                    throw new Exception("Transfer is not in both Accounts as it should be. This should never be the case!");
-            }
+            if (transaction is Transfer t) t.Delete();
             else
             {
                 transactions.Remove(transaction);
@@ -102,17 +95,14 @@ namespace MoneyManager.Core
             DeleteTransaction(transactions[index]); // To avoid duplicate code
         }
 
-        private void AddTransfer(Transfer transfer, Account twin)
+        internal void AddTransfer(Transfer transfer)
         {
-            // Validity check: transfers cannot be between the same account
-            if (ReferenceEquals(this, twin)) throw new TransactionInvalidException("Tried to transfer money from an account to itself.");
-            
-            // Add to both this account, and the twin account
             transactions.Add(transfer);
             transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
-            twin.transactions.Add(transfer);
-            twin.transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list (including this twin!)
         }
+
+        internal void RemoveTransfer(Transfer transfer)
+            => transactions.Remove(transfer);
 
         /// <summary>
         /// Adds a Transfer of money from here to the given <see cref="Account"/>.
@@ -120,10 +110,7 @@ namespace MoneyManager.Core
         /// <param name="account"></param>
         /// <param name="value"></param>
         public void TransferTo(Account account, Money value)
-        {
-            var transfer = new Transfer(account, this, value, Name);
-            AddTransfer(transfer, account);
-        }
+            => Transfer.Create(this, account, value);
 
         /// <summary>
         /// Adds a Transfer of money from here to the given <see cref="Account"/>.
@@ -132,10 +119,7 @@ namespace MoneyManager.Core
         /// <param name="value"></param>
         /// <param name="memo"></param>
         public void TransferTo(Account account, Money value, string memo)
-        {
-            var transfer = new Transfer(account, this, value, Name, memo);
-            AddTransfer(transfer, account);
-        }
+            => Transfer.Create(this, account, value, memo);
 
         /// <summary>
         /// Adds a Transfer of money from here to the given <see cref="Account"/>.
@@ -144,10 +128,7 @@ namespace MoneyManager.Core
         /// <param name="value"></param>
         /// <param name="date"></param>
         public void TransferTo(Account account, Money value, DateOnly date)
-        {
-            var transfer = new Transfer(account, this, value, Name, date);
-            AddTransfer(transfer, account);
-        }
+            => Transfer.Create(this, account, value, date);
 
         /// <summary>
         /// Adds a Transfer of money from here to the given <see cref="Account"/>.
@@ -157,10 +138,7 @@ namespace MoneyManager.Core
         /// <param name="date"></param>
         /// <param name="memo"></param>
         public void TransferTo(Account account, Money value, DateOnly date, string memo)
-        {
-            var transfer = new Transfer(account, this, value, Name, date, memo);
-            AddTransfer(transfer, account);
-        }
+            => Transfer.Create(this, account, value, date, memo);
 
         /// <summary>
         /// Adds a Transfer of money from here to the given <see cref="Account"/>.
@@ -171,10 +149,7 @@ namespace MoneyManager.Core
         /// <param name="memo"></param>
         /// <param name="transactionNumber"></param>
         public void TransferTo(Account account, Money value, DateOnly date, string memo, string transactionNumber)
-        {
-            var transfer = new Transfer(account, this, value, Name, date, memo, transactionNumber);
-            AddTransfer(transfer, account);
-        }
+            => Transfer.Create(this, account, value, date, memo, transactionNumber);
 
         /// <summary>
         /// Adds a Transfer of money from the given <see cref="Account"/> to here.
