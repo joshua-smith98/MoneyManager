@@ -84,17 +84,7 @@
         public virtual BalanceInfo BalanceInfoForPeriod(DateOnly from, Period period)
         {
             // Get the date the period extends to, being careful to be inclusive (which is why the weirdness is there)
-            var to = period switch
-            {
-                Period.Daily => from,
-                Period.Weekly => from.AddDays(6),
-                Period.Fortnightly => from.AddDays(15),
-                Period.Monthly => from.AddMonths(1).AddDays(-1),
-                Period.Quarterly => from.AddMonths(3).AddDays(-1),
-                Period.Biannually => from.AddMonths(6).AddDays(-1),
-                Period.Annually => from.AddYears(1).AddDays(-1),
-                _ => throw new ArgumentOutOfRangeException(nameof(period), "Period must not be null!")
-            };
+            var to = period.GetEndDate(from);
 
             var transactionsBetween = Transactions.Where(x => x.Date >= from && x.Date <= to);
             return BalanceInfoBetween(transactionsBetween.First(), transactionsBetween.Last());
