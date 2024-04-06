@@ -5,14 +5,14 @@
     /// </summary>
     public class BalanceInfo
     {
-        public readonly Money Balance;
-        public readonly Money ClearedBalance;
+        public Money Balance { get; }
+        public Money ClearedBalance { get; }
 
-        public readonly Money Income;
-        public readonly Money ClearedIncome;
+        public Money Income { get; }
+        public Money ClearedIncome { get; }
 
-        public readonly Money Expenses;
-        public readonly Money ClearedExpenses;
+        public Money Expenses { get; }
+        public Money ClearedExpenses { get; }
 
         public BalanceInfo(Transaction[] transactions)
         {
