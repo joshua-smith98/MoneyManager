@@ -3,7 +3,7 @@
     /// <summary>
     /// Holds information about the Balance, Income and Expenses of a <see cref="Balanceable"/> inheritor.
     /// </summary>
-    public readonly struct BalanceInfo
+    public class BalanceInfo
     {
         public readonly Money Balance;
         public readonly Money ClearedBalance;
