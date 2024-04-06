@@ -47,8 +47,8 @@ namespace Tests
             var transfer = account1.Transactions[0];
 
             // Act and Assert
-            Assert.ThrowsException<TransactionInvalidException>(() => { account.NewTransaction(transfer); }); // Test adding transfer
-            Assert.ThrowsException<TransactionAlreadyExistsException>(() => { account.NewTransaction(duplicateTransaction); }); // Test duplicate transaction
+            Assert.ThrowsException<TransactionException>(() => { account.NewTransaction(transfer); }); // Test adding transfer
+            Assert.ThrowsException<TransactionException>(() => { account.NewTransaction(duplicateTransaction); }); // Test duplicate transaction
             
             account.NewTransaction(firstTransaction);
             Assert.AreSame(account.Transactions[0], firstTransaction); // Test sorting
@@ -80,8 +80,8 @@ namespace Tests
             Transaction[] ts_with_first = [.. transactions, firstTransaction];
 
             // Act and Assert
-            Assert.ThrowsException<TransactionInvalidException>(() => { account.NewTransactions(ts_with_transfer); }); // Test adding transfer
-            Assert.ThrowsException<TransactionAlreadyExistsException>(() => { account.NewTransactions(ts_with_duplicate); }); // Test duplicate transaction
+            Assert.ThrowsException<TransactionException>(() => { account.NewTransactions(ts_with_transfer); }); // Test adding transfer
+            Assert.ThrowsException<TransactionException>(() => { account.NewTransactions(ts_with_duplicate); }); // Test duplicate transaction
 
             account.NewTransactions(ts_with_first);
             Assert.AreSame(account.Transactions[0], firstTransaction); // Test sorting

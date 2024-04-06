@@ -52,7 +52,7 @@ namespace MoneyManager.Core
             {
                 // Check for change of sign (invalid in Transfers)
                 if (base.Value is not null && Math.Sign((decimal)base.Value) != Math.Sign((decimal)value))
-                    throw new TransferSignChangedException("Attempted to change the sign of a Transfer. To reverse a transfer, delete this one and create new.");
+                    throw new TransferException("Attempted to change the sign of a Transfer. To reverse a transfer, delete this one and create new.");
 
                 // Set the twin's value as well
                 base.Value = value;

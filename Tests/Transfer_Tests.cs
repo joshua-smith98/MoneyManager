@@ -62,7 +62,7 @@ namespace Tests
             Assert.AreEqual(transfer2.Value, 100);
 
             // Assert
-            Assert.ThrowsException<TransferSignChangedException>(() => transfer1.Value = 100);
+            Assert.ThrowsException<TransferException>(() => transfer1.Value = 100);
         }
 
         [TestMethod]

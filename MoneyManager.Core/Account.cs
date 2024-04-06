@@ -36,10 +36,10 @@ namespace MoneyManager.Core
         public void NewTransaction(Transaction transaction)
         {
             // Validity check: Can't add a Transfer using this method
-            if (transaction is Transfer) throw new TransactionInvalidException("Tried to add a Transfer as if it were a Transaction.");
+            if (transaction is Transfer) throw new TransactionException("Tried to add a Transfer as if it were a Transaction.");
 
             // Validity check: Transaction can't already be in this account
-            if (transactions.Contains(transaction)) throw new TransactionAlreadyExistsException($"Tried to add duplicate transaction to account: \"{Name}\"");
+            if (transactions.Contains(transaction)) throw new TransactionException($"Tried to add duplicate transaction to account: \"{Name}\"");
             
             transactions.Add(transaction);
             transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
@@ -52,10 +52,10 @@ namespace MoneyManager.Core
         public void NewTransactions(params Transaction[] transactions)
         {
             // Validity check: Can't add any Transfers using this method
-            if (transactions.Any(x => x is Transfer)) throw new TransactionInvalidException("Tried to add a Transfer as if it were a Transaction.");
+            if (transactions.Any(x => x is Transfer)) throw new TransactionException("Tried to add a Transfer as if it were a Transaction.");
 
             // Validity check: Transactions can't already be in this account
-            if (transactions.Any(x => this.transactions.Contains(x))) throw new TransactionAlreadyExistsException($"Tried to add duplicate transaction to account: \"{Name}\"");
+            if (transactions.Any(x => this.transactions.Contains(x))) throw new TransactionException($"Tried to add duplicate transaction to account: \"{Name}\"");
 
             this.transactions.AddRange(transactions);
             this.transactions.Sort((x, y) => x.Date.CompareTo(y.Date)); // Sort ascending by date at every change to transactions list
