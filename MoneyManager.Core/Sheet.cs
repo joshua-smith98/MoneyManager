@@ -128,5 +128,49 @@
 
             DeleteCategory(categories[index]); // Avoid duplicating purging code
         }
+
+        public ReportChunk GenerateReportChunk(DateOnly startDate, Period period)
+        {
+            // Generate ReportChunkCategories
+            List<ReportChunkCategory> reportChunkCategories = [];
+
+            foreach (Category category in Categories)
+            {
+                var reportChunkCategory = new ReportChunkCategory(category, startDate, period, category.BalanceInfoForPeriod(startDate, period))
+                {
+                    IncomeBudget = category.IncomeBudget,
+                    ExpensesBudget = category.ExpensesBudget,
+                    IncomeDifference = category.GetIncomeDifference(startDate, period),
+                    ExpensesDifference = category.GetExpensesDifference(startDate, period)
+                };
+                reportChunkCategories.Add(reportChunkCategory);
+            }
+
+            // Generate ReportChunk and Return
+            return new ReportChunk(
+                startDate,
+                period,
+                BalanceInfoForPeriod(startDate, period),
+                BalanceInfoAtDate(period.GetEndDateInclusive(startDate)),
+                reportChunkCategories.ToArray()
+                );
+        }
+
+        public ReportStepped GenerateReportStepped(DateOnly startDate, Period period, Period stepPeriod)
+        {
+            // Generate ReportChunks
+            int numReportChunks = period.DivideIntoOrNull(stepPeriod) ?? throw new SheetException("Can't generate a stepped report with Periods the don't divide evenly.");
+            ReportChunk[] reportChunks = new ReportChunk[numReportChunks];
+            DateOnly currentDate = startDate;
+
+            for (int i = 0; i < numReportChunks; i++)
+            {
+                reportChunks[i] = GenerateReportChunk(currentDate, stepPeriod);
+                currentDate = stepPeriod.GetEndDateExclusive(currentDate);
+            }
+
+            // Generate ReportStepped and Return
+            return new ReportStepped(startDate, period, stepPeriod, reportChunks);
+        }
     }
 }
