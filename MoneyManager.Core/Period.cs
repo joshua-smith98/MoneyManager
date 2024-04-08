@@ -33,43 +33,26 @@
         public static DateOnly GetEndDateInclusive(this Period period, DateOnly startDate)
             => GetEndDateInclusive(period, startDate).AddDays(-1);
 
-        public static int? GetNumberInOrNull(this Period smallPeriod, Period bigPeriod)
-            => bigPeriod switch
+        public static int? DivideIntoOrNull(this Period bigPeriod, Period smallPeriod)
+        {
+            if (bigPeriod == smallPeriod) return null; // For the sake of this app, a Period can't divide into itself
+
+            // Get big end date
+            DateOnly startDate = DateOnly.MinValue;
+            DateOnly endDate = bigPeriod.GetEndDateExclusive(startDate);
+
+            // Iterate through small end dates until we reach the big end, or overtake it.
+            DateOnly stepDate = startDate;
+            int counter = 0;
+
+            while (stepDate < endDate)
             {
-                Period.Daily => null, // Daily cannot be divided into any other period (except itself, which for the purpose of this app doesn't count)
-                Period.Weekly => smallPeriod is Period.Daily ? 7 : null,
-                Period.Fortnightly => smallPeriod switch
-                {
-                    Period.Daily => 14,
-                    Period.Weekly => 2,
-                    _ => null
-                },
-                Period.Monthly => null, // Months cannot be evenly divided into any other period
-                Period.Quarterly => smallPeriod switch
-                {
-                    Period.Weekly => 13,
-                    Period.Monthly => 3,
-                    _ => null
-                },
-                Period.Biannually => smallPeriod switch
-                {
-                    Period.Weekly => 26,
-                    Period.Fortnightly => 13,
-                    Period.Monthly => 6,
-                    Period.Quarterly => 2,
-                    _ => null
-                },
-                Period.Annually => smallPeriod switch
-                {
-                    Period.Daily => 365,
-                    Period.Weekly => 52,
-                    Period.Fortnightly => 26,
-                    Period.Monthly => 12,
-                    Period.Quarterly => 4,
-                    Period.Biannually => 2,
-                    _ => null
-                },
-                _ => null
-            };
+                stepDate = smallPeriod.GetEndDateExclusive(stepDate);
+                counter++;
+            }
+
+            if (stepDate == endDate) return counter; // The big period divides into the small period evenly
+            return null; // if stepDate > endDate: The big period does not divide evenly into the small period
+        }
     }
 }
