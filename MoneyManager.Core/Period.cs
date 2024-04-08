@@ -31,7 +31,7 @@
             };
 
         public static DateOnly GetEndDateInclusive(this Period period, DateOnly startDate)
-            => GetEndDateInclusive(period, startDate).AddDays(-1);
+            => GetEndDateExclusive(period, startDate).AddDays(-1);
 
         public static int? DivideIntoOrNull(this Period bigPeriod, Period smallPeriod)
         {
