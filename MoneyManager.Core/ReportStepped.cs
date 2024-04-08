@@ -7,7 +7,7 @@
         public Period Period { get; }
         public Period StepPeriod { get; }
         public DateOnly StartDate { get; }
-        public DateOnly EndDate => Period.GetEndDate(StartDate);
+        public DateOnly EndDate => Period.GetEndDateInclusive(StartDate);
 
         internal ReportStepped(DateOnly startDate, Period period, Period stepPeriod, ReportChunk[] reportChunks)
         {

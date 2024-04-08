@@ -11,7 +11,7 @@ namespace MoneyManager.Core
 
         public Period Period { get; }
         public DateOnly StartDate { get; }
-        public DateOnly EndDate => Period.GetEndDate(StartDate);
+        public DateOnly EndDate => Period.GetEndDateInclusive(StartDate);
 
         internal ReportChunk(DateOnly startDate, Period period, BalanceInfo balanceInfo, BalanceInfo balanceInfoToDate, ReportChunkCategory[] reportChunkCategories)
         {

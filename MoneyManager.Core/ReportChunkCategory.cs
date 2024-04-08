@@ -16,7 +16,7 @@
 
         public Period Period { get; }
         public DateOnly StartDate { get; }
-        public DateOnly EndDate => Period.GetEndDate(StartDate);
+        public DateOnly EndDate => Period.GetEndDateInclusive(StartDate);
 
         internal ReportChunkCategory(Category? category, DateOnly startDate, Period period, BalanceInfo balanceInfo)
         {
