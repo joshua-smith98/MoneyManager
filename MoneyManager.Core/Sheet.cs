@@ -170,7 +170,7 @@
             }
 
             // Generate ReportStepped and Return
-            return new ReportStepped(startDate, period, stepPeriod, reportChunks);
+            return new ReportStepped(startDate, period, stepPeriod, reportChunks, GenerateReportChunk(startDate, period));
         }
     }
 }
