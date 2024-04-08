@@ -87,7 +87,7 @@
         public virtual BalanceInfo BalanceInfoForPeriod(DateOnly from, Period period)
         {
             // Get the date the period extends to, being careful to be inclusive (which is why the weirdness is there)
-            var to = period.GetEndDate(from);
+            var to = period.GetEndDateInclusive(from);
 
             var transactionsBetween = Transactions.Where(x => x.Date >= from && x.Date <= to);
             return BalanceInfoBetween(transactionsBetween.First(), transactionsBetween.Last());
