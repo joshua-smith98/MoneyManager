@@ -40,6 +40,9 @@
             return new BalanceInfo(Transactions[..(index + 1)]); // End of range is exclusive, but our 'index' is inclusive
         }
 
+        public virtual BalanceInfo BalanceInfoAtDate(DateOnly date)
+            => new BalanceInfo(Transactions.Where(x => x.Date <= date).ToArray());
+
         /// <summary>
         /// Gets the Balance, Income and Expenses of this object, between the given <see cref="Transaction"/>s, inclusive.
         /// </summary>
