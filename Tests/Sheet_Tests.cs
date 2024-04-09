@@ -291,5 +291,63 @@ namespace Tests
             Assert.AreEqual(reportChunk.ReportChunkCategories[null].ExpensesDifference, null);
             Assert.AreEqual(reportChunk.ReportChunkCategories[null].BalanceDifference, null);
         }
+
+        [TestMethod]
+        public void GenerateReportStepped_Tests()
+        {
+            // Generates a stepped report from the given start date, across the given period and with steps of the given period
+            // Throws a SheetException if the period and step period are incompatible (not evenly divisible)
+            // We won't bother to check the ReportChunks here since we did it in the above method, except for the startdates, enddates and periods
+
+            // Arrange
+            var random = new Random();
+            var period = Period.Annually;
+            var stepPeriod = Period.Daily;
+            var startDate = DateOnly.FromDateTime(DateTime.Today);
+            var endDate = period.GetEndDateExclusive(startDate);
+
+            Transaction[] preTransactions = [
+                new Transaction(50, startDate.AddDays(-5)),
+                new Transaction(-35, startDate.AddMonths(-5))
+                ];
+            Transaction[] postTransactions = [
+                new Transaction(70, endDate.AddDays(5)),
+                new Transaction(-20, endDate.AddMonths(5))
+                ];
+
+            var stepDate = startDate;
+            Transaction[] transactions = new Transaction[365];
+            for (int i = 0; i < transactions.Length; i++)
+            {
+                var val = random.Next(-500, 500);
+                while (val == 0) val = random.Next(-500, 500);
+                transactions[i] = new Transaction(val, stepDate);
+                stepDate = stepDate.AddDays(1);
+            }
+
+            var account = new Account("Account", [.. preTransactions, .. transactions, .. postTransactions]);
+            var sheet = new Sheet();
+            sheet.NewAccount(account);
+
+            // Act
+            var reportStepped = sheet.GenerateReportStepped(startDate, period, stepPeriod);
+
+            // Assert
+            // We won't bother checking the total report chunk, because we already know this will work from the previous test
+            // Check ReportChunks
+            stepDate = startDate;
+            for(int i = 0; i < reportStepped.ReportChunks.Length; i++)
+            {
+                Assert.AreEqual(stepDate, reportStepped.ReportChunks[i].StartDate);
+                Assert.AreEqual(stepDate, reportStepped.ReportChunks[i].EndDate); // Report end dates are inclusive, so in this case they're the same as the stepdate
+                Assert.AreEqual(stepPeriod, reportStepped.ReportChunks[i].Period);
+                Assert.AreEqual(transactions[i].Value, reportStepped.ReportChunks[i].BalanceInfo.Balance); // Check the report chunk matches the given transaction
+                stepDate = stepDate.AddDays(1);
+            }
+
+            // Check exception upon incompatible periods being given
+            Assert.ThrowsException<SheetException>(() => reportStepped = sheet.GenerateReportStepped(startDate, Period.Monthly, Period.Fortnightly)); // Test incompatible periods
+            Assert.ThrowsException<SheetException>(() => reportStepped = sheet.GenerateReportStepped(startDate, Period.Fortnightly, Period.Monthly)); // Step period larger than period
+        }
     }
 }
