@@ -17,6 +17,12 @@
 
     public static class PeriodExtensions
     {
+        public static bool IsLongerThan(this Period period1, Period period2)
+            => period1 is Period.Null || period2 is Period.Null ? false : period1 > period2;
+
+        public static bool IsShorterThan(this Period period1, Period period2)
+            => !(period1.IsLongerThan(period2) || period1 == period2); // Not longer than or equal to
+        
         public static DateOnly GetEndDateExclusive(this Period period, DateOnly startDate)
             => period switch
             {
@@ -58,6 +64,9 @@
 
         public static int DivideInto(this Period bigPeriod, Period smallPeriod)
         {
+            // Special case: small period is bigger than big period -> result is 0
+            if (smallPeriod.IsLongerThan(bigPeriod)) return 0;
+            
             // Get big end date
             DateOnly startDate = DateOnly.MinValue;
             DateOnly endDate = bigPeriod.GetEndDateExclusive(startDate);

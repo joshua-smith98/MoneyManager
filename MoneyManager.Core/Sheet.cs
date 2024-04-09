@@ -166,6 +166,7 @@
         {
             // Generate ReportChunks
             int numReportChunks = period.DivideInto(stepPeriod);
+            if (numReportChunks == 0) throw new SheetException("Step period cannot be larger than total period.");
             ReportChunk[] reportChunks = new ReportChunk[numReportChunks];
             DateOnly currentDate = startDate;
 
