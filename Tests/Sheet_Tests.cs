@@ -296,7 +296,7 @@ namespace Tests
         public void GenerateReportStepped_Tests()
         {
             // Generates a stepped report from the given start date, across the given period and with steps of the given period
-            // Throws a SheetException if the period and step period are incompatible (not evenly divisible)
+            // Throws a SheetException if the step period is larger than the total period
             // We won't bother to check the ReportChunks here since we did it in the above method, except for the startdates, enddates and periods
 
             // Arrange
@@ -346,7 +346,6 @@ namespace Tests
             }
 
             // Check exception upon incompatible periods being given
-            Assert.ThrowsException<SheetException>(() => reportStepped = sheet.GenerateReportStepped(startDate, Period.Monthly, Period.Fortnightly)); // Test incompatible periods
             Assert.ThrowsException<SheetException>(() => reportStepped = sheet.GenerateReportStepped(startDate, Period.Fortnightly, Period.Monthly)); // Step period larger than period
         }
     }
