@@ -4,7 +4,7 @@ namespace MoneyManager.Core
 {
     public class ReportChunk
     {
-        public ReportChunkCategory[] ReportChunkCategories { get; }
+        public ReportChunkCategoryCollection ReportChunkCategories { get; }
 
         public BalanceInfo BalanceInfo { get; }
         public BalanceInfo BalanceInfoToDate { get; }
@@ -19,7 +19,7 @@ namespace MoneyManager.Core
             Period = period;
             BalanceInfo = balanceInfo;
             BalanceInfoToDate = balanceInfoToDate;
-            ReportChunkCategories = reportChunkCategories;
+            ReportChunkCategories = new ReportChunkCategoryCollection(reportChunkCategories);
         }
     }
 }
