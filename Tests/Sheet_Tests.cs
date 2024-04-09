@@ -181,5 +181,115 @@ namespace Tests
             Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.DeleteCategoryAt(-5)); // Check IndexOutOfRangeException
             Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.DeleteCategoryAt(20)); // Check IndexOutOfRangeException
         }
+
+        [TestMethod]
+        public void GenerateReportChunk_Tests()
+        {
+            // Returns a new ReportChunk, containing ReportChunkCategories
+            // Arrange
+            var startDate = DateOnly.FromDateTime(DateTime.Now);
+            var period = Period.Weekly;
+
+            var sheet = new Sheet();
+            var category1 = new Category("Category 1")
+            {
+                IncomeBudget = new Budget(20, period),
+                ExpensesBudget  = new Budget(-35, period)
+            };
+            var category2 = new Category("Category 2")
+            {
+                IncomeBudget = new Budget(500, period),
+                ExpensesBudget = new Budget(-55, period)
+            };
+            sheet.NewCategory(category1);
+            sheet.NewCategory(category2);
+
+            Transaction[] transactionsBeforePeriod = [
+                new Transaction(50, startDate.AddDays(-5)),
+                new Transaction(-70, startDate.AddDays(-2)),
+                ];
+
+            Transaction[] transactions = [
+                new Transaction(25, startDate) {Category = category1},
+                new Transaction(-30, startDate.AddDays(5)) {Category = category1},
+                new Transaction(523, startDate.AddDays(3)) {Category = category2},
+                new Transaction(-60, period.GetEndDateInclusive(startDate)) {Category = category2},
+                new Transaction(-367, startDate.AddDays(2)), // Test no category
+                new Transaction(20, startDate.AddDays(4)),
+                ];
+
+            Transaction[] transactionsAfterPeriod = [
+                new Transaction(77, startDate.AddDays(8)),
+                new Transaction(-57, startDate.AddDays(25)),
+                ];
+
+            sheet.NewAccount(new Account("Account", [.. transactionsBeforePeriod, .. transactions, .. transactionsAfterPeriod]));
+
+            // Act
+            var reportChunk = sheet.GenerateReportChunk(startDate, period);
+
+            // Assert
+            // Check BalanceInfo
+            Assert.AreEqual(reportChunk.BalanceInfo.Income, 25 + 523 + 20);
+            Assert.AreEqual(reportChunk.BalanceInfo.Expenses, -30 - 60 - 367);
+            Assert.AreEqual(reportChunk.BalanceInfo.Balance, 25 + 523 + 20 - 30 - 60 - 367);
+
+            // Check BalanceInfoToDate
+            Assert.AreEqual(reportChunk.BalanceInfoToDate.Income, 50 + 25 + 523 + 20);
+            Assert.AreEqual(reportChunk.BalanceInfoToDate.Expenses, -70 - 30 - 60 - 367);
+            Assert.AreEqual(reportChunk.BalanceInfoToDate.Balance, 50 + 25 + 523 + 20 - 70 - 30 - 60 - 367);
+
+            // Check Categories exist
+            Assert.IsTrue(sheet.Categories.All(reportChunk.ReportChunkCategories.ContainsKey));
+            Assert.IsTrue(reportChunk.ReportChunkCategories.ContainsKey(null)); // Check for uncategorised transactions
+
+            // Check category1
+            // Check BalanceInfo
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category1].BalanceInfo.Income, 25);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category1].BalanceInfo.Expenses, -30);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category1].BalanceInfo.Balance, 25 - 30);
+
+            // Check Budgets
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category1].BudgetedIncome, 20);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category1].BudgetedExpenses, -35);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category1].BudgetedBalance, 20 - 35);
+
+            // Check Differences
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category1].IncomeDifference, 25 - 20);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category1].ExpensesDifference, -30 - -35);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category1].BalanceDifference, (25 - 20) + (-30 - -35));
+
+            // Check category2
+            // Check BalanceInfo
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category2].BalanceInfo.Income, 523);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category2].BalanceInfo.Expenses, -60);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category2].BalanceInfo.Balance, 523 - 60);
+
+            // Check Budgets
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category2].BudgetedIncome, 500);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category2].BudgetedExpenses, -55);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category2].BudgetedBalance, 500 - 55);
+
+            // Check Differences
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category2].IncomeDifference, 523 - 500);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category2].ExpensesDifference, -60 - -55);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[category2].BalanceDifference, (523 - 500) + (-60 - -55));
+
+            // Check null category
+            // Check BalanceInfo
+            Assert.AreEqual(reportChunk.ReportChunkCategories[null].BalanceInfo.Income, 20);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[null].BalanceInfo.Expenses, -367);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[null].BalanceInfo.Balance, 20 - 367);
+
+            // Check Budgets
+            Assert.AreEqual(reportChunk.ReportChunkCategories[null].BudgetedIncome, null);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[null].BudgetedExpenses, null);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[null].BudgetedBalance, null);
+
+            // Check Differences
+            Assert.AreEqual(reportChunk.ReportChunkCategories[null].IncomeDifference, null);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[null].ExpensesDifference, null);
+            Assert.AreEqual(reportChunk.ReportChunkCategories[null].BalanceDifference, null);
+        }
     }
 }
