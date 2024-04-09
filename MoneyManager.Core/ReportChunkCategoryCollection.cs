@@ -15,7 +15,7 @@ namespace MoneyManager.Core
         public ReportChunkCategory this[Category? key] => ContainsKey(key) ?
             reportChunkCategories.Where(x => x.Category == key).First() : throw new IndexOutOfRangeException();
 
-        public IEnumerable<Category?> Keys => reportChunkCategories.Select(x => x.Category);
+        public IEnumerable<Category?> Keys => reportChunkCategories.Select(x => x.Category).Distinct();
 
         public IEnumerable<ReportChunkCategory> Values => reportChunkCategories;
 
