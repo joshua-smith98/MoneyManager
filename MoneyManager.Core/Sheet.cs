@@ -146,6 +146,12 @@
                 reportChunkCategories.Add(reportChunkCategory);
             }
 
+            // Add uncategorised transactions
+            var uncategorisedTransactions = Transactions.Where(x => x.Category == null).OrderBy(x => x.Date).ToArray();
+            var tempAccount = new Account("", uncategorisedTransactions);
+            var miscReportChunkCategory = new ReportChunkCategory(null, startDate, period, tempAccount.BalanceInfoForPeriod(startDate, period));
+            reportChunkCategories.Add(miscReportChunkCategory);
+
             // Generate ReportChunk and Return
             return new ReportChunk(
                 startDate,
