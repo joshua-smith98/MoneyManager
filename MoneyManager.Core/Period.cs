@@ -20,7 +20,7 @@
         public static DateOnly GetEndDateExclusive(this Period period, DateOnly startDate)
             => period switch
             {
-                Period.Daily => startDate,
+                Period.Daily => startDate.AddDays(1),
                 Period.Weekly => startDate.AddDays(7),
                 Period.Fortnightly => startDate.AddDays(14),
                 Period.Monthly => startDate.AddMonths(1),
