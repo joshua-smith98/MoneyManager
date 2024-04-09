@@ -8,7 +8,7 @@
         public Period Period { get; }
         public Period StepPeriod { get; }
         public DateOnly StartDate { get; }
-        public DateOnly EndDate => Period.GetEndDateInclusive(StartDate);
+        public DateOnly EndDate => ReportChunks.Last().EndDate; // In case the stepPeriod doesn't divide evenly into the period
 
         internal ReportStepped(DateOnly startDate, Period period, Period stepPeriod, ReportChunk[] reportChunks, ReportChunk totalReportChunk)
         {

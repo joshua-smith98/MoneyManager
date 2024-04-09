@@ -33,7 +33,8 @@
         public static DateOnly GetEndDateInclusive(this Period period, DateOnly startDate)
             => GetEndDateExclusive(period, startDate).AddDays(-1);
 
-        public static int? DivideIntoOrNull(this Period bigPeriod, Period smallPeriod)
+        [Obsolete] // I'd remove it, but I just love it so much...
+        public static int? DivideIntoEvenlyOrNull(this Period bigPeriod, Period smallPeriod)
         {
             if (bigPeriod == smallPeriod) return null; // For the sake of this app, a Period can't divide into itself
 
@@ -53,6 +54,25 @@
 
             if (stepDate == endDate) return counter; // The big period divides into the small period evenly
             return null; // if stepDate > endDate: The big period does not divide evenly into the small period
+        }
+
+        public static int DivideInto(this Period bigPeriod, Period smallPeriod)
+        {
+            // Get big end date
+            DateOnly startDate = DateOnly.MinValue;
+            DateOnly endDate = bigPeriod.GetEndDateExclusive(startDate);
+
+            // Iterate through small end dates until we reach the big end, or overtake it.
+            DateOnly stepDate = startDate;
+            int counter = 0;
+
+            while (stepDate < endDate)
+            {
+                stepDate = smallPeriod.GetEndDateExclusive(stepDate);
+                counter++;
+            }
+
+            return counter;
         }
     }
 }

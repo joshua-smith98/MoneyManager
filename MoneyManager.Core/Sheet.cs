@@ -165,7 +165,7 @@
         public ReportStepped GenerateReportStepped(DateOnly startDate, Period period, Period stepPeriod)
         {
             // Generate ReportChunks
-            int numReportChunks = period.DivideIntoOrNull(stepPeriod) ?? throw new SheetException("Can't generate a stepped report with Periods the don't divide evenly.");
+            int numReportChunks = period.DivideInto(stepPeriod);
             ReportChunk[] reportChunks = new ReportChunk[numReportChunks];
             DateOnly currentDate = startDate;
 
