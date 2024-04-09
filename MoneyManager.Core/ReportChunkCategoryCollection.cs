@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyManager.Core
 {
+    /// <summary>
+    /// A collection of <see cref="ReportChunkCategory"/>, with the keys being <see cref="Category"/>.
+    /// A key of <see cref="null"/> gets the <see cref="ReportChunkCategory"/> representing transactions that were uncategorised.
+    /// </summary>
+    /// <param name="reportChunkCategories"></param>
     public class ReportChunkCategoryCollection(ReportChunkCategory[] reportChunkCategories) : IReadOnlyDictionary<Category?, ReportChunkCategory>
     {
         private ReportChunkCategory[] reportChunkCategories = reportChunkCategories;

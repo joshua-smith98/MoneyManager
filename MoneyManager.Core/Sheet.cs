@@ -129,6 +129,12 @@
             DeleteCategory(categories[index]); // Avoid duplicating purging code
         }
 
+        /// <summary>
+        /// Generates a <see cref="ReportChunk"/> for the given <see cref="Period"/> starting at the given date.
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="period"></param>
+        /// <returns></returns>
         public ReportChunk GenerateReportChunk(DateOnly startDate, Period period)
         {
             // Generate ReportChunkCategories
@@ -162,6 +168,14 @@
                 );
         }
 
+        /// <summary>
+        /// Generates a <see cref="ReportStepped"/> for the given <see cref="Period"/>, starting at the given date and with the given step period.
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="period"></param>
+        /// <param name="stepPeriod"></param>
+        /// <returns></returns>
+        /// <exception cref="SheetException"></exception>
         public ReportStepped GenerateReportStepped(DateOnly startDate, Period period, Period stepPeriod)
         {
             // Generate ReportChunks

@@ -1,5 +1,8 @@
 ﻿namespace MoneyManager.Core
 {
+    /// <summary>
+    /// The part of a Report which represents a category's balance and budget info across a certain period.
+    /// </summary>
     public class ReportChunkCategory
     {
         public Category? Category { get; }

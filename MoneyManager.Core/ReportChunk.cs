@@ -2,8 +2,14 @@
 
 namespace MoneyManager.Core
 {
+    /// <summary>
+    /// The part of a report which represents the balance info across a certain period across all accounts and categories.
+    /// </summary>
     public class ReportChunk
     {
+        /// <summary>
+        /// Gets the balance and budget info associated with a specific <see cref="Category"/>.
+        /// </summary>
         public ReportChunkCategoryCollection ReportChunkCategories { get; }
 
         public BalanceInfo BalanceInfo { get; }
