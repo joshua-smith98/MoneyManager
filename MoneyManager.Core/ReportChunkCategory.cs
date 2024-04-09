@@ -5,10 +5,10 @@
         public Category? Category { get; }
 
         public BalanceInfo BalanceInfo { get; }
-        public Budget? IncomeBudget { get; internal init; }
-        public Budget? ExpensesBudget { get; internal init; }
-        public Budget? BalancedBudget => IncomeBudget is not null && ExpensesBudget is not null ?
-            Budget.Sum(IncomeBudget, ExpensesBudget, Period.Null): null;
+        public Money? BudgetedIncome { get; internal init; } // Use Money for the budgets here, since we'll never need to convert to another period from this class
+        public Money? BudgetedExpenses { get; internal init; }
+        public Money? BudgetedBalance => BudgetedIncome is not null && BudgetedExpenses is not null ?
+            BudgetedIncome + BudgetedExpenses : null;
         public Money? IncomeDifference { get; internal init; }
         public Money? ExpensesDifference { get; internal init; }
         public Money? BalanceDifference => IncomeDifference is not null && ExpensesDifference is not null ?

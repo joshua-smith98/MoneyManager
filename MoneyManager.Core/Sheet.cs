@@ -138,8 +138,8 @@
             {
                 var reportChunkCategory = new ReportChunkCategory(category, startDate, period, category.BalanceInfoForPeriod(startDate, period))
                 {
-                    IncomeBudget = category.IncomeBudget,
-                    ExpensesBudget = category.ExpensesBudget,
+                    BudgetedIncome = category.IncomeBudget?.Get(period),
+                    BudgetedExpenses = category.ExpensesBudget?.Get(period),
                     IncomeDifference = category.GetIncomeDifference(startDate, period),
                     ExpensesDifference = category.GetExpensesDifference(startDate, period)
                 };
