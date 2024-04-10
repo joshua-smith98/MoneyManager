@@ -5,69 +5,6 @@
     /// </summary>
     public class Budget
     {
-        /// <summary>
-        /// Gets or sets the amount of money budgeted per day.
-        /// </summary>
-        public Money PerDay 
-        {
-            get => Get(Period.Daily);
-            set => Set(value, Period.Daily);
-        }
-
-        /// <summary>
-        /// Gets or sets the amount of money budgeted per week.
-        /// </summary>
-        public Money PerWeek
-        {
-            get => Get(Period.Weekly);
-            set => Set(value, Period.Weekly);
-        }
-
-        /// <summary>
-        /// Gets or sets the amount of money budgeted per fortnight.
-        /// </summary>
-        public Money PerFortnight
-        {
-            get => Get(Period.Fortnightly);
-            set => Set(value, Period.Fortnightly);
-        }
-
-        /// <summary>
-        /// Gets or sets the amount of money budgeted per month.
-        /// </summary>
-        public Money PerMonth
-        {
-            get => Get(Period.Monthly);
-            set => Set(value, Period.Monthly);
-        }
-
-        /// <summary>
-        /// Gets or sets the amount of money budgeted per quarter.
-        /// </summary>
-        public Money PerQuarter
-        {
-            get => Get(Period.Quarterly);
-            set => Set(value, Period.Quarterly);
-        }
-
-        /// <summary>
-        /// Gets or sets the amount of money budgeted per 6 months.
-        /// </summary>
-        public Money Per6Months
-        {
-            get => Get(Period.Biannually);
-            set => Set(value, Period.Biannually);
-        }
-
-        /// <summary>
-        /// Gets or sets the amount of money budgeted per year.
-        /// </summary>
-        public Money PerYear
-        {
-            get => Get(Period.Annually);
-            set => Set(value, Period.Annually);
-        }
-
         private Money perDay;
 
         /// <summary>
