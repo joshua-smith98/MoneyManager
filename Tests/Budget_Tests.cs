@@ -19,7 +19,7 @@ namespace Tests
             var actualSum = value1 + value2;
 
             // Act
-            var budgetSum = Budget.Sum(budget1, budget2, Period.Null);
+            var budgetSum = Budget.Sum(budget1, budget2);
 
             // Act and Assert
             Assert.AreEqual(budgetSum.Get(Period.Null), actualSum);

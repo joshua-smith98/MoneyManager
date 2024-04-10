@@ -19,7 +19,7 @@
         /// <param name="budget2"></param>
         /// <param name="newPeriod"></param>
         /// <returns></returns>
-        public static Budget Sum(Budget budget1, Budget budget2, Period newPeriod)
+        public static Budget Sum(Budget budget1, Budget budget2, Period newPeriod = Period.Null)
             => new Budget(FromDaily(budget1.perDay + budget2.perDay, newPeriod), newPeriod);
 
         /// <summary>

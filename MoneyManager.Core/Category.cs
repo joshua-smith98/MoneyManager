@@ -28,7 +28,7 @@
         /// </summary>
         public Budget? BalancedBudget
             => (IncomeBudget is not null && ExpensesBudget is not null)
-            ? Budget.Sum(IncomeBudget, ExpensesBudget, Period.Null)
+            ? Budget.Sum(IncomeBudget, ExpensesBudget)
             : null;
 
         internal void AddTransaction(Transaction transaction)
