@@ -10,7 +10,7 @@
         /// <summary>
         /// Gets the current base period for this budget.
         /// </summary>
-        public Period CurrentPeriod { get; private set; }
+        public Period CurrentPeriod { get; private set; } = period;
 
         /// <summary>
         /// Gets the sum of the given budgets with the given period.
