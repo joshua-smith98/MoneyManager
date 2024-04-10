@@ -26,8 +26,8 @@
         /// <param name="period1"></param>
         /// <param name="period2"></param>
         /// <returns></returns>
-        public static bool IsLongerThan(this Period period1, Period period2)
-            => period1 is Period.Null || period2 is Period.Null ? false : period1 > period2; // Taking advantage of the order of values in the enum
+        public static bool IsLongerThan(this Period thisPeriod, Period period)
+            => thisPeriod is Period.Null || period is Period.Null ? false : thisPeriod > period; // Taking advantage of the order of values in the enum
 
         /// <summary>
         /// Returns <see cref="true"/> if this <see cref="Period"/> is shorter than the given one.
@@ -35,8 +35,8 @@
         /// <param name="period1"></param>
         /// <param name="period2"></param>
         /// <returns></returns>
-        public static bool IsShorterThan(this Period period1, Period period2)
-            => !(period1.IsLongerThan(period2) || period1 == period2); // Not longer than or equal to
+        public static bool IsShorterThan(this Period thisPeriod, Period period)
+            => !(thisPeriod.IsLongerThan(period) || thisPeriod == period); // Not longer than or equal to
         
         /// <summary>
         /// Gets the date this <see cref="Period"/> would end, if starting from the given date. Exclusive.
@@ -100,17 +100,17 @@
         /// <summary>
         /// Divides this <see cref="Period"/> by another one, rounding up. Returns 0 if the given period is larger than this one.
         /// </summary>
-        /// <param name="bigPeriod"></param>
-        /// <param name="smallPeriod"></param>
+        /// <param name="thisPeriod"></param>
+        /// <param name="period"></param>
         /// <returns></returns>
-        public static int DivideInto(this Period bigPeriod, Period smallPeriod)
+        public static int DivideInto(this Period thisPeriod, Period period)
         {
-            // Special case: small period is bigger than big period -> result is 0
-            if (smallPeriod.IsLongerThan(bigPeriod)) return 0;
+            // Special case: given period is bigger than this one -> result is 0
+            if (period.IsLongerThan(thisPeriod)) return 0;
             
             // Get big end date
             DateOnly startDate = DateOnly.MinValue;
-            DateOnly endDate = bigPeriod.GetEndDateExclusive(startDate);
+            DateOnly endDate = thisPeriod.GetEndDateExclusive(startDate);
 
             // Iterate through small end dates until we reach the big end, or overtake it.
             DateOnly stepDate = startDate;
@@ -118,7 +118,7 @@
 
             while (stepDate < endDate)
             {
-                stepDate = smallPeriod.GetEndDateExclusive(stepDate);
+                stepDate = period.GetEndDateExclusive(stepDate);
                 counter++;
             }
 
