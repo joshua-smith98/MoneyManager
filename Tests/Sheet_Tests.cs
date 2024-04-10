@@ -16,9 +16,9 @@ namespace Tests
             var sheet = new Sheet();
 
             // Act and Assert
-            sheet.NewAccount(account);
+            sheet.AddAccount(account);
             Assert.IsTrue(sheet.Accounts.Contains(account));
-            Assert.ThrowsException<SheetException>(() => sheet.NewAccount(account)); // Check for duplicate account exception
+            Assert.ThrowsException<SheetException>(() => sheet.AddAccount(account)); // Check for duplicate account exception
         }
 
         [TestMethod]
@@ -40,9 +40,9 @@ namespace Tests
             var sheet = new Sheet();
 
             // Act and Assert
-            sheet.NewAccounts(allAccounts);
+            sheet.AddAccounts(allAccounts);
             Assert.IsTrue(allAccounts.All(x => sheet.Accounts.Contains(x))); // Check that all accounts are in the sheet
-            Assert.ThrowsException<SheetException>(() => sheet.NewAccounts(insideAccounts)); // Check for duplicate account exception
+            Assert.ThrowsException<SheetException>(() => sheet.AddAccounts(insideAccounts)); // Check for duplicate account exception
         }
 
 
@@ -61,12 +61,12 @@ namespace Tests
                 new Account("account3"),
                 new Account("account4")
                 ];
-            sheet.NewAccounts(accounts);
+            sheet.AddAccounts(accounts);
 
             // Act and Assert
-            sheet.DeleteAccount(accounts[0]);
+            sheet.RemoveAccount(accounts[0]);
             Assert.IsFalse(sheet.Accounts.Contains(accounts[0])); // Check account was removed from the sheet
-            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.DeleteAccount(outsideAccount)); // Check IndexOutOfRangeException
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.RemoveAccount(outsideAccount)); // Check IndexOutOfRangeException
         }
 
         [TestMethod]
@@ -83,13 +83,13 @@ namespace Tests
                 new Account("account3"),
                 new Account("account4")
                 ];
-            sheet.NewAccounts(accounts);
+            sheet.AddAccounts(accounts);
 
             // Act and Assert
-            sheet.DeleteAccountAt(2);
+            sheet.RemoveAccountAt(2);
             Assert.IsFalse(sheet.Accounts.Contains(accounts[2])); // Check account was removed from the sheet
-            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.DeleteAccountAt(-5)); // Check IndexOutOfRangeException
-            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.DeleteAccountAt(20)); // Check IndexOutOfRangeException
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.RemoveAccountAt(-5)); // Check IndexOutOfRangeException
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.RemoveAccountAt(20)); // Check IndexOutOfRangeException
         }
 
         [TestMethod]
@@ -103,9 +103,9 @@ namespace Tests
             var sheet = new Sheet();
 
             // Act and Assert
-            sheet.NewCategory(category);
+            sheet.AddCategory(category);
             Assert.IsTrue(sheet.Categories.Contains(category));
-            Assert.ThrowsException<SheetException>(() => sheet.NewCategory(category)); // Check for duplicate category exception
+            Assert.ThrowsException<SheetException>(() => sheet.AddCategory(category)); // Check for duplicate category exception
         }
 
         [TestMethod]
@@ -127,9 +127,9 @@ namespace Tests
             var sheet = new Sheet();
 
             // Act and Assert
-            sheet.NewCategories(allCategories);
+            sheet.AddCategories(allCategories);
             Assert.IsTrue(allCategories.All(x => sheet.Categories.Contains(x))); // Check that all categories are in the sheet
-            Assert.ThrowsException<SheetException>(() => sheet.NewCategories(insideCategories)); // Check for duplicate category exception
+            Assert.ThrowsException<SheetException>(() => sheet.AddCategories(insideCategories)); // Check for duplicate category exception
         }
 
 
@@ -151,14 +151,14 @@ namespace Tests
                 new Category("account4"),
                 insideCategory
                 ];
-            sheet.NewCategories(categories);
+            sheet.AddCategories(categories);
             var transaction = new Transaction(1, "") { Category = insideCategory };
 
             // Act and Assert
-            sheet.DeleteCategory(insideCategory);
+            sheet.RemoveCategory(insideCategory);
             Assert.IsFalse(sheet.Categories.Contains(insideCategory)); // Check category was removed from the sheet
             Assert.IsNull(transaction.Category); // Check transaction had its category removed
-            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.DeleteCategory(outsideCategory)); // Check IndexOutOfRangeException
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.RemoveCategory(outsideCategory)); // Check IndexOutOfRangeException
         }
 
         [TestMethod]
@@ -175,11 +175,11 @@ namespace Tests
                 new Category("account3"),
                 new Category("account4")
                 ];
-            sheet.NewCategories(categories);
+            sheet.AddCategories(categories);
 
             // Act and Assert
-            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.DeleteCategoryAt(-5)); // Check IndexOutOfRangeException
-            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.DeleteCategoryAt(20)); // Check IndexOutOfRangeException
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.RemoveCategoryAt(-5)); // Check IndexOutOfRangeException
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sheet.RemoveCategoryAt(20)); // Check IndexOutOfRangeException
         }
 
         [TestMethod]
@@ -201,8 +201,8 @@ namespace Tests
                 IncomeBudget = new Budget(500, period),
                 ExpensesBudget = new Budget(-55, period)
             };
-            sheet.NewCategory(category1);
-            sheet.NewCategory(category2);
+            sheet.AddCategory(category1);
+            sheet.AddCategory(category2);
 
             Transaction[] transactionsBeforePeriod = [
                 new Transaction(50, startDate.AddDays(-5)),
@@ -223,7 +223,7 @@ namespace Tests
                 new Transaction(-57, startDate.AddDays(25)),
                 ];
 
-            sheet.NewAccount(new Account("Account", [.. transactionsBeforePeriod, .. transactions, .. transactionsAfterPeriod]));
+            sheet.AddAccount(new Account("Account", [.. transactionsBeforePeriod, .. transactions, .. transactionsAfterPeriod]));
 
             // Act
             var reportChunk = sheet.GenerateReportChunk(startDate, period);
@@ -327,7 +327,7 @@ namespace Tests
 
             var account = new Account("Account", [.. preTransactions, .. transactions, .. postTransactions]);
             var sheet = new Sheet();
-            sheet.NewAccount(account);
+            sheet.AddAccount(account);
 
             // Act
             var reportStepped = sheet.GenerateReportStepped(startDate, period, stepPeriod);

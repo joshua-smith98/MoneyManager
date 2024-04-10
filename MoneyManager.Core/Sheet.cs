@@ -21,7 +21,7 @@
         /// </summary>
         /// <param name="account"></param>
         /// <exception cref="SheetException"></exception>
-        public void NewAccount(Account account)
+        public void AddAccount(Account account)
         {
             // Validity check: Accounts must not already contain account
             if (Accounts.Contains(account)) throw new SheetException($"Account \"{account.Name}\" already exists in sheet.");
@@ -35,7 +35,7 @@
         /// </summary>
         /// <param name="accounts"></param>
         /// <exception cref="SheetException"></exception>
-        public void NewAccounts(params Account[] accounts)
+        public void AddAccounts(params Account[] accounts)
         {
             // Validity check: Accounts must not already contain any of accounts
             foreach (Account account in accounts) // Use a foreach here rather than linq so we can access the account name
@@ -49,7 +49,7 @@
         /// </summary>
         /// <param name="account"></param>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public void DeleteAccount(Account account)
+        public void RemoveAccount(Account account)
         {
             // Validity check: account must be within Accounts
             if (!Accounts.Contains(account)) throw new IndexOutOfRangeException();
@@ -62,7 +62,7 @@
         /// </summary>
         /// <param name="index"></param>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public void DeleteAccountAt(int index)
+        public void RemoveAccountAt(int index)
         {
             // Validity check: index must be within the range of accounts
             if (index < 0 || index >= accounts.Count) throw new IndexOutOfRangeException();
@@ -76,7 +76,7 @@
         /// </summary>
         /// <param name="category"></param>
         /// <exception cref="SheetException"></exception>
-        public void NewCategory(Category category)
+        public void AddCategory(Category category)
         {
             // Validity check: category must not already be in Categories
             if (Categories.Contains(category)) throw new SheetException($"Category \"{category.Name}\" already exists in sheet.");
@@ -90,7 +90,7 @@
         /// </summary>
         /// <param name="categories"></param>
         /// <exception cref="SheetException"></exception>
-        public void NewCategories(params Category[] categories)
+        public void AddCategories(params Category[] categories)
         {
             // Validity check: Categories must not already contain any of categories
             foreach (Category category in categories) // Use a foreach here rather than linq so we can access the category name
@@ -104,7 +104,7 @@
         /// </summary>
         /// <param name="category"></param>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public void DeleteCategory(Category category)
+        public void RemoveCategory(Category category)
         {
             // Validity check: category must be contained within Categories
             if (!Categories.Contains(category)) throw new IndexOutOfRangeException();
@@ -121,12 +121,12 @@
         /// </summary>
         /// <param name="index"></param>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public void DeleteCategoryAt(int index)
+        public void RemoveCategoryAt(int index)
         {
             // Validity check: index must be within the bounds of categories
             if (index < 0 ||index >= categories.Count) throw new IndexOutOfRangeException();
 
-            DeleteCategory(categories[index]); // Avoid duplicating purging code
+            RemoveCategory(categories[index]); // Avoid duplicating purging code
         }
 
         /// <summary>
