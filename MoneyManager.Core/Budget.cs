@@ -3,19 +3,14 @@
     /// <summary>
     /// Represents an amount of <see cref="Money"/> budgeted across a certain <see cref="Period"/>, and translated across all other <see cref="Period"/>s.
     /// </summary>
-    public class Budget
+    public class Budget(Money value, Period period)
     {
-        private Money perDay;
+        private Money perDay = ToDaily(value, period);
 
         /// <summary>
         /// Gets the current base period for this budget.
         /// </summary>
         public Period CurrentPeriod { get; private set; }
-
-        public Budget(Money value, Period period)
-        {
-            Set(value, period); // Set() sets the value of perDay, so just ignore the IDE's complaints here
-        }
 
         /// <summary>
         /// Gets the sum of the given budgets with the given period.
