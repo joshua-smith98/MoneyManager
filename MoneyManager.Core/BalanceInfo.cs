@@ -3,7 +3,7 @@
     /// <summary>
     /// Holds information about the Balance, Income and Expenses of a <see cref="Balanceable"/> inheritor.
     /// </summary>
-    public class BalanceInfo
+    public class BalanceInfo : IEquatable<BalanceInfo>
     {
         public Money Balance { get; }
         public Money ClearedBalance { get; }
@@ -71,6 +71,20 @@
                 Expenses = 0;
                 ClearedExpenses = 0;
             }
+        }
+
+        public bool Equals(BalanceInfo? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            
+            return
+                Balance == other.Balance &&
+                ClearedBalance == other.ClearedBalance &&
+                Expenses == other.Expenses &&
+                ClearedExpenses == other.ClearedExpenses &&
+                Income == other.Income &&
+                ClearedIncome == other.ClearedIncome;
         }
     }
 }
