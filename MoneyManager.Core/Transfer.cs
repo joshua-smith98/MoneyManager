@@ -1,7 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace MoneyManager.Core
+﻿namespace MoneyManager.Core
 {
     /// <summary>
     /// A special <see cref="Transaction"/> that represents a transfer of money between two <see cref="Account"/>s.

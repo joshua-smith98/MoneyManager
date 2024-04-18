@@ -1,6 +1,4 @@
-﻿
-using MoneyManager.Core;
-using System.Diagnostics;
+﻿using MoneyManager.Core;
 
 namespace Tests
 {

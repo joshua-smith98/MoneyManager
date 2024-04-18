@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace MoneyManager.Core
+﻿namespace MoneyManager.Core
 {
     /// <summary>
     /// The part of a report which represents the balance info across a certain period across all accounts and categories.

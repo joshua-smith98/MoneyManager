@@ -1,6 +1,4 @@
-﻿using System.Transactions;
-
-namespace MoneyManager.Core
+﻿namespace MoneyManager.Core
 {
     /// <summary>
     /// Represents an account of monetary transactions.
