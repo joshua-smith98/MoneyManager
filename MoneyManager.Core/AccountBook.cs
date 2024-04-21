@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a financial sheet containing Accounts and Categories.
     /// </summary>
-    public class Sheet : Balanceable
+    public class AccountBook : Balanceable
     {
         public override Transaction[] Transactions => Accounts.SelectMany(x => x.Transactions).OrderBy(x => x.Date).ToArray();
         
@@ -13,33 +13,33 @@
         public Category[] Categories => categories.ToArray();
         private readonly List<Category> categories = [];
 
-        public Sheet() { }
+        public AccountBook() { }
 
         /// <summary>
         /// Adds the given <see cref="Account"/> to this Sheet.
-        /// Throws a <see cref="SheetException"/> if it already exists within this Sheet.
+        /// Throws a <see cref="AccountBookException"/> if it already exists within this Sheet.
         /// </summary>
         /// <param name="account"></param>
-        /// <exception cref="SheetException"></exception>
+        /// <exception cref="AccountBookException"></exception>
         public void AddAccount(Account account)
         {
             // Validity check: Accounts must not already contain account
-            if (Accounts.Contains(account)) throw new SheetException($"Account \"{account.Name}\" already exists in sheet.");
+            if (Accounts.Contains(account)) throw new AccountBookException($"Account \"{account.Name}\" already exists in sheet.");
 
             accounts.Add(account);
         }
 
         /// <summary>
         /// Adds the given Accounts to this Sheet.
-        /// Throws a <see cref="SheetException"/> if any of the them already exist in this Sheet.
+        /// Throws a <see cref="AccountBookException"/> if any of the them already exist in this Sheet.
         /// </summary>
         /// <param name="accounts"></param>
-        /// <exception cref="SheetException"></exception>
+        /// <exception cref="AccountBookException"></exception>
         public void AddAccounts(params Account[] accounts)
         {
             // Validity check: Accounts must not already contain any of accounts
             foreach (Account account in accounts) // Use a foreach here rather than linq so we can access the account name
-                if (Accounts.Contains(account)) throw new SheetException($"Account \"{account.Name}\" already exists in sheet.");
+                if (Accounts.Contains(account)) throw new AccountBookException($"Account \"{account.Name}\" already exists in sheet.");
 
             this.accounts.AddRange(accounts);
         }
@@ -72,29 +72,29 @@
 
         /// <summary>
         /// Adds the given <see cref="Category"/> to this Sheet.
-        /// Throws a <see cref="SheetException"/> if the given Category already exists within this Sheet.
+        /// Throws a <see cref="AccountBookException"/> if the given Category already exists within this Sheet.
         /// </summary>
         /// <param name="category"></param>
-        /// <exception cref="SheetException"></exception>
+        /// <exception cref="AccountBookException"></exception>
         public void AddCategory(Category category)
         {
             // Validity check: category must not already be in Categories
-            if (Categories.Contains(category)) throw new SheetException($"Category \"{category.Name}\" already exists in sheet.");
+            if (Categories.Contains(category)) throw new AccountBookException($"Category \"{category.Name}\" already exists in sheet.");
 
             categories.Add(category);
         }
 
         /// <summary>
         /// Adds the given Categories to this Sheet.
-        /// Throws a <see cref="SheetException"/> if any of them already exist within this Sheet.
+        /// Throws a <see cref="AccountBookException"/> if any of them already exist within this Sheet.
         /// </summary>
         /// <param name="categories"></param>
-        /// <exception cref="SheetException"></exception>
+        /// <exception cref="AccountBookException"></exception>
         public void AddCategories(params Category[] categories)
         {
             // Validity check: Categories must not already contain any of categories
             foreach (Category category in categories) // Use a foreach here rather than linq so we can access the category name
-                if (Categories.Contains(category)) throw new SheetException($"Category \"{category.Name}\" already exists in sheet.");
+                if (Categories.Contains(category)) throw new AccountBookException($"Category \"{category.Name}\" already exists in sheet.");
 
             this.categories.AddRange(categories);
         }
@@ -175,12 +175,12 @@
         /// <param name="period"></param>
         /// <param name="stepPeriod"></param>
         /// <returns></returns>
-        /// <exception cref="SheetException"></exception>
+        /// <exception cref="AccountBookException"></exception>
         public ReportStepped GenerateReportStepped(DateOnly startDate, Period period, Period stepPeriod)
         {
             // Generate ReportChunks
             int numReportChunks = period.DivideInto(stepPeriod);
-            if (numReportChunks == 0) throw new SheetException("Step period cannot be larger than total period.");
+            if (numReportChunks == 0) throw new AccountBookException("Step period cannot be larger than total period.");
             ReportChunk[] reportChunks = new ReportChunk[numReportChunks];
             DateOnly currentDate = startDate;
 

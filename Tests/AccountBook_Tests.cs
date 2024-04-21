@@ -3,7 +3,7 @@
 namespace Tests
 {
     [TestClass]
-    public class Sheet_Tests
+    public class AccountBook_Tests
     {
         [TestMethod]
         public void NewAccount_Tests()
@@ -13,12 +13,12 @@ namespace Tests
 
             // Arrange
             var account = new Account("");
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
 
             // Act and Assert
             sheet.AddAccount(account);
             Assert.IsTrue(sheet.Accounts.Contains(account));
-            Assert.ThrowsException<SheetException>(() => sheet.AddAccount(account)); // Check for duplicate account exception
+            Assert.ThrowsException<AccountBookException>(() => sheet.AddAccount(account)); // Check for duplicate account exception
         }
 
         [TestMethod]
@@ -37,12 +37,12 @@ namespace Tests
                 new Account("account4")
                 ];
             Account[] allAccounts = [.. outsideAccounts, .. insideAccounts];
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
 
             // Act and Assert
             sheet.AddAccounts(allAccounts);
             Assert.IsTrue(allAccounts.All(x => sheet.Accounts.Contains(x))); // Check that all accounts are in the sheet
-            Assert.ThrowsException<SheetException>(() => sheet.AddAccounts(insideAccounts)); // Check for duplicate account exception
+            Assert.ThrowsException<AccountBookException>(() => sheet.AddAccounts(insideAccounts)); // Check for duplicate account exception
         }
 
 
@@ -53,7 +53,7 @@ namespace Tests
             // Throws an IndexOutOfRangeException if the given account is not in the sheet
 
             // Arrange
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
             var outsideAccount = new Account("outside account");
             Account[] accounts = [
                 new Account("account1"),
@@ -76,7 +76,7 @@ namespace Tests
             // Throws an IndexOutOfRangeException if the index is out of range
 
             // Arrange
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
             Account[] accounts = [
                 new Account("account1"),
                 new Account("account2"),
@@ -100,12 +100,12 @@ namespace Tests
 
             // Arrange
             var category = new Category("");
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
 
             // Act and Assert
             sheet.AddCategory(category);
             Assert.IsTrue(sheet.Categories.Contains(category));
-            Assert.ThrowsException<SheetException>(() => sheet.AddCategory(category)); // Check for duplicate category exception
+            Assert.ThrowsException<AccountBookException>(() => sheet.AddCategory(category)); // Check for duplicate category exception
         }
 
         [TestMethod]
@@ -124,12 +124,12 @@ namespace Tests
                 new Category("account4")
                 ];
             Category[] allCategories = [.. outsideCategories, .. insideCategories];
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
 
             // Act and Assert
             sheet.AddCategories(allCategories);
             Assert.IsTrue(allCategories.All(x => sheet.Categories.Contains(x))); // Check that all categories are in the sheet
-            Assert.ThrowsException<SheetException>(() => sheet.AddCategories(insideCategories)); // Check for duplicate category exception
+            Assert.ThrowsException<AccountBookException>(() => sheet.AddCategories(insideCategories)); // Check for duplicate category exception
         }
 
 
@@ -141,7 +141,7 @@ namespace Tests
             // Throws an IndexOutOfRangeException if the given category is not in the sheet
 
             // Arrange
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
             var outsideCategory = new Category("outside category");
             var insideCategory = new Category("inside category");
             Category[] categories = [
@@ -168,7 +168,7 @@ namespace Tests
             // Calls DeleteCategory(), so we don't need to test anything else
 
             // Arrange
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
             Category[] categories = [
                 new Category("account1"),
                 new Category("account2"),
@@ -190,7 +190,7 @@ namespace Tests
             var startDate = DateOnly.FromDateTime(DateTime.Now);
             var period = Period.Weekly;
 
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
             var category1 = new Category("Category 1")
             {
                 IncomeBudget = new Budget(20, period),
@@ -326,7 +326,7 @@ namespace Tests
             }
 
             var account = new Account("Account", [.. preTransactions, .. transactions, .. postTransactions]);
-            var sheet = new Sheet();
+            var sheet = new AccountBook();
             sheet.AddAccount(account);
 
             // Act
@@ -346,7 +346,7 @@ namespace Tests
             }
 
             // Check exception upon incompatible periods being given
-            Assert.ThrowsException<SheetException>(() => reportStepped = sheet.GenerateReportStepped(startDate, Period.Fortnightly, Period.Monthly)); // Step period larger than period
+            Assert.ThrowsException<AccountBookException>(() => reportStepped = sheet.GenerateReportStepped(startDate, Period.Fortnightly, Period.Monthly)); // Step period larger than period
         }
     }
 }
