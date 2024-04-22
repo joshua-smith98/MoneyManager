@@ -29,6 +29,12 @@
         /// <param name="period"></param>
         /// <returns></returns>
         public Money Get(Period period) => FromDaily(perDay, period);
+
+        /// <summary>
+        /// Gets the ammount of money budgeted for <see cref="CurrentPeriod"/>.
+        /// </summary>
+        /// <returns></returns>
+        public Money Get() => Get(CurrentPeriod);
         
         /// <summary>
         /// Sets the amount of money budgeted for the given period.
