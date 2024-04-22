@@ -25,7 +25,7 @@ namespace MoneyManager.FileSystem
             public bool HasExpensesBudget => ExpensesBudget is not null;
         }
 
-        internal record BudgetDat(decimal PerDay, int Period);
+        internal record BudgetDat(decimal PerPeriod, int Period);
 
         internal record AccountTableRow(
             string Name,
@@ -267,12 +267,121 @@ namespace MoneyManager.FileSystem
 
         public static AccountBookFile Deconstruct(AccountBook accountBook)
         {
-            throw new NotImplementedException();
+            // Construct CategoryTable
+            int numCategories = accountBook.Categories.Length;
+            var categoryTable = new CategoryTableRow[numCategories];
+
+            for (int i = 0; i < numCategories; i++)
+            {
+                var category = accountBook.Categories[i];
+
+                string name = category.Name;
+
+                BudgetDat? incomeBudget =
+                    category.IncomeBudget is not null
+                    ? new BudgetDat((decimal)category.IncomeBudget.Get(), (int)category.IncomeBudget.CurrentPeriod)
+                    : null;
+
+                BudgetDat? expensesBudget =
+                    category.ExpensesBudget is not null
+                    ? new BudgetDat((decimal)category.ExpensesBudget.Get(), (int)category.ExpensesBudget.CurrentPeriod)
+                    : null;
+
+                categoryTable[i] = new CategoryTableRow(name, incomeBudget, expensesBudget);
+            }
+
+            // Construct AccountTable & Build Transfer List
+            int numAccounts = accountBook.Accounts.Length;
+            var accountTable = new AccountTableRow[numAccounts];
+
+            List<Transfer> transfers = [];
+
+            for (int i = 0; i < numAccounts; i++)
+            {
+                var account = accountBook.Accounts[i];
+                
+                string name = account.Name;
+
+                // Construct TransactionTable
+                int numTransactions = account.Transactions.Length;
+                List<TransactionTableRow> transactionTable = []; // Use a list here, since we'll only be including transactions, and not transfers
+
+                for (int j = 0; j < numTransactions; j++)
+                {
+                    var transaction = account.Transactions[j];
+
+                    // Add to Transfer list if it's a transfer
+                    if (transaction is Transfer transfer)
+                    {
+                        if (transfer.Value > 0) transfers.Add(transfer); // Only add transfers with positive values (to avoid doubling up via twins)
+                        continue; // Never add transfer to TransactionTable
+                    }
+
+                    // Otherwise add row to transactionTable
+                    transactionTable.Add(new TransactionTableRow(
+                        transaction.Number,
+                        (decimal)transaction.Value,
+                        transaction.Date.DayNumber,
+                        transaction.Payee,
+                        transaction.Memo,
+                        transaction.Category is not null ? transaction.Category.Name : "", // Use empty category name for null category
+                        transaction.IsCleared
+                        ));
+                }
+
+                // Refresh numTransactions with actual number
+                numTransactions = transactionTable.Count;
+
+                // Construct AccountTableRow
+                accountTable[i] = new AccountTableRow(name, numTransactions, transactionTable.ToArray());
+            }
+
+            // Construct TransferTable
+            int numTransfers = transfers.Count;
+            var transferTable = new TransferTableRow[numTransfers];
+
+            for (int i = 0; i < numTransfers; i++)
+            {
+                var transfer = transfers[i];
+
+                transferTable[i] = new TransferTableRow(
+                    transfer.From.Name,
+                    transfer.To.Name,
+                    transfer.Number,
+                    (decimal)transfer.Value,
+                    transfer.Date.DayNumber,
+                    transfer.Payee,
+                    transfer.Memo,
+                    transfer.Category is not null ? transfer.Category.Name : "", // Use empty category name for null category
+                    transfer.IsCleared
+                    );
+            }
+
+            // Construct AccountBookFile and return
+            return new AccountBookFile(
+                numCategories,
+                categoryTable,
+                numAccounts,
+                accountTable,
+                numTransfers,
+                transferTable
+                );
         }
 
         public void UpdateFrom(AccountBook accountBook)
         {
-            throw new NotImplementedException();
+            // Create temporary file
+            var tempAccBkFile = Deconstruct(accountBook);
+
+            // Transfer data to this file
+            NumCategories = tempAccBkFile.NumCategories;
+            CategoryTable = tempAccBkFile.CategoryTable;
+            NumAccounts = tempAccBkFile.NumAccounts;
+            AccountTable = tempAccBkFile.AccountTable;
+            NumTransfers = tempAccBkFile.NumTransfers;
+            TransferTable   = tempAccBkFile.TransferTable;
+
+            // Path in this file is maintained
         }
 
         public void SaveTo(string path)
