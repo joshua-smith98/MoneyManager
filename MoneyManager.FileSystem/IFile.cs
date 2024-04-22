@@ -1,6 +1,6 @@
 ﻿namespace MoneyManager.FileSystem
-{
-    public interface IFile<T, This>
+{    
+    public interface IFile<T, This> where T : class where This : IFile<T, This>
     {
         public static abstract char[] Header { get; }
         public static abstract string Extension { get; }
