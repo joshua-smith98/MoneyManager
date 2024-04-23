@@ -49,7 +49,6 @@ namespace MoneyManager.FileSystem
             string TransactionNumber,
             decimal Value,
             int DayNumber,
-            string Payee,
             string Memo,
             string CategoryName,
             bool IsCleared
@@ -145,7 +144,6 @@ namespace MoneyManager.FileSystem
                         br.ReadString(); // TransactionNumber
                         br.ReadDecimal(); // Value
                         br.ReadInt32(); // DayNumber
-                        br.ReadString(); // Payee
                         br.ReadString(); // Memo
                         br.ReadString(); // CategoryName
                         br.ReadBoolean(); // IsCleared
@@ -243,7 +241,6 @@ namespace MoneyManager.FileSystem
                             br.ReadString(), // TransactionNumber
                             br.ReadDecimal(), // Value
                             br.ReadInt32(), // DayNumber
-                            br.ReadString(), // Payee
                             br.ReadString(), // Memo
                             br.ReadString(), // CategoryName
                             br.ReadBoolean() // IsCleared
@@ -350,7 +347,6 @@ namespace MoneyManager.FileSystem
                     transfer.Number,
                     (decimal)transfer.Value,
                     transfer.Date.DayNumber,
-                    transfer.Payee,
                     transfer.Memo,
                     transfer.Category is not null ? transfer.Category.Name : "", // Use empty category name for null category
                     transfer.IsCleared
@@ -386,7 +382,83 @@ namespace MoneyManager.FileSystem
 
         public void SaveTo(string path)
         {
-            throw new NotImplementedException();
+            // Open file (assume file can be overwritten)
+            using var bw = new BinaryWriter(File.Create(path));
+
+            // Write header and version no.
+            bw.Write(Header);
+            bw.Write(Version);
+
+            // Write CategoryTable
+            bw.Write(NumCategories);
+            for (int i = 0; i < NumCategories; i++)
+            {
+                var categoryRow = CategoryTable[i];
+                
+                // Write Name
+                bw.Write(categoryRow.Name);
+
+                // Write IncomeBudget, if it exists
+                bw.Write(categoryRow.HasIncomeBudget);
+                if (categoryRow.HasIncomeBudget)
+                {
+                    bw.Write(categoryRow.IncomeBudget!.PerPeriod); // IncomeBudget cannot be null, since HasIncomeBudget => IncomeBudget is not null
+                    bw.Write(categoryRow.IncomeBudget!.Period);
+                }
+
+                // Write ExpensesBudget, if it exists
+                bw.Write(categoryRow.HasExpensesBudget);
+                if (categoryRow.HasExpensesBudget)
+                {
+                    bw.Write(categoryRow.ExpensesBudget!.PerPeriod); // ExpensesBudget cannot be null, since HasExpensesBudget => ExpensesBudget is not null
+                    bw.Write(categoryRow.ExpensesBudget!.Period);
+                }
+            }
+
+            // Write AccountTable
+            bw.Write(NumAccounts);
+            for (int i = 0; i < NumAccounts; i++)
+            {
+                var accountRow = AccountTable[i];
+                
+                // Write Name
+                bw.Write(accountRow.Name);
+
+                // Write TransactionTable
+                bw.Write(accountRow.NumTransactions);
+                for (int j = 0; j < accountRow.NumTransactions; j++)
+                {
+                    var transactionRow = accountRow.TransactionTable[j];
+
+                    bw.Write(transactionRow.TransactionNumber);
+                    bw.Write(transactionRow.Value);
+                    bw.Write(transactionRow.DayNumber);
+                    bw.Write(transactionRow.Payee);
+                    bw.Write(transactionRow.Memo);
+                    bw.Write(transactionRow.CategoryName);
+                    bw.Write(transactionRow.IsCleared);
+                }
+            }
+
+            // Write TransferTable
+            bw.Write(NumTransfers);
+            for (int i = 0; i < NumTransfers; i++)
+            {
+                var transferRow = TransferTable[i];
+
+                bw.Write(transferRow.FromAccName);
+                bw.Write(transferRow.ToAccName);
+                bw.Write(transferRow.TransactionNumber);
+                bw.Write(transferRow.Value);
+                bw.Write(transferRow.DayNumber);
+                bw.Write(transferRow.Memo);
+                bw.Write(transferRow.CategoryName);
+                bw.Write(transferRow.IsCleared);
+            }
+
+            // Flush and close
+            bw.Flush();
+            bw.Close();
         }
 
         public AccountBook Construct()
