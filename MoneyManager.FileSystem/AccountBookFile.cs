@@ -463,7 +463,77 @@ namespace MoneyManager.FileSystem
 
         public AccountBook Construct()
         {
-            throw new NotImplementedException();
+            // Build Categories
+            var categories = new Category[NumCategories];
+            for (int i = 0; i < NumCategories; i++)
+            {
+                var categoryRow = CategoryTable[i];
+                
+                // Construct budgets (if they exist)
+                Budget? incomeBudget =
+                    categoryRow.HasIncomeBudget
+                    ? new Budget(categoryRow.IncomeBudget!.PerPeriod, (Period)categoryRow.IncomeBudget!.Period)
+                    : null;
+
+                Budget? expensesBudget =
+                    categoryRow.HasExpensesBudget
+                    ? new Budget(categoryRow.ExpensesBudget!.PerPeriod, (Period)categoryRow.ExpensesBudget!.Period)
+                    : null;
+
+                // Construct category
+                categories[i] = new Category(categoryRow.Name, incomeBudget, expensesBudget);
+            }
+
+            // Build Accounts w/ Transactions
+            var accounts = new Account[NumAccounts];
+            for (int i = 0; i < NumAccounts; i++)
+            {
+                var accountRow = AccountTable[i];
+                
+                // Construct Transactions
+                var transactions = new Transaction[accountRow.NumTransactions];
+                for (int j = 0; j < accountRow.NumTransactions; j++)
+                {
+                    var transactionRow = accountRow.TransactionTable[j];
+
+                    transactions[j] = new Transaction(
+                        transactionRow.Value,
+                        DateOnly.FromDayNumber(transactionRow.DayNumber),
+                        transactionRow.Payee,
+                        transactionRow.Memo,
+                        transactionRow.TransactionNumber
+                        );
+
+                    transactions[j].Category = categories.Where(x => x.Name == transactionRow.CategoryName).First();
+                }
+
+                // Construct account
+                accounts[i] = new Account(accountRow.Name, transactions);
+            }
+
+            // Add Transfers
+            foreach (TransferTableRow transferRow in TransferTable)
+            {
+                // Find relevant Accounts
+                var fromAccount = accounts.Where(x => x.Name == transferRow.FromAccName).First();
+                var toAccount = accounts.Where(x => x.Name == transferRow.ToAccName).First();
+
+                // Create transfer
+                fromAccount.TransferTo(
+                    toAccount,
+                    transferRow.Value,
+                    DateOnly.FromDayNumber(transferRow.DayNumber),
+                    transferRow.Memo,
+                    transferRow.TransactionNumber,
+                    categories.Where(x => x.Name == transferRow.CategoryName).First()
+                    );
+            }
+
+            // Construct AccountBook, add components and return
+            var ret = new AccountBook();
+            ret.AddCategories(categories);
+            ret.AddAccounts(accounts);
+            return ret;
         }
 
     }
