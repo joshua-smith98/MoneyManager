@@ -72,7 +72,7 @@
             _ => TransactionType.Null
         };
 
-        public Transaction(Money value, DateOnly date, string payee = "", string memo = "", string number = "")
+        public Transaction(Money value, DateOnly date, string payee = "", string memo = "", string number = "", Category? category = null)
         {
             // Validity check: Transaction Value must not be zero
             if (value == 0) throw new TransactionException("Cannot create a Transaction with a value of zero!");
@@ -81,9 +81,10 @@
             Payee = payee;
             Memo = memo;
             Number = number;
+            Category = category;
         }
 
-        public Transaction(Money value, string payee = "", string memo = "", string number = "")
-            : this(value, DateOnly.FromDateTime(DateTime.Now), payee, memo, number) { }
+        public Transaction(Money value, string payee = "", string memo = "", string number = "", Category? category = null)
+            : this(value, DateOnly.FromDateTime(DateTime.Now), payee, memo, number, category) { }
     }
 }

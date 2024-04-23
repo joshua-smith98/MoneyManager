@@ -109,8 +109,9 @@
         /// <param name="value"></param>
         /// <param name="memo"></param>
         /// <param name="transactionNumber"></param>
-        public void TransferTo(Account account, Money value, string memo = "", string transactionNumber = "")
-            => Transfer.Create(this, account, value, memo, transactionNumber);
+        /// <param name="category"></param>
+        public void TransferTo(Account account, Money value, string memo = "", string transactionNumber = "", Category? category = null)
+            => Transfer.Create(this, account, value, memo, transactionNumber, category);
 
         /// <summary>
         /// Adds a Transfer of money from here to the given <see cref="Account"/>.
@@ -120,8 +121,9 @@
         /// <param name="date"></param>
         /// <param name="memo"></param>
         /// <param name="transactionNumber"></param>
-        public void TransferTo(Account account, Money value, DateOnly date, string memo = "", string transactionNumber = "")
-            => Transfer.Create(this, account, value, date, memo, transactionNumber);
+        /// <param name="category"></param>
+        public void TransferTo(Account account, Money value, DateOnly date, string memo = "", string transactionNumber = "", Category? category = null)
+            => Transfer.Create(this, account, value, date, memo, transactionNumber, category);
 
         /// <summary>
         /// Adds a Transfer of money from the given <see cref="Account"/> to here.
@@ -130,8 +132,9 @@
         /// <param name="value"></param>
         /// <param name="memo"></param>
         /// <param name="transactionNumber"></param>
-        public void TransferFrom(Account account, Money value, string memo = "", string transactionNumber = "")
-            => account.TransferTo(this, value, memo, transactionNumber);
+        /// <param name="category"></param>
+        public void TransferFrom(Account account, Money value, string memo = "", string transactionNumber = "", Category? category = null)
+            => account.TransferTo(this, value, memo, transactionNumber, category);
 
         /// <summary>
         /// Adds a Transfer of money from the given <see cref="Account"/> to here.
@@ -141,7 +144,8 @@
         /// <param name="date"></param>
         /// <param name="memo"></param>
         /// <param name="transactionNumber"></param>
-        public void TransferFrom(Account account, Money value, DateOnly date, string memo = "", string transactionNumber = "")
-            => account.TransferTo(this, value, date, memo, transactionNumber);
+        /// <param name="category"></param>
+        public void TransferFrom(Account account, Money value, DateOnly date, string memo = "", string transactionNumber = "", Category? category = null)
+            => account.TransferTo(this, value, date, memo, transactionNumber, category);
     }
 }

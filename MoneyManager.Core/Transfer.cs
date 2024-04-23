@@ -102,32 +102,32 @@
 
         /* The Transfer construction logic is a bit complex, so here's a description:
          *  First    -> The Create() method is called. This constructs the outgoing transfer, without providing a twin.
-         *  Then     -> The outgoing transfer's constructor constructs the incoming transfer, giving itself as its twin
+         *  Then     -> The outgoing transfer's constructor constructs the incoming transfer, giving itself as its twin,
          *              and assigning the incoming transfer as the outgoing's twin. The two transfers are now linked.
          *  Finally  -> The outgoing transfer is passed to the CreateFrom() method, which adds both transfers to their respective Accounts.
          */
 
-        private Transfer(Account to, Account from, Money value, DateOnly date, string memo = "", string number = "", Transfer? twin = null)
-            : base(value, date, "", memo, number)
+        private Transfer(Account to, Account from, Money value, DateOnly date, string memo = "", string number = "", Category? category = null, Transfer? twin = null)
+            : base(value, date, "", memo, number, category)
         {
             To = to;
             From = from;
 
             // Case: twin isn't given -> create our own twin with inverse value
             if (twin is null)
-                Twin = new Transfer(to, from, -value, date, memo, number, this);
+                Twin = new Transfer(to, from, -value, date, memo, number, category, this);
             else Twin = twin; // Otherwise just use the one we're given
         }
 
-        private Transfer(Account to, Account from, Money value, string memo = "", string number = "", Transfer? twin = null)
-            : base(value, "", memo, number)
+        private Transfer(Account to, Account from, Money value, string memo = "", string number = "", Category? category = null, Transfer? twin = null)
+            : base(value, "", memo, number, category)
         {
             To = to;
             From = from;
 
             // Case: twin isn't given -> create our own twin with inverse value
             if (twin is null)
-                Twin = new Transfer(to, from, -value, memo, number, this);
+                Twin = new Transfer(to, from, -value, memo, number, category, this);
             else Twin = twin; // Otherwise just use the one we're given
         }
 
@@ -140,9 +140,10 @@
         /// <param name="date"></param>
         /// <param name="memo"></param>
         /// <param name="number"></param>
-        public static void Create(Account from, Account to, Money value, DateOnly date, string memo = "", string number = "")
+        /// <param name="category"></param>
+        public static void Create(Account from, Account to, Money value, DateOnly date, string memo = "", string number = "", Category? category = null)
             // Note: we are constructing the outgoing transfer, so we're ensuring value is negative here.
-            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, date, memo, number));
+            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, date, memo, number, category));
 
         /// <summary>
         /// Creates a new transfer between the given accounts, with the given metadata.
@@ -152,9 +153,10 @@
         /// <param name="value"></param>
         /// <param name="memo"></param>
         /// <param name="number"></param>
-        public static void Create(Account from, Account to, Money value, string memo = "", string number = "")
+        /// <param name="category"></param>
+        public static void Create(Account from, Account to, Money value, string memo = "", string number = "", Category? category = null)
             // Note: we are constructing the outgoing transfer, so we're ensuring value is negative here.
-            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, memo, number));
+            => CreateFrom(new Transfer(to, from, value > 0 ? -value : value, memo, number, category));
 
         private static void CreateFrom(Transfer fromTransfer)
         {
