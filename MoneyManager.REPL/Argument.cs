@@ -15,7 +15,7 @@
 
             // If we're expecting Str and it matches the first word, then everything except that is our argument
             if (Str is not null && argWords.First().ToLower() == Str.ToLower())
-                return Parse(string.Concat(argWords[1..]));
+                return Parse(argumentSubStr[argWords.First().Length..].Trim());
 
             // Otherwise, if we aren't expecting Str, then the whole substr must be our argument
             else if (Str is null)
