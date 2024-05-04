@@ -48,7 +48,7 @@ namespace MoneyManager.REPL
 
         private string _pathToThisCommand;
 
-        public Command(string pathToThisCommand)
+        public Command(string pathToThisCommand = "")
         {
             // Validate constraints
             // Commands with no sub-commands must contain an action
