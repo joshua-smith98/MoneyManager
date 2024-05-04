@@ -31,7 +31,7 @@ namespace MoneyManager.REPL
                     for(int i = 0; i < Arguments.Length; i++)
                     {
                         ret.Append($" {Arguments[i].Str}");
-                        ret.Append(Arguments.IsRequired ? $" [{Arguments[i].ID}]" : $" ({Arguments[i].ID})"); // Use square brackets if argument is required, or rounded if not
+                        ret.Append(Arguments[i].IsRequired ? $" [{Arguments[i].ID}]" : $" ({Arguments[i].ID})"); // Use square brackets if argument is required, or rounded if not
                         ret.Append(i == Arguments.Length - 1 ? ";" : ","); // Put semicolon at end of arg segment if its the last one, otherwise comma
                     }
                 }
@@ -54,7 +54,11 @@ namespace MoneyManager.REPL
             // Commands with no sub-commands must contain an action
             if (SubCommands.Length == 0 && Action is null)
                 throw new REPLSemanticErrorException($"Command path stub (missing action): {CommandPath}"); // Should only be thrown if I make a mistake implementing the command structure
-            
+
+            // Only lonely arguments may contain no Str
+            if (Arguments.Length > 1 && Arguments.Any(x => x.Str is null))
+                throw new REPLSemanticErrorException($"One or more arguments missing Str when more than one exist: {CommandPath}"); // Ditto^^
+
             _pathToThisCommand = pathToThisCommand;
         }
 
