@@ -2,6 +2,9 @@
 
 namespace MoneyManager.FileSystem
 {
+    /// <summary>
+    /// Represents the file format that can be used to transmute between some <see cref="AccountBookFile"/> and a file on the disk.
+    /// </summary>
     public class AccountBookFile : IFile<AccountBook, AccountBookFile>
     {
         public static char[] Header => "MOMAACBK".ToArray();
@@ -12,6 +15,7 @@ namespace MoneyManager.FileSystem
 
         public string? Path { get; private set; }
 
+        #region FileDataStructure
         internal int NumCategories;
         internal CategoryTableRow[] CategoryTable;
         internal int NumAccounts;
@@ -72,7 +76,16 @@ namespace MoneyManager.FileSystem
             TransferTable = transferTable;
             Path = path;
         }
+        #endregion
 
+        /// <summary>
+        /// Loads an instance of <see cref="AccountBookFile"/> from the given path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="InvalidFileFormatException"></exception>
+        /// <exception cref="OldFileVersionException"></exception>
         public static AccountBookFile LoadFrom(string path)
         {
             // Check that file exists
@@ -262,6 +275,11 @@ namespace MoneyManager.FileSystem
             #endregion
         }
 
+        /// <summary>
+        /// Deconstructs the given <see cref="AccountBook"/> into an instance of <see cref="AccountBookFile"/>.
+        /// </summary>
+        /// <param name="accountBook"></param>
+        /// <returns></returns>
         public static AccountBookFile Deconstruct(AccountBook accountBook)
         {
             // Construct CategoryTable
@@ -363,7 +381,11 @@ namespace MoneyManager.FileSystem
                 transferTable
                 );
         }
-
+        
+        /// <summary>
+        /// Updates this instance of <see cref="AccountBookFile"/> with new information from an <see cref="AccountBook"/> instance.
+        /// </summary>
+        /// <param name="accountBook"></param>
         public void UpdateFrom(AccountBook accountBook)
         {
             // Create temporary file
@@ -377,9 +399,13 @@ namespace MoneyManager.FileSystem
             NumTransfers = tempAccBkFile.NumTransfers;
             TransferTable   = tempAccBkFile.TransferTable;
 
-            // Path in this file is maintained
+            // Path in this AccountBookFile instance persists
         }
 
+        /// <summary>
+        /// Saves this instance of <see cref="AccountBookFile"/> to a new file at the given path. Overwrites any existing data.
+        /// </summary>
+        /// <param name="path"></param>
         public void SaveTo(string path)
         {
             // Open file (assume file can be overwritten)
@@ -461,6 +487,10 @@ namespace MoneyManager.FileSystem
             bw.Close();
         }
 
+        /// <summary>
+        /// Constructs a new <see cref="AccountBook"/> from this instance of <see cref="AccountBookFile"/>.
+        /// </summary>
+        /// <returns></returns>
         public AccountBook Construct()
         {
             // Build Categories
