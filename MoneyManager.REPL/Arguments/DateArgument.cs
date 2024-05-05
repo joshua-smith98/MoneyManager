@@ -4,7 +4,7 @@
     {
         public override Type Type => typeof(DateOnly);
 
-        protected override ArgumentValue Parse(string argumentSubStr)
+        protected override ArgumentValue ParseImpl(string argumentSubStr)
         {
             // Remove ending comma or semi-colon if it exists
             if (argumentSubStr[^1] == ',' || argumentSubStr[^1] == ';')

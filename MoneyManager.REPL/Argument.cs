@@ -15,18 +15,18 @@ namespace MoneyManager.REPL
         public bool MatchStr(string argumentSubStr)
             => Str is null || Str is not null && argumentSubStr.Split().First().ToLower() == Str.ToLower();
 
-        public ArgumentValue TryRead(string argumentSubStr)
+        public ArgumentValue Parse(string argumentSubStr)
         {
             // If we're expecting Str, then everything except that is our argument
             if (Str is not null)
-                return Parse(argumentSubStr.Trim()[Str.Length..].Trim());
+                return ParseImpl(argumentSubStr.Trim()[Str.Length..].Trim());
 
             // Otherwise, if we aren't expecting Str, then the whole substr must be our argument
             else
-                return Parse(argumentSubStr);
+                return ParseImpl(argumentSubStr);
         }
 
-        protected abstract ArgumentValue Parse(string argumentSubStr);
+        protected abstract ArgumentValue ParseImpl(string argumentSubStr);
 
         internal static string[] SplitOutside(string input, char separator, char ignoreSplitInside)
         {

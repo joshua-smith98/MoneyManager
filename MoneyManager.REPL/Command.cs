@@ -77,7 +77,7 @@ namespace MoneyManager.REPL
 
             // Case: One argument with null Str -> Assume argsSubStr is the whole single argument
             else if (Arguments.Length == 1 && Arguments.First().Str is null)
-                ret.Add(Arguments.First().ID, Arguments.First().TryRead(argsSubStr)!); // TryRead will always return non-null here, as we're not checking str
+                ret.Add(Arguments.First().ID, Arguments.First().Parse(argsSubStr)!); // TryRead will always return non-null here, as we're not checking str
 
             // Case: One or more arguments w/ Str
             else
@@ -99,7 +99,7 @@ namespace MoneyManager.REPL
                     if (matchResults.Count() > 1)
                         throw new REPLSemanticErrorException($"Multiple arguments in command \"{Str}\" match Str: \"{argsSubStr.Split().First()}\"");
 
-                    ret.Add(matchResults.First().ID, matchResults.First().TryRead(argsSubStr));
+                    ret.Add(matchResults.First().ID, matchResults.First().Parse(argsSubStr));
                     argList.Remove(matchResults.First());
                 }
             }
