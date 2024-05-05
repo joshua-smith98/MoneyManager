@@ -1,4 +1,6 @@
-﻿namespace MoneyManager.REPL
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace MoneyManager.REPL
 {
     internal abstract class Argument(string id, bool isRequired, string? str = null)
     {
@@ -10,20 +12,18 @@
 
         public abstract Type Type { get; }
 
-        public ArgumentValue? TryRead(string argumentSubStr)
-        {
-            var argWords = argumentSubStr.Split();
+        public bool MatchStr(string argumentSubStr)
+            => Str is null || Str is not null && argumentSubStr.Split().First().ToLower() == Str.ToLower();
 
-            // If we're expecting Str and it matches the first word, then everything except that is our argument
-            if (Str is not null && argWords.First().ToLower() == Str.ToLower())
-                return Parse(argumentSubStr[argWords.First().Length..].Trim());
+        public ArgumentValue TryRead(string argumentSubStr)
+        {
+            // If we're expecting Str, then everything except that is our argument
+            if (Str is not null)
+                return Parse(argumentSubStr.Trim()[Str.Length..].Trim());
 
             // Otherwise, if we aren't expecting Str, then the whole substr must be our argument
-            else if (Str is null)
+            else
                 return Parse(argumentSubStr);
-
-            // Finally, if we're expecting string, but it doesn't match then this isn't the argument we're looking for
-            else return null;
         }
 
         protected abstract ArgumentValue Parse(string argumentSubStr);
