@@ -68,7 +68,6 @@ namespace MoneyManager.REPL
 
         public ArgumentValueCollection ReadArgs(string argsSubStr)
         {
-            // Whooh this method is a doozy...
             // Assume that this is a substring goes from the beginning of the args to the end including semi-colon, and doesn't include the command str
             // Read args in any order and none are read twice
             var ret = new ArgumentValueCollection();
@@ -83,27 +82,12 @@ namespace MoneyManager.REPL
             // Case: One or more arguments w/ Str
             else
             {
-                // Split argSubStr into separate arguments via comma
-                var commaSplit = argsSubStr.Split(',');
-
-                // Then concatinate any strings between quotes
-                var argSubStrList = new List<string>();
-                var insideQuotedSegment = false;
-                for (int i = 0; i < commaSplit.Length; i++)
-                {
-                    if (!insideQuotedSegment)
-                        argSubStrList.Add(commaSplit[i]);
-                    else
-                        argSubStrList[^1] += commaSplit[i];
-
-                    // If we detect a single quote only within a segment, we move inside or outside a quoted segment
-                    if (commaSplit[i].Where(x => x == '"').Count() == 1)
-                        insideQuotedSegment = !insideQuotedSegment;
-                }
+                // Split argSubStrs by comma, ignoring commas inside double-quotes
+                var argSubStrs = Argument.SplitOutside(argsSubStr, ',', '"');
 
                 // Read any arguments that match each argSubStr once only
                 var argList = Arguments.ToList();
-                foreach (var argSubStr in argSubStrList)
+                foreach (var argSubStr in argSubStrs)
                 {
                     foreach (var argument in argList)
                     {

@@ -27,5 +27,28 @@
         }
 
         protected abstract ArgumentValue Parse(string argumentSubStr);
+
+        internal static string[] SplitOutside(string input, char separator, char ignoreSplitInside)
+        {
+            // Split input into separate arguments via separator
+            var commaSplit = input.Split(separator);
+
+            // Then concatinate any strings between ignore char
+            var outputList = new List<string>();
+            var insideIgnoredegment = false;
+            for (int i = 0; i < commaSplit.Length; i++)
+            {
+                if (!insideIgnoredegment)
+                    outputList.Add(commaSplit[i]);
+                else
+                    outputList[^1] += commaSplit[i];
+
+                // If we detect an odd number of ignore char only within a segment, we move inside or outside an ignored segment
+                if (commaSplit[i].Where(x => x == ignoreSplitInside).Count() % 2 != 0)
+                    insideIgnoredegment = !insideIgnoredegment;
+            }
+
+            return outputList.ToArray();
+        }
     }
 }
