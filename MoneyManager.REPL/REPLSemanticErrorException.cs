@@ -1,4 +1,4 @@
 ﻿namespace MoneyManager.REPL
 {
-    public class REPLSemanticErrorException(string message) : REPLException(message);
+    internal class REPLSemanticErrorException(string message) : REPLException(message);
 }
