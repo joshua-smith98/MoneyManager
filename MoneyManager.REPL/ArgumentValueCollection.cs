@@ -17,6 +17,12 @@ namespace MoneyManager.REPL
         public void Add(string ID, ArgumentValue Value)
             => keyValuePairs.Add(ID, Value);
 
+        public void Add(ArgumentValueCollection argumentValues)
+        {
+            foreach (KeyValuePair<string, ArgumentValue> keyValuePair in argumentValues)
+                keyValuePairs.Add(keyValuePair.Key, keyValuePair.Value);
+        }
+
         public bool ContainsID(string ID)
             => keyValuePairs.ContainsKey(ID);
 
