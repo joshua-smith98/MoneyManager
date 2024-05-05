@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace MoneyManager.REPL
+﻿namespace MoneyManager.REPL
 {
     internal abstract class Argument(string id, bool isRequired, string? str = null)
     {
