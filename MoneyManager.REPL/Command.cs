@@ -43,6 +43,7 @@ namespace MoneyManager.REPL
 
         public abstract Command[] SubCommands { get; }
         public abstract Argument[] Arguments { get; }
+        public abstract string[] RequiredArgIDs { get; }
 
         public abstract Action<ArgumentValueCollection>? Action { get; }
 

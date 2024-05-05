@@ -5,7 +5,8 @@
         public string? Str { get; } = str;
         public string ID { get; } = id;
 
-        public bool IsRequired { get; } = isRequired;
+        [Obsolete]
+        public bool IsRequired { get; } = isRequired; // TODO: Properly remove this property and re-factor Command.CommandPath to use Command.RequiredArgIDs
 
         public abstract Type Type { get; }
 
