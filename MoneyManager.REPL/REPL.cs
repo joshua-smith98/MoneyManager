@@ -66,8 +66,18 @@ namespace MoneyManager.REPL
 
         private void Parse(string userInput)
         {
-            // Parse given user input
+            var commandMatches = TopLevelCommands.Where(x => x.MatchStr(userInput));
 
+            if (commandMatches.Count() > 1)
+                throw new REPLSemanticErrorException($"Multiple top-level commands match str: \"{userInput.Split().First()}\"");
+
+            if (commandMatches.Count() == 1)
+            {
+                commandMatches.First().Parse(userInput, new ArgumentValueCollection());
+                return;
+            }
+
+            throw new REPLCommandNotFoundException($"Couldn't find command: \"{userInput.Split().First()}\"");
         }
     }
 }
