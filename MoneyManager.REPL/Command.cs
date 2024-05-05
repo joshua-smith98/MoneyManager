@@ -66,6 +66,58 @@ namespace MoneyManager.REPL
         public bool MatchStr(string commandSubStr)
             => commandSubStr.Split().First().ToLower() == Str.ToLower();
 
+        public void Parse(string commandSubStr, ArgumentValueCollection previousArgs)
+        {
+            // Assume MatchStr has already been determined to be true
+
+            // Remove Str from commandSubStr
+            var remainder = commandSubStr.Trim()[Str.Length..].Trim();
+
+            // Try and match remainder to subcommand first, if so then Parse that and return
+            var subCommandMatches = SubCommands.Where(x => x.MatchStr(remainder));
+
+            if (subCommandMatches.Count() > 1)
+                throw new REPLSemanticErrorException($"Multiple subcommands in command \"{Str}\" match str: \"{remainder.Split().First()}\"");
+
+            if (subCommandMatches.Count() == 1)
+            {
+                subCommandMatches.First().Parse(commandSubStr, previousArgs);
+                return;
+            }
+
+            // Then try parsing remainder as arguments - split until semicolon excluding quotes
+            var argsSubStr = Argument.SplitOutside(remainder, ';', '"').First();
+            previousArgs.Add(ReadArgs(argsSubStr));
+
+            // Finally, if nothing remains then run our action; otherwise parse remainder as subcommand and return
+            var finalRemainder = remainder[argsSubStr.Length..].Trim();
+            
+            if (finalRemainder == string.Empty)
+            {
+                if (Action is null)
+                    throw new REPLCommandPathNotValidException($"Found nothing after command \"{Str}\" or its arguments. This command isn't at the end of a valid command path!");
+                
+                Action.Invoke(previousArgs);
+                return;
+            }
+            else
+            {
+                subCommandMatches = SubCommands.Where(x => x.MatchStr(finalRemainder));
+
+                if (subCommandMatches.Count() > 1)
+                    throw new REPLSemanticErrorException($"Multiple subcommands in command \"{Str}\" match str: \"{finalRemainder.Split().First()}\"");
+
+                if (subCommandMatches.Count() == 1)
+                {
+                    subCommandMatches.First().Parse(commandSubStr, previousArgs);
+                    return;
+                }
+            }
+
+            // If parsing of final remainder fails then we couldn't find the next command\
+            throw new REPLCommandNotFoundException($"Command \"{Str}\" doesn't contain any sub-command: \"{finalRemainder.Split().First()}\"");
+        }
+
         public ArgumentValueCollection ReadArgs(string argsSubStr)
         {
             // Assume that this is a substring goes from the beginning of the args to the end including semi-colon, and doesn't include the command str
