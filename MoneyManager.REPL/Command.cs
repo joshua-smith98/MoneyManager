@@ -66,6 +66,10 @@ namespace MoneyManager.REPL
         /// The list of <see cref="Argument"/>s that are required by this command, referenced by their <see cref="Argument.ID"/>s.
         /// </summary>
         public abstract string[] RequiredArgIDs { get; }
+        /// <summary>
+        /// The list of <see cref="Argument"/>s that can be used by this command but are not required, referenced by their <see cref="Argument.ID"/>.
+        /// </summary>
+        public abstract string[] OptionalArgIDs { get; }
 
         /// <summary>
         /// The <see cref="System.Action"/> associated with this command. If this is null, then this command must contain some sub-commands.
