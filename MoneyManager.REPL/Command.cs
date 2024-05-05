@@ -65,5 +65,61 @@ namespace MoneyManager.REPL
 
         public bool MatchStr(string commandSubStr)
             => commandSubStr.Split().First().ToLower() == Str.ToLower();
+
+        public ArgumentValueCollection ReadArgs(string argsSubStr)
+        {
+            // Whooh this method is a doozy...
+            // Assume that this is a substring goes from the beginning of the args to the end including semi-colon, and doesn't include the command str
+            // Read args in any order and none are read twice
+            var ret = new ArgumentValueCollection();
+
+            // Case: No arguments -> do nothing, return empty collection
+            if (Arguments.Length == 0) ;
+
+            // Case: One argument with null Str -> Assume argsSubStr is the whole single argument
+            else if (Arguments.Length == 1 && Arguments.First().Str is null)
+                ret.Add(Arguments.First().ID, Arguments.First().TryRead(argsSubStr)!); // TryRead will always return non-null here, as we're not checking str
+
+            // Case: One or more arguments w/ Str
+            else
+            {
+                // Split argSubStr into separate arguments via comma
+                var commaSplit = argsSubStr.Split(',');
+
+                // Then concatinate any strings between quotes
+                var argSubStrList = new List<string>();
+                var insideQuotedSegment = false;
+                for (int i = 0; i < commaSplit.Length; i++)
+                {
+                    if (!insideQuotedSegment)
+                        argSubStrList.Add(commaSplit[i]);
+                    else
+                        argSubStrList[^1] += commaSplit[i];
+
+                    // If we detect a single quote only within a segment, we move inside or outside a quoted segment
+                    if (commaSplit[i].Where(x => x == '"').Count() == 1)
+                        insideQuotedSegment = !insideQuotedSegment;
+                }
+
+                // Read any arguments that match each argSubStr once only
+                var argList = Arguments.ToList();
+                foreach (var argSubStr in argSubStrList)
+                {
+                    foreach (var argument in argList)
+                    {
+                        var tryReadResult = argument.TryRead(argSubStr);
+                        if (tryReadResult is not null)
+                        {
+                            ret.Add(argument.ID, tryReadResult);
+                            argList.Remove(argument);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Return
+            return ret;
+        }
     }
 }
