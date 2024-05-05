@@ -85,20 +85,22 @@ namespace MoneyManager.REPL
                 // Split argSubStrs by comma, ignoring commas inside double-quotes
                 var argSubStrs = Argument.SplitOutside(argsSubStr, ',', '"');
 
-                // Read any arguments that match each argSubStr once only
+                // Read any arguments that match each argSubStr and remove them from the match pool if they do (so we only match them once)
                 var argList = Arguments.ToList();
                 foreach (var argSubStr in argSubStrs)
                 {
-                    foreach (var argument in argList)
-                    {
-                        var tryReadResult = argument.TryRead(argSubStr);
-                        if (tryReadResult is not null)
-                        {
-                            ret.Add(argument.ID, tryReadResult);
-                            argList.Remove(argument);
-                            break;
-                        }
-                    }
+                    var matchResults = argList.Where(x => x.MatchStr(argSubStr));
+
+                    // Case: no arguments match
+                    if (!matchResults.Any())
+                        throw new REPLArgumentNotFoundException($"Couldn't find argument for command \"{Str}\" with label: \"{argSubStr.Split().First()}\"");
+
+                    // Case: more than one arguments match -> Must mean identical IDs within a single command, this is problem with my code!
+                    if (matchResults.Count() > 1)
+                        throw new REPLSemanticErrorException($"Multiple arguments in command \"{Str}\" match Str: \"{argsSubStr.Split().First()}\"");
+
+                    ret.Add(matchResults.First().ID, matchResults.First().TryRead(argsSubStr));
+                    argList.Remove(matchResults.First());
                 }
             }
 
