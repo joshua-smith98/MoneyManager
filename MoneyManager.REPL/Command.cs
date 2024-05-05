@@ -118,7 +118,7 @@ namespace MoneyManager.REPL
             throw new REPLCommandNotFoundException($"Command \"{Str}\" doesn't contain any sub-command: \"{finalRemainder.Split().First()}\"");
         }
 
-        public ArgumentValueCollection ReadArgs(string argsSubStr)
+        private ArgumentValueCollection ReadArgs(string argsSubStr)
         {
             // Assume that this is a substring goes from the beginning of the args to the end including semi-colon, and doesn't include the command str
             // Read args in any order and none are read twice
