@@ -2,6 +2,10 @@
 
 namespace MoneyManager.REPL
 {
+    /// <summary>
+    /// A "collection" of <see cref="ArgumentValue"/> (actually implements <see cref="IEnumerable"/>, not <see cref="ICollection"/>).<br/>
+    /// Is readonly, except for <see cref="Add"/>.
+    /// </summary>
     internal class ArgumentValueCollection : IEnumerable<KeyValuePair<string, ArgumentValue>>
     {
         private readonly Dictionary<string, ArgumentValue> keyValuePairs = [];

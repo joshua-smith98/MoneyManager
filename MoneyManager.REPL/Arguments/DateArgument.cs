@@ -1,5 +1,11 @@
 ﻿namespace MoneyManager.REPL
 {
+    /// <summary>
+    /// Represents an <see cref="Argument"/> which accepts a <see cref="DateOnly"/> type.
+    /// </summary>
+    /// <param name="id">The internal identifier for this argument instance.</param>
+    /// <param name="isRequired">[Deprecated]</param>
+    /// <param name="str">The string the user uses to refer to this argument in a command path.</param>
     internal class DateArgument(string id, bool isRequired, string? str = null) : Argument(id, isRequired, str)
     {
         public override Type Type => typeof(DateOnly);
