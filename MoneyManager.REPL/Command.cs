@@ -137,14 +137,19 @@ namespace MoneyManager.REPL
             var argsSubStr = Argument.SplitOutside(remainder, ';', '"').First();
             previousArgs.Add(ReadArgs(argsSubStr));
 
-            // Finally, if nothing remains then run our action; otherwise parse remainder as subcommand and return
+            // Finally, if nothing remains then verify all required args are given and run our action; otherwise parse remainder as subcommand and return
             var finalRemainder = remainder[argsSubStr.Length..].Trim();
             
             if (finalRemainder == string.Empty)
             {
                 if (Action is null)
                     throw new REPLCommandPathNotValidException($"Found nothing after command \"{Str}\" or its arguments. This command isn't at the end of a valid command path!");
-                
+
+                // Verify all required args are given
+                foreach (var requiredArgID in RequiredArgIDs)
+                    if (!previousArgs.ContainsID(requiredArgID))
+                        throw new REPLCommandMissingRequiredArgsException($"Couldn't find required argument: [{requiredArgID}]");
+
                 Action.Invoke(previousArgs);
                 return;
             }
