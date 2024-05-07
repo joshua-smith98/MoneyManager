@@ -83,7 +83,7 @@ namespace MoneyManager.REPL
         /// </summary>
         /// <param name="pathToThisCommand"></param>
         /// <exception cref="REPLSemanticErrorException"></exception>
-        public Command(string pathToThisCommand = "")
+        public Command(string pathToThisCommand)
         {
             // Validate constraints
             // Commands with no sub-commands must contain an action
