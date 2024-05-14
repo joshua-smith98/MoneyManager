@@ -18,6 +18,12 @@ namespace MoneyManager.REPL
 
         public int Count => keyValuePairs.Count;
 
+        public ArgumentValueCollection(params (string, ArgumentValue)[] values)
+        {
+            foreach ((string id, ArgumentValue value) in values)
+                keyValuePairs[id] = value;
+        }
+
         public void Add(string ID, ArgumentValue Value)
             => keyValuePairs.Add(ID, Value);
 
