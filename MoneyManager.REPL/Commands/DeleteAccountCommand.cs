@@ -30,8 +30,12 @@ namespace MoneyManager.REPL.Commands
                     if (!REPL.Instance.CurrentAccountBook.Accounts.Select(x => x.Name).Contains(accountName))
                         throw new REPLCommandActionException($"Couldn't find Account: \"{accountName}\"");
 
-                    // Delete account
+                    // Reset context if required
                     var accountToDelete = REPL.Instance.CurrentAccountBook.Accounts.Where(x => x.Name == accountName).First();
+                    if (REPL.Instance.CurrentContext == accountToDelete)
+                        REPL.Instance.CurrentContext = REPL.Instance.CurrentAccountBook;
+
+                    // Delete account
                     REPL.Instance.CurrentAccountBook.RemoveAccount(accountToDelete);
 
                     Terminal.MessageSingle($"Deleted account: \"{accountName}\"");
@@ -50,6 +54,10 @@ namespace MoneyManager.REPL.Commands
                         Terminal.MessageSingle("Account deletion cancelled by user.", ConsoleColor.Red);
                         return;
                     }
+
+                    // Reset context if required
+                    if (REPL.Instance.CurrentContext == REPL.Instance.CurrentAccountBook.Accounts[selection])
+                        REPL.Instance.CurrentContext = REPL.Instance.CurrentAccountBook;
 
                     // Otherwise -> Delete selected account
                     REPL.Instance.CurrentAccountBook.RemoveAccountAt(selection);

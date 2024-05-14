@@ -1,0 +1,52 @@
+﻿
+namespace MoneyManager.REPL.Commands
+{
+    internal class SaveCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    {
+        public override string Str => "save";
+
+        public override string About => "Saves the currently loaded Account Book.";
+
+        public override Command[] SubCommands => [
+            new SaveAsCommand(CommandPath)
+            ];
+
+        public override Argument[] Arguments => [];
+
+        public override string[] RequiredArgIDs => [];
+
+        public override string[] OptionalArgIDs => [];
+
+        public override Action<ArgumentValueCollection>? Action =>
+            (ArgumentValueCollection args) =>
+            {
+                // Case: AccountBook has been saved previously
+                if (REPL.Instance.CurrentAccountBookFile is not null && REPL.Instance.CurrentAccountBookFile.Path is not null)
+                {
+                    // Update and save
+                    REPL.Instance.CurrentAccountBookFile.UpdateFrom(REPL.Instance.CurrentAccountBook);
+                    REPL.Instance.CurrentAccountBookFile.SaveTo(REPL.Instance.CurrentAccountBookFile.Path);
+                    Terminal.MessageSingle("Account Book Successfully saved.");
+                }
+
+                // Case: AccountBook has no previous file to save to -> acquire new path and save
+                else
+                {
+                    // Get new path from user
+                    string? newPath = Terminal.PromptCancellable("Path to save Account Book to (or ESC to cancel): ", ConsoleKey.Escape);
+                    if (newPath is null)
+                    {
+                        Terminal.MessageSingle("Save cancelled by user.", ConsoleColor.Red);
+                        return;
+                    }
+
+                    // Invoke SaveAsCommand
+                    new SaveAsCommand("").Action!(
+                        new ArgumentValueCollection(
+                            ("accountBookPath", new ArgumentValue(newPath, typeof(string)))
+                            )
+                        );
+                }
+            };
+    }
+}

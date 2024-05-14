@@ -25,7 +25,7 @@ namespace MoneyManager.REPL.Commands
                     // Case: user says yes -> invoke save command
                     case Terminal.UserResult.Yes:
                         // Run "save book" command
-                        new SaveBookCommand("").Action([]);
+                        new SaveCommand("").Action!([]);
                         break;
 
                     // Case: user says no -> continue without saving
