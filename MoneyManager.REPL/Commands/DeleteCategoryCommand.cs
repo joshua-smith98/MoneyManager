@@ -50,10 +50,7 @@ namespace MoneyManager.REPL.Commands
 
                     // Case: User selected last item ("Cancel") -> print message and exit action
                     if (selection == selectionMenuItems.Length - 1)
-                    {
-                        Terminal.MessageSingle("Category deletion cancelled by user.", ConsoleColor.Red);
-                        return;
-                    }
+                        throw new REPLCommandActionException("Category deletion cancelled by user.");
 
                     // Reset context if required
                     if (REPL.Instance.CurrentContext == REPL.Instance.CurrentAccountBook.Categories[selection])

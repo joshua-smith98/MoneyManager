@@ -33,8 +33,7 @@ namespace MoneyManager.REPL.Commands
 
                     // Case: user cancels or gives any other response -> print message and exit action
                     default:
-                        Terminal.MessageSingle("Cancelled by user.", ConsoleColor.Red);
-                        return;
+                        throw new REPLCommandActionException("Save cancelled by user.");
                 }
 
                 // Create new AccountBook and reset file

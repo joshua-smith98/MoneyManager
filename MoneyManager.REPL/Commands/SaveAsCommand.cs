@@ -31,10 +31,7 @@ namespace MoneyManager.REPL.Commands
 
                 // Case: file already exists -> acquire overwrite permission
                 if (File.Exists(accountBookPath) && !Terminal.GetUserApproval("Overwrite existing file (y/n)?"))
-                {
-                    Terminal.MessageSingle("Save cancelled by user.", ConsoleColor.Red);
-                    return;
-                }
+                    throw new REPLCommandActionException("Save cancelled by user.");
 
                 // Otherwise, create or update file and save to path
                 if (REPL.Instance.CurrentAccountBookFile is null)

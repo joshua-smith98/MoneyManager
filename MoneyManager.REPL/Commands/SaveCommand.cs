@@ -35,10 +35,7 @@ namespace MoneyManager.REPL.Commands
                     // Get new path from user
                     string? newPath = Terminal.PromptCancellable("Path to save Account Book to (or ESC to cancel): ", ConsoleKey.Escape);
                     if (newPath is null)
-                    {
-                        Terminal.MessageSingle("Save cancelled by user.", ConsoleColor.Red);
-                        return;
-                    }
+                        throw new REPLCommandActionException("Save cancelled by user.");
 
                     // Invoke SaveAsCommand
                     new SaveAsCommand("").Action!(
