@@ -23,11 +23,12 @@
                 string accountName = (string)args["accountName"].Value;
 
                 // Validity check: an account with the given name must exist
-                if (!REPL.Instance.CurrentAccountBook.Accounts.Select(x = x.Name).Contains(accountName))
+                if (!REPL.Instance.CurrentAccountBook.Accounts.Select(x => x.Name).Contains(accountName))
                     throw new REPLCommandActionException($"Couldn't find Account: \"{accountName}\"");
 
                 // Enter into the context of the account
                 REPL.Instance.CurrentContext = REPL.Instance.CurrentAccountBook.Accounts.Where(x => x.Name == accountName).First();
+                Terminal.MessageSingle($"Successfully entered into account: {accountName}");
             };
     }
 }

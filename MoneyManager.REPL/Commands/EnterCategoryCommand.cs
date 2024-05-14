@@ -28,6 +28,7 @@
 
                 // Enter into the context of the category
                 REPL.Instance.CurrentContext = REPL.Instance.CurrentAccountBook.Categories.Where(x => x.Name == categoryName).First();
+                Terminal.MessageSingle($"Successfully entered into category: {categoryName}");
             };
     }
 }
