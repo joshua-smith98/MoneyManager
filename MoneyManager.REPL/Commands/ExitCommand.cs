@@ -13,13 +13,7 @@ namespace MoneyManager.REPL.Commands
             new ExitProgramCommand(CommandPath)
             ];
 
-        public override Argument[] Arguments => [];
-
-        public override string[] RequiredArgIDs => [];
-
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action =>
+        protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
                 // Case: current context is an account
@@ -41,7 +35,7 @@ namespace MoneyManager.REPL.Commands
                 }
 
                 // Otherwise -> call ExitProgramCommand
-                new ExitProgramCommand("").Action!(new ArgumentValueCollection());
+                new ExitProgramCommand("").Invoke(new ArgumentValueCollection());
             };
     }
 }

@@ -6,9 +6,7 @@ namespace MoneyManager.REPL.Commands
     {
         public override string Str => "from";
 
-        public override string About => "Gets the total balance for the currently loaded Account or Category, for the given period from the given date.";
-
-        public override Command[] SubCommands => [];
+        public override string About => "Gets the total balance for the current context, for the given period from the given date.";
 
         public override Argument[] Arguments => [
             new DateArgument("fromDate", true)
@@ -19,22 +17,18 @@ namespace MoneyManager.REPL.Commands
             "fromDate"
             ];
 
-        public override string[] OptionalArgIDs => [];
+        public override Type? RequiredContextType => typeof(Balanceable);
 
-        public override Action<ArgumentValueCollection>? Action =>
+        protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
                 // Get period and date
                 var getPeriod = (Period)args["getPeriod"].Value;
                 var fromDate = (DateOnly)args["fromDate"].Value;
 
-                // Case: current context is Balanceable -> print balance to terminal
-                if (REPL.Instance.CurrentContext is Balanceable balanceable)
-                    Terminal.MessageSingle(balanceable.BalanceInfoForPeriod(fromDate, getPeriod).Balance);
-
-                // Otherwise -> context is invalid
-                else
-                    throw new REPLCommandActionException($"No account or category is currently open.");
+                // Get balabceable and print to terminal
+                var balanceable = (Balanceable)REPL.Instance.CurrentContext;
+                Terminal.MessageSingle(balanceable.BalanceInfoForPeriod(fromDate, getPeriod).Balance);
             };
     }
 }

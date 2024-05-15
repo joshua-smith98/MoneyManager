@@ -6,28 +6,20 @@ namespace MoneyManager.REPL.Commands
     {
         public override string Str => "balance";
 
-        public override string About => "Gets the total balance for the currently open Account or Category.";
+        public override string About => "Gets the total balance for the current context.";
 
         public override Command[] SubCommands => [
             new GetBalanceFromCommand(CommandPath)
             ];
 
-        public override Argument[] Arguments => [];
+        public override Type? RequiredContextType => typeof(Balanceable);
 
-        public override string[] RequiredArgIDs => [];
-
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action =>
+        protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
-                // Case: current context is Balanceable -> print balance to terminal
-                if (REPL.Instance.CurrentContext is Balanceable balanceable)
-                    Terminal.MessageSingle(balanceable.BalanceInfo.Balance);
-                
-                // Otherwise -> context is invalid
-                else
-                    throw new REPLCommandActionException($"No account or category is currently open.");
+                // Aquire balanceable and print balance to terminal
+                var balanceable = (Balanceable)REPL.Instance.CurrentContext;
+                Terminal.MessageSingle(balanceable.BalanceInfo.Balance);
             };
     }
 }

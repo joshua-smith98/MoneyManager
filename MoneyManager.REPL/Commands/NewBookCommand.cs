@@ -8,15 +8,7 @@ namespace MoneyManager.REPL.Commands
 
         public override string About => "Creates a new Account Book.";
 
-        public override Command[] SubCommands => [];
-
-        public override Argument[] Arguments => [];
-
-        public override string[] RequiredArgIDs => [];
-
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action =>
+        protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
                 // Confirm whether to save current account book or not

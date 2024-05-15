@@ -12,13 +12,5 @@ namespace MoneyManager.REPL.Commands
             new EnterCategoryCommand(CommandPath),  // Global Context
             new EnterNewCommand(CommandPath)        // Global Context
             ];
-
-        public override Argument[] Arguments => [];
-
-        public override string[] RequiredArgIDs => [];
-
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action => null;
     }
 }

@@ -16,11 +16,5 @@
         public override Argument[] Arguments => [
             new PeriodArgument("getPeriod", false)
             ];
-
-        public override string[] RequiredArgIDs => [];
-
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action => null;
     }
 }

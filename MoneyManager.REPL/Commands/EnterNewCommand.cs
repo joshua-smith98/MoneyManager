@@ -10,13 +10,5 @@
             new EnterNewAccountCommand(CommandPath),    // Global Context
             new EnterNewCategoryCommand(CommandPath)    // Global Context
             ];
-
-        public override Argument[] Arguments => [];
-
-        public override string[] RequiredArgIDs => [];
-
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action => null;
     }
 }

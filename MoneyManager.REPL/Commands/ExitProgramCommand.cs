@@ -7,15 +7,7 @@ namespace MoneyManager.REPL.Commands
 
         public override string About => "Exits the program.";
 
-        public override Command[] SubCommands => [];
-
-        public override Argument[] Arguments => [];
-
-        public override string[] RequiredArgIDs => [];
-
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action =>
+        protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
                 // Confirm exit of program, save account book and stop REPL loop

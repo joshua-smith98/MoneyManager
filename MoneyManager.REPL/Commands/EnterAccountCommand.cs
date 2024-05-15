@@ -6,17 +6,13 @@
 
         public override string About => "Enters into the given Account to access and edit its details.";
 
-        public override Command[] SubCommands => [];
-
         public override Argument[] Arguments => [
             new StringArgument("accountName", true)
             ];
 
         public override string[] RequiredArgIDs => ["accountName"];
 
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action => 
+        protected override Action<ArgumentValueCollection>? Action => 
             (ArgumentValueCollection args) =>
             {
                 // Get account name

@@ -8,17 +8,13 @@ namespace MoneyManager.REPL.Commands
 
         public override string About => "Creates a new Category with the given name.";
 
-        public override Command[] SubCommands => [];
-
         public override Argument[] Arguments => [
             new StringArgument("categoryName", true)
             ];
 
         public override string[] RequiredArgIDs => ["categoryName"];
 
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action =>
+        protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
                 // Get categoryName

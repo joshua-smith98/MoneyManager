@@ -57,24 +57,32 @@ namespace MoneyManager.REPL
         /// <summary>
         /// The collection of sub-commands for this command. If this is empty, then <see cref="Action"/> must not be null.
         /// </summary>
-        public abstract Command[] SubCommands { get; }
+        public virtual Command[] SubCommands => [];
         /// <summary>
         /// The collection of <see cref="Argument"/>s associated with this command.
         /// </summary>
-        public abstract Argument[] Arguments { get; }
+        public virtual Argument[] Arguments => [];
         /// <summary>
         /// The list of <see cref="Argument"/>s that are required by this command, referenced by their <see cref="Argument.ID"/>s.
         /// </summary>
-        public abstract string[] RequiredArgIDs { get; }
+        public virtual string[] RequiredArgIDs => [];
         /// <summary>
         /// The list of <see cref="Argument"/>s that can be used by this command but are not required, referenced by their <see cref="Argument.ID"/>.
         /// </summary>
-        public abstract string[] OptionalArgIDs { get; }
+        public virtual string[] OptionalArgIDs => [];
+
+        /// <summary>
+        /// The type of context that is required by this command. A null context type means this command can be invoked under any context.
+        /// </summary>
+        public virtual Type? RequiredContextType => null;
 
         /// <summary>
         /// The <see cref="System.Action"/> associated with this command. If this is null, then this command must contain some sub-commands.
+        /// Note: Use <see cref="Invoke()"/> to manually run this command, rather than manually invoking this action.
+        /// This will ensure the required argument and context checks are done.<br/>
         /// </summary>
-        public abstract Action<ArgumentValueCollection>? Action { get; }
+        /// <exception cref="REPLCommandActionException"></exception>
+        protected virtual Action<ArgumentValueCollection>? Action => null;
 
         private string _pathToThisCommand;
 
@@ -106,6 +114,34 @@ namespace MoneyManager.REPL
             => commandSubStr.Split().First().ToLower() == Str.ToLower();
 
         /// <summary>
+        /// Invokes the current command, checking for the required arguments and context.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <exception cref="REPLSemanticErrorException"></exception>
+        /// <exception cref="REPLCommandContextNotValidException"></exception>
+        /// <exception cref="REPLCommandMissingRequiredArgsException"></exception>
+        /// <exception cref="REPLCommandActionException"></exception>
+        public void Invoke(ArgumentValueCollection args)
+        {
+            // Check for manual invocation of command without an action (this is already caught in Parse())
+            if (Action is null)
+                throw new REPLSemanticErrorException($"Tried to manually invoke command that doesn't contain an action: {GetType()}");
+
+            // Verify that the required context is available
+            if (RequiredContextType is not null && RequiredContextType != REPL.Instance.CurrentContext.GetType())
+                throw new REPLCommandContextNotValidException($"This command requires a '{RequiredContextType}' item to be open before it can be used.");
+
+            // Verify all required args are given
+            foreach (var requiredArgID in RequiredArgIDs)
+                if (!args.ContainsID(requiredArgID))
+                    throw new REPLCommandMissingRequiredArgsException($"Couldn't find required argument: [{requiredArgID}]");
+
+            // Invoke our action
+            Action.Invoke(args);
+            return;
+        }
+
+        /// <summary>
         /// Parses the given string and runs this command, using the given arguments aquired further back in the command path.<br/>
         /// Assumes that <see cref="MatchStr"/> returns <see cref="true"/> for <paramref name="commandSubStr"/>.
         /// </summary>
@@ -114,6 +150,9 @@ namespace MoneyManager.REPL
         /// <exception cref="REPLSemanticErrorException"></exception>
         /// <exception cref="REPLCommandPathNotValidException"></exception>
         /// <exception cref="REPLCommandNotFoundException"></exception>
+        /// <exception cref="REPLCommandMissingRequiredArgsException"></exception>
+        /// <exception cref="REPLCommandContextNotValidException"></exception>
+        /// <exception cref="REPLCommandActionException"></exception>
         public void Parse(string commandSubStr, ArgumentValueCollection previousArgs)
         {
             // Assume MatchStr has already been determined to be true
@@ -137,20 +176,17 @@ namespace MoneyManager.REPL
             var argsSubStr = Argument.SplitOutside(remainder, ';', '"').First();
             previousArgs.Add(ReadArgs(argsSubStr));
 
-            // Finally, if nothing remains then verify all required args are given and run our action; otherwise parse remainder as subcommand and return
+            // Finally, if nothing remains then invoke this command; otherwise parse remainder as subcommand and return
             var finalRemainder = remainder[argsSubStr.Length..].Trim();
             
             if (finalRemainder == string.Empty)
             {
+                // Validity check: Command cannot end a path if it doesn't contain an action.
                 if (Action is null)
                     throw new REPLCommandPathNotValidException($"Found nothing after command \"{Str}\" or its arguments. This command isn't at the end of a valid command path!");
 
-                // Verify all required args are given
-                foreach (var requiredArgID in RequiredArgIDs)
-                    if (!previousArgs.ContainsID(requiredArgID))
-                        throw new REPLCommandMissingRequiredArgsException($"Couldn't find required argument: [{requiredArgID}]");
-
-                Action.Invoke(previousArgs);
+                // Invoke and return
+                Invoke(previousArgs);
                 return;
             }
             else

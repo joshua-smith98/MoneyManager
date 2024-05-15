@@ -7,17 +7,13 @@ namespace MoneyManager.REPL.Commands
 
         public override string About => "Deletes the Account with the given name, or chosen from a selection menu.";
 
-        public override Command[] SubCommands => [];
-
         public override Argument[] Arguments => [
             new StringArgument("accountName", false)
             ];
 
-        public override string[] RequiredArgIDs => [];
-
         public override string[] OptionalArgIDs => ["accountName"];
 
-        public override Action<ArgumentValueCollection>? Action => 
+        protected override Action<ArgumentValueCollection>? Action => 
             (ArgumentValueCollection args) =>
             {
                 // Case: accountName is provided -> Delete account if it exists

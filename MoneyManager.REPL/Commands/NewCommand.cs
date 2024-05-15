@@ -13,13 +13,5 @@ namespace MoneyManager.REPL.Commands
             new NewCategoryCommand(CommandPath),    // Global Context
             new NewTransactionCommand(CommandPath), // Account Context
             ];
-
-        public override Argument[] Arguments => [];
-
-        public override string[] RequiredArgIDs => [];
-
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action => null;
     }
 }

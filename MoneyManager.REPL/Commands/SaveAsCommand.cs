@@ -9,17 +9,13 @@ namespace MoneyManager.REPL.Commands
 
         public override string About => "Saves the currently loaded Account Book to the given path.";
 
-        public override Command[] SubCommands => [];
-
         public override Argument[] Arguments => [
             new StringArgument("accountBookPath", true)
             ];
 
         public override string[] RequiredArgIDs => ["accountBookPath"];
 
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action =>
+        protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
                 var accountBookPath = (string)args["accountBookPath"];

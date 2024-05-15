@@ -7,17 +7,13 @@ namespace MoneyManager.REPL.Commands
 
         public override string About => "Deletes the Category with the given name, or chosen from a selection menu.";
 
-        public override Command[] SubCommands => [];
-
         public override Argument[] Arguments => [
             new StringArgument("categoryName", false)
             ];
 
-        public override string[] RequiredArgIDs => [];
-
         public override string[] OptionalArgIDs => ["categoryName"];
 
-        public override Action<ArgumentValueCollection>? Action =>
+        protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
                 // Case: categoryName is provided -> Delete category if it exists

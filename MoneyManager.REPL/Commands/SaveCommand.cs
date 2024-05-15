@@ -11,13 +11,7 @@ namespace MoneyManager.REPL.Commands
             new SaveAsCommand(CommandPath)
             ];
 
-        public override Argument[] Arguments => [];
-
-        public override string[] RequiredArgIDs => [];
-
-        public override string[] OptionalArgIDs => [];
-
-        public override Action<ArgumentValueCollection>? Action =>
+        protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
                 // Case: AccountBook has been saved previously
@@ -38,7 +32,7 @@ namespace MoneyManager.REPL.Commands
                         throw new REPLCommandActionException("Save cancelled by user.");
 
                     // Invoke SaveAsCommand
-                    new SaveAsCommand("").Action!(
+                    new SaveAsCommand("").Invoke(
                         new ArgumentValueCollection(
                             ("accountBookPath", new ArgumentValue(newPath, typeof(string)))
                             )
