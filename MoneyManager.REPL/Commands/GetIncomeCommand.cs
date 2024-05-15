@@ -12,7 +12,7 @@ namespace MoneyManager.REPL.Commands
             new GetIncomeFromCommand(CommandPath)
             ];
 
-        public override Type? RequiredContextType => typeof(Balanceable);
+        public override Type[] RequiredContextTypes => [typeof(Balanceable)];
 
         protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>

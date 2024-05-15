@@ -19,7 +19,7 @@ namespace MoneyManager.REPL.Commands
             "fromDate"
             ];
 
-        public override Type? RequiredContextType => typeof(Balanceable);
+        public override Type[] RequiredContextTypes => [typeof(Balanceable)];
 
         protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>

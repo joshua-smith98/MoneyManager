@@ -72,9 +72,9 @@ namespace MoneyManager.REPL
         public virtual string[] OptionalArgIDs => [];
 
         /// <summary>
-        /// The type of context that is required by this command. A null context type means this command can be invoked under any context.
+        /// The possible context types that are required by this command. An empty sequence means this command can be invoked under any context.
         /// </summary>
-        public virtual Type? RequiredContextType => null;
+        public virtual Type[] RequiredContextTypes => [];
 
         /// <summary>
         /// The <see cref="System.Action"/> associated with this command. If this is null, then this command must contain some sub-commands.
@@ -128,8 +128,8 @@ namespace MoneyManager.REPL
                 throw new REPLSemanticErrorException($"Tried to manually invoke command that doesn't contain an action: {GetType()}");
 
             // Verify that the required context is available
-            if (RequiredContextType is not null && RequiredContextType != REPL.Instance.CurrentContext.GetType())
-                throw new REPLCommandContextNotValidException($"This command requires a '{RequiredContextType}' item to be open before it can be used.");
+            if (RequiredContextTypes.Length != 0 && !RequiredContextTypes.Any(x => x == REPL.Instance.CurrentContext.GetType()))
+                throw new REPLCommandContextNotValidException($"This command path is not available within the current context."); // TODO: make this error message more useful
 
             // Verify all required args are given
             foreach (var requiredArgID in RequiredArgIDs)
