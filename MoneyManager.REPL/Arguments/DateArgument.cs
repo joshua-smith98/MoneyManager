@@ -17,8 +17,7 @@
                 argumentSubStr = argumentSubStr[..^1];
 
             // Parse date
-            DateOnly parsedValue;
-            if (!DateOnly.TryParse(argumentSubStr, out parsedValue))
+            if (!DateOnly.TryParse(argumentSubStr, out DateOnly parsedValue))
                 throw new REPLArgumentParseException($"Date provided for [{ID}] was of an invalid format.");
 
             // Construct and return
