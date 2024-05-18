@@ -1,5 +1,6 @@
 ﻿using MoneyManager.Core;
 using MoneyManager.FileSystem;
+using MoneyManager.REPL.Commands;
 
 namespace MoneyManager.REPL
 {
@@ -37,7 +38,17 @@ namespace MoneyManager.REPL
         /// <summary>
         /// The list of the REPL's top-level commands.
         /// </summary>
-        internal Command[] TopLevelCommands => [];
+        internal Command[] TopLevelCommands => [
+            new DeleteCommand(""),
+            new EditCommand(""),
+            new EnterCommand(""),
+            new ExitCommand(""),
+            new GetCommand(""),
+            new NewCommand(""),
+            new SaveCommand(""),
+            new SetCommand(""),
+            new TransferCommand(""),
+            ];
 
         /// <summary>
         /// Gets if the REPL is currently running. Set to false to end the loop.
