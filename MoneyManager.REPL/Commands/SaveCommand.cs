@@ -32,7 +32,7 @@ namespace MoneyManager.REPL.Commands
                         throw new REPLCommandActionException("Save cancelled by user.");
 
                     // Invoke SaveAsCommand
-                    new SaveAsCommand("").Invoke(
+                    new SaveAsCommand([]).Invoke(
                         new ArgumentValueCollection(
                             ("accountBookPath", new ArgumentValue(newPath, typeof(string)))
                             )

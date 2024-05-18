@@ -39,15 +39,15 @@ namespace MoneyManager.REPL
         /// The list of the REPL's top-level commands.
         /// </summary>
         internal Command[] TopLevelCommands => [
-            new DeleteCommand(""),
-            new EditCommand(""),
-            new EnterCommand(""),
-            new ExitCommand(""),
-            new GetCommand(""),
-            new NewCommand(""),
-            new SaveCommand(""),
-            new SetCommand(""),
-            new TransferCommand(""),
+            new DeleteCommand([]),
+            new EditCommand([]),
+            new EnterCommand([]),
+            new ExitCommand([]),
+            new GetCommand([]),
+            new NewCommand([]),
+            new SaveCommand([]),
+            new SetCommand([]),
+            new TransferCommand([]),
             ];
 
         /// <summary>

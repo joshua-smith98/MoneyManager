@@ -16,7 +16,7 @@ namespace MoneyManager.REPL.Commands
                     // Case: user says yes -> invoke save command
                     case Terminal.UserResult.Yes:
                         // Run "save book" command
-                        new SaveCommand("").Action!([]); // If user cancells inside SaveCommand, then the REPL will catch the exception and we won't continue
+                        new SaveCommand([]).Invoke([]); // If user cancells inside SaveCommand, then the REPL will catch the exception and we won't continue
                         break;
 
                     // Case: user says no -> continue without saving

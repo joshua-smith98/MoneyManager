@@ -35,7 +35,7 @@ namespace MoneyManager.REPL.Commands
                 }
 
                 // Otherwise -> call ExitProgramCommand
-                new ExitProgramCommand("").Invoke(new ArgumentValueCollection());
+                new ExitProgramCommand([]).Invoke(new ArgumentValueCollection());
             };
     }
 }
