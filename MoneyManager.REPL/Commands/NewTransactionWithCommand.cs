@@ -3,7 +3,7 @@ using MoneyManager.Core;
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class NewTransactionWithCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class NewTransactionWithCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "with";
 

@@ -1,6 +1,6 @@
 ﻿namespace MoneyManager.REPL.Commands
 {
-    internal class EnterNewAccountCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class EnterNewAccountCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "account";
 
@@ -16,10 +16,10 @@
             (ArgumentValueCollection args) =>
             {
                 // Invoke NewAccountCommand
-                new NewAccountCommand("").Invoke(args); // We can pass the args through as is, as the required ID is the same for NewAccountCommand
+                new NewAccountCommand([]).Invoke(args); // We can pass the args through as is, as the required ID is the same for NewAccountCommand
 
                 // Invoke EnterAccountCommand
-                new EnterAccountCommand("").Invoke(args);
+                new EnterAccountCommand([]).Invoke(args);
             };
     }
 }

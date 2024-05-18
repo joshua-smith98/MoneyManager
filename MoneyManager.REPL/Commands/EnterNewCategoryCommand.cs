@@ -1,7 +1,7 @@
 ﻿
 namespace MoneyManager.REPL.Commands
 {
-    internal class EnterNewCategoryCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class EnterNewCategoryCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "category";
 
@@ -17,10 +17,10 @@ namespace MoneyManager.REPL.Commands
             (ArgumentValueCollection args) =>
             {
                 // Invoke NewCategoryCommand
-                new NewCategoryCommand("").Invoke(args); // We can pass the args through as is, as the required ID is the same for NewCategoryCommand
+                new NewCategoryCommand([]).Invoke(args); // We can pass the args through as is, as the required ID is the same for NewCategoryCommand
 
                 // Invoke EnterCategoryCommand
-                new EnterCategoryCommand("").Invoke(args);
+                new EnterCategoryCommand([]).Invoke(args);
             };
     }
 }

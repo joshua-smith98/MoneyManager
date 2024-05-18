@@ -4,9 +4,9 @@
     /// Represents an Argument in the MoneyManager REPL, connected with some <see cref="Command"/>.
     /// </summary>
     /// <param name="id">The internal identifier for this argument.</param>
-    /// <param name="isRequired">[Obsolete]</param>
+    /// <param name="isRequired">Determines whether this argument is required by the command it is contained within.</param>
     /// <param name="str">The string used by the user to refer to this argument when specifying a value.</param>
-    internal abstract class Argument(string id, bool isRequired, string? str = null)
+    internal abstract class Argument(string id, bool? isRequired = null, string? str = null)
     {
         /// <summary>
         /// The string used by the user to refer to this argument instance when specifying a value.<br/>
@@ -19,8 +19,11 @@
         /// </summary>
         public string ID { get; } = id;
 
-        [Obsolete]
-        public bool IsRequired { get; } = isRequired; // TODO: Properly remove this property and re-factor Command.CommandPath to use Command.RequiredArgIDs
+        /// <summary>
+        /// Determines whether this argument is required by the command it is contained within.<br/>
+        /// Note: This does not set a requirement for commands further down in the path, and should not be used within an unactionable command.
+        /// </summary>
+        public bool? IsRequired { get; } = isRequired;
 
         /// <summary>
         /// The value type that this argument accepts.

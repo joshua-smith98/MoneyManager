@@ -2,7 +2,7 @@
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class GetClearedExpensesFromCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class GetClearedExpensesFromCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "from";
 

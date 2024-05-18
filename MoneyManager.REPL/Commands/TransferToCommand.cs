@@ -2,14 +2,14 @@
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class TransferToCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class TransferToCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "from";
 
         public override string About => "Used with 'with' to transfer an amount to the given account from this one.";
 
         public override Command[] SubCommands => [
-            new TransferToWithCommand(CommandPath)
+            new TransferToWithCommand(_commandPath)
             ];
 
         public override Argument[] Arguments => [

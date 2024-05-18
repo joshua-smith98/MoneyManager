@@ -3,14 +3,14 @@ using MoneyManager.Core;
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class ExitCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class ExitCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "exit";
 
         public override string About => "Exits the program, or the currently open Account or Category.";
 
         public override Command[] SubCommands => [
-            new ExitProgramCommand(CommandPath)
+            new ExitProgramCommand(_commandPath)
             ];
 
         protected override Action<ArgumentValueCollection>? Action =>

@@ -2,14 +2,14 @@
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class GetBalanceCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class GetBalanceCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "balance";
 
         public override string About => "Gets the total balance for the current context.";
 
         public override Command[] SubCommands => [
-            new GetBalanceFromCommand(CommandPath)
+            new GetBalanceFromCommand(_commandPath)
             ];
 
         public override Type[] RequiredContextTypes => [typeof(Balanceable)];

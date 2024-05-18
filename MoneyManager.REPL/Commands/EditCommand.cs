@@ -1,13 +1,13 @@
 ﻿namespace MoneyManager.REPL.Commands
 {
-    internal class EditCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class EditCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "edit";
 
         public override string About => "Used to edit items.";
 
         public override Command[] SubCommands => [
-            new EditTransactionsCommand(CommandPath)
+            new EditTransactionsCommand(_commandPath)
             ];
     }
 }

@@ -1,14 +1,14 @@
 ﻿
 namespace MoneyManager.REPL.Commands
 {
-    internal class SaveCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class SaveCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "save";
 
         public override string About => "Saves the currently loaded Account Book.";
 
         public override Command[] SubCommands => [
-            new SaveAsCommand(CommandPath)
+            new SaveAsCommand(_commandPath)
             ];
 
         protected override Action<ArgumentValueCollection>? Action =>

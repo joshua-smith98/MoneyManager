@@ -2,7 +2,7 @@
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class TransferFromWithCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class TransferFromWithCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "with";
 

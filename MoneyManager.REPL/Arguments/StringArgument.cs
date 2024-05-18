@@ -6,7 +6,7 @@
     /// <param name="id">The internal identifier for this argument instance.</param>
     /// <param name="isRequired">[Deprecated]</param>
     /// <param name="str">The string the user uses to refer to this argument in a command path.</param>
-    internal class StringArgument(string id, bool isRequired, string? str = null) : Argument(id, isRequired, str)
+    internal class StringArgument(string id, bool? isRequired = null, string? str = null) : Argument(id, isRequired, str)
     {
         public override Type Type => typeof(string);
 

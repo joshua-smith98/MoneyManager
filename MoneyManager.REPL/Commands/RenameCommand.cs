@@ -2,7 +2,7 @@
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class RenameCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class RenameCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "rename";
 

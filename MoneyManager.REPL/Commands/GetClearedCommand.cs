@@ -1,18 +1,18 @@
 ﻿namespace MoneyManager.REPL.Commands
 {
-    internal class GetClearedCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class GetClearedCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "cleared";
 
         public override string About => "Used to get cleared balance, income and expense information about the current context.";
 
         public override Command[] SubCommands => [
-            new GetClearedBalanceCommand(CommandPath),
-            new GetClearedBalanceFromCommand(CommandPath),
-            new GetClearedIncomeCommand(CommandPath),
-            new GetClearedIncomeFromCommand(CommandPath),
-            new GetClearedExpensesCommand(CommandPath),
-            new GetClearedExpensesFromCommand(CommandPath),
+            new GetClearedBalanceCommand(_commandPath),
+            new GetClearedBalanceFromCommand(_commandPath),
+            new GetClearedIncomeCommand(_commandPath),
+            new GetClearedIncomeFromCommand(_commandPath),
+            new GetClearedExpensesCommand(_commandPath),
+            new GetClearedExpensesFromCommand(_commandPath),
             ];
     }
 }

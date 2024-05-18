@@ -3,7 +3,7 @@ using MoneyManager.FileSystem;
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class SaveAsCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class SaveAsCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "as";
 
@@ -18,7 +18,7 @@ namespace MoneyManager.REPL.Commands
         protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {
-                var accountBookPath = (string)args["accountBookPath"];
+                var accountBookPath = (string)args["accountBookPath"].Value;
 
                 // Validity check: directory must exist
                 var dirName = Path.GetDirectoryName(accountBookPath);

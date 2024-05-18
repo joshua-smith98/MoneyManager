@@ -1,7 +1,7 @@
 ﻿
 namespace MoneyManager.REPL.Commands
 {
-    internal class ExitProgramCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class ExitProgramCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "program";
 

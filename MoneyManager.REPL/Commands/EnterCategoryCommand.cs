@@ -1,6 +1,6 @@
 ﻿namespace MoneyManager.REPL.Commands
 {
-    internal class EnterCategoryCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class EnterCategoryCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "category";
 

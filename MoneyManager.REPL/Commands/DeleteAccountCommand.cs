@@ -1,7 +1,7 @@
 ﻿
 namespace MoneyManager.REPL.Commands
 {
-    internal class DeleteAccountCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class DeleteAccountCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "account";
 

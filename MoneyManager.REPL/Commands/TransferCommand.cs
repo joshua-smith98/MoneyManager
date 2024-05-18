@@ -1,18 +1,18 @@
 ﻿namespace MoneyManager.REPL.Commands
 {
-    internal class TransferCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class TransferCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "transfer";
 
         public override string About => "Used with 'to' and 'from' to create transfers between accounts.";
 
         public override Command[] SubCommands => [
-            new TransferToCommand(CommandPath),
-            new TransferFromCommand(CommandPath)
+            new TransferToCommand(_commandPath),
+            new TransferFromCommand(_commandPath)
             ];
 
         public override Argument[] Arguments => [
-            new MoneyArgument("transferValue", true)
+            new MoneyArgument("transferValue")
             ];
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.AccessControl;
+using System.Text;
 
 namespace MoneyManager.REPL
 {
@@ -24,33 +25,76 @@ namespace MoneyManager.REPL
         {
             get
             {
-                // Begin with the path to this command, plus the Str
-                StringBuilder ret = new();
-                ret.Append($"{_pathToThisCommand} {Str}");
+                // Concatinate previous commands to new path string with optional/required args
+                var strBuilder = new StringBuilder();
 
-                // Case: no arguments -> Do nothing
-                if (Arguments.Length == 0) ;
-
-                // Case: One argument with null str -> Only include ID
-                else if (Arguments.First().Str is null)
+                foreach (Command command in _pathToThisCommand)
                 {
-                    var firstArg = Arguments.First();
-                    ret.Append(firstArg.IsRequired ? $" [{firstArg.ID}]" : $" ({firstArg.ID})"); // Use square brackets if argument is required, or rounded if not
-                }
+                    // Append command str
+                    strBuilder.Append(command.Str);
 
-                // Case: multiple arguments -> include Str and ID
-                else
-                {
-                    for(int i = 0; i < Arguments.Length; i++)
+                    // Append single argument if only one
+                    if (command.Arguments.Length == 1)
                     {
-                        ret.Append($" {Arguments[i].Str}");
-                        ret.Append(Arguments[i].IsRequired ? $" [{Arguments[i].ID}]" : $" ({Arguments[i].ID})"); // Use square brackets if argument is required, or rounded if not
-                        ret.Append(i == Arguments.Length - 1 ? ";" : ","); // Put semicolon at end of arg segment if its the last one, otherwise comma
+                        if (RequiredArgIDs.Contains(command.Arguments[0].ID))
+                            strBuilder.Append($" [{command.Arguments[0].ID}]");
+                        else if (OptionalArgIDs.Contains(command.Arguments[0].ID))
+                            strBuilder.Append($" ({command.Arguments[0].ID})");
                     }
+
+                    // Otherwise if this has some required or optional arguments, append
+                    else if (command.Arguments.Any(x => RequiredArgIDs.Contains(x.ID)) || command.Arguments.Any(x => OptionalArgIDs.Contains(x.ID)))
+                    {
+                        foreach (Argument argument in command.Arguments.Where(x => RequiredArgIDs.Contains(x.ID) || OptionalArgIDs.Contains(x.ID)))
+                        {
+                            // Append some required arg
+                            if (RequiredArgIDs.Contains(argument.ID))
+                                strBuilder.Append($" {argument.Str} [{argument.ID}],");
+
+                            // Append some optional arg
+                            else if (OptionalArgIDs.Contains(argument.ID))
+                                strBuilder.Append($" ({argument.Str} [{argument.ID}]),");
+                        }
+
+                        // Remove comma and replace with semicolon
+                        strBuilder.Remove(strBuilder.Length - 1, 1);
+                        strBuilder.Append(';');
+                    }
+
+                    // Append space to path in anticipation of the next command
+                    strBuilder.Append(' ');
                 }
 
-                // Return built CommandPath
-                return ret.ToString();
+                // Add current command and args to string
+                strBuilder.Append(Str);
+
+                // Case: only one argument -> append only ID
+                if (Arguments.Length == 1)
+                {
+                    if (Arguments[0].IsRequired is not null && Arguments[0].IsRequired!.Value) // If we don't specify a requirement, we'll just act as if it's optional
+                        strBuilder.Append($" [{Arguments[0].ID}]");
+                    else
+                        strBuilder.Append($" ({Arguments[0].ID})");
+                }
+
+                // Case: multiple arguments -> append str & ID
+                else if (Arguments.Length > 1)
+                {
+                    foreach (Argument argument in Arguments)
+                    {
+                        if (argument.IsRequired is not null && argument.IsRequired!.Value) // Ditto^^
+                            strBuilder.Append($" {argument.Str} [{argument.ID}],");
+                        else
+                            strBuilder.Append($" ({argument.Str} [{argument.ID}]),");
+                    }
+
+                    // Replace trailing comma with semicolon
+                    strBuilder.Remove(strBuilder.Length - 1, 1);
+                    strBuilder.Append(';');
+                }
+
+                // return
+                return strBuilder.ToString();
             }
         }
 
@@ -84,23 +128,33 @@ namespace MoneyManager.REPL
         /// <exception cref="REPLCommandActionException"></exception>
         protected virtual Action<ArgumentValueCollection>? Action => null;
 
-        private string _pathToThisCommand;
+        private readonly Command[] _pathToThisCommand;
+        protected Command[] _commandPath => _pathToThisCommand.Concat([this]).ToArray();
+        private string _commandPathSimple => string.Join(' ' , _pathToThisCommand.Select(x => x.Str)) + " " + Str;
 
         /// <summary>
         /// Constructs a new instance of <see cref="Command"/>.
         /// </summary>
         /// <param name="pathToThisCommand"></param>
         /// <exception cref="REPLSemanticErrorException"></exception>
-        public Command(string pathToThisCommand)
+        public Command(Command[] pathToThisCommand)
         {
             // Validate constraints
             // Commands with no sub-commands must contain an action
             if (SubCommands.Length == 0 && Action is null)
-                throw new REPLSemanticErrorException($"Command path stub (missing action): {CommandPath}"); // Should only be thrown if I make a mistake implementing the command structure
+                throw new REPLSemanticErrorException($"Command path stub (missing action): {_commandPathSimple}"); // Should only be thrown if I make a mistake implementing the command structure
 
             // Only lonely arguments may contain no Str
             if (Arguments.Length > 1 && Arguments.Any(x => x.Str is null))
-                throw new REPLSemanticErrorException($"One or more arguments missing Str when more than one exist: {CommandPath}"); // Ditto^^
+                throw new REPLSemanticErrorException($"One or more arguments missing Str when more than one exist: {_commandPathSimple}"); // Ditto^^
+
+            // All arguments in a actionable command must contain a IsRequired value
+            if (Action is not null && Arguments.Any(x => x.IsRequired is null))
+                throw new REPLSemanticErrorException($"One or more arguments contain no IsRequired value on a command with an action: {_commandPathSimple}");
+
+            // No arguments in a non-actionable command can contain a IsRequired value
+            if (Action is null && Arguments.Any(x => x.IsRequired is not null))
+                throw new REPLSemanticErrorException($"One or more arguments contain an unneccesary IsRequired value on a non-actionable command: {_commandPathSimple}");
 
             _pathToThisCommand = pathToThisCommand;
         }

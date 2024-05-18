@@ -2,7 +2,7 @@
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class NewAccountCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class NewAccountCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "account";
 

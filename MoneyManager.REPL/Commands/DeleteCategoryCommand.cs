@@ -1,7 +1,7 @@
 ﻿
 namespace MoneyManager.REPL.Commands
 {
-    internal class DeleteCategoryCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class DeleteCategoryCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "category";
 

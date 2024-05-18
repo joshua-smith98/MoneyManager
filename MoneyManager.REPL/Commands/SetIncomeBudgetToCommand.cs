@@ -2,7 +2,7 @@
 
 namespace MoneyManager.REPL.Commands
 {
-    internal class SetIncomeBudgetToCommand(string pathToThisCommand) : Command(pathToThisCommand)
+    internal class SetIncomeBudgetToCommand(Command[] pathToThisCommand) : Command(pathToThisCommand)
     {
         public override string Str => "to";
 
