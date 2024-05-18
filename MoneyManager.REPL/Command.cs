@@ -18,8 +18,19 @@ namespace MoneyManager.REPL
         /// A general description of this command. Used for help information.
         /// </summary>
         public abstract string About { get; }
+
         /// <summary>
-        /// Gets the command path for this command, including all required and/or optional arguments.
+        /// The sequence of <see cref="Command"/>s leading up to this instance in its command path.
+        /// </summary>
+        private readonly Command[] _pathToThisCommand;
+
+        /// <summary>
+        /// The sequence of <see cref="Command"/>s in this instance's command path.
+        /// </summary>
+        protected Command[] _commandPath => _pathToThisCommand.Concat([this]).ToArray();
+
+        /// <summary>
+        /// Gets a string representing the command path for this instance, including all required and/or optional arguments.
         /// </summary>
         public string CommandPath
         {
@@ -99,6 +110,11 @@ namespace MoneyManager.REPL
         }
 
         /// <summary>
+        /// A simple version of the <see cref="CommandPath"/> property that doesn't include arguments.
+        /// </summary>
+        private string _commandPathSimple => string.Join(' ', _pathToThisCommand.Select(x => x.Str)) + " " + Str;
+
+        /// <summary>
         /// The collection of sub-commands for this command. If this is empty, then <see cref="Action"/> must not be null.
         /// </summary>
         public virtual Command[] SubCommands => [];
@@ -127,10 +143,6 @@ namespace MoneyManager.REPL
         /// </summary>
         /// <exception cref="REPLCommandActionException"></exception>
         protected virtual Action<ArgumentValueCollection>? Action => null;
-
-        private readonly Command[] _pathToThisCommand;
-        protected Command[] _commandPath => _pathToThisCommand.Concat([this]).ToArray();
-        private string _commandPathSimple => string.Join(' ' , _pathToThisCommand.Select(x => x.Str)) + " " + Str;
 
         /// <summary>
         /// Constructs a new instance of <see cref="Command"/>.
