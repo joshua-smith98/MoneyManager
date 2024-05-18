@@ -16,10 +16,7 @@ namespace MoneyManager.REPL.Commands
             new AccountArgument("fromAccount", true)
             ];
 
-        public override string[] RequiredArgIDs => [
-            "transferValue",
-            "fromAccount"
-            ];
+        protected override string[] additionalRequiredArgIDs => ["transferValue"];
 
         public override Type[] RequiredContextTypes => [typeof(Account)];
 

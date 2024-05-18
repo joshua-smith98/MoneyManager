@@ -15,16 +15,9 @@ namespace MoneyManager.REPL.Commands
             new StringArgument("transferCategory", false, "category")
             ];
 
-        public override string[] RequiredArgIDs => [
+        protected override string[] additionalRequiredArgIDs => [
             "transferValue",
             "fromAccount"
-            ];
-
-        public override string[] OptionalArgIDs => [
-            "transferDate",
-            "transferMemo",
-            "transferNumber",
-            "transferCategory"
             ];
 
         public override Type[] RequiredContextTypes => [typeof(Account)];

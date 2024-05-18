@@ -10,8 +10,6 @@
             new StringArgument("accountName", true)
             ];
 
-        public override string[] RequiredArgIDs => ["accountName"];
-
         protected override Action<ArgumentValueCollection>? Action => 
             (ArgumentValueCollection args) =>
             {

@@ -11,8 +11,6 @@ namespace MoneyManager.REPL.Commands
             new StringArgument("accountName", false)
             ];
 
-        public override string[] OptionalArgIDs => ["accountName"];
-
         protected override Action<ArgumentValueCollection>? Action => 
             (ArgumentValueCollection args) =>
             {

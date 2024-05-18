@@ -8,7 +8,7 @@ namespace MoneyManager.REPL.Commands
 
         public override string About => "Gets the expenses budget for the currently open Category for the given period.";
 
-        public override string[] RequiredArgIDs => ["getPeriod"];
+        protected override string[] additionalRequiredArgIDs => ["getPeriod"];
 
         public override Type[] RequiredContextTypes => [typeof(Category)];
 

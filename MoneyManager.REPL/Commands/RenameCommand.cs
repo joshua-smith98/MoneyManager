@@ -12,8 +12,6 @@ namespace MoneyManager.REPL.Commands
             new StringArgument("newName", true)
             ];
 
-        public override string[] RequiredArgIDs => ["newName"];
-
         public override Type[] RequiredContextTypes => [typeof(Account), typeof(Category)];
 
         protected override Action<ArgumentValueCollection>? Action =>

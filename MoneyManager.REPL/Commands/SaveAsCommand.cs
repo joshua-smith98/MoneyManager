@@ -13,8 +13,6 @@ namespace MoneyManager.REPL.Commands
             new StringArgument("accountBookPath", true)
             ];
 
-        public override string[] RequiredArgIDs => ["accountBookPath"];
-
         protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {

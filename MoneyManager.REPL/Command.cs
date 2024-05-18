@@ -122,14 +122,32 @@ namespace MoneyManager.REPL
         /// The collection of <see cref="Argument"/>s associated with this command.
         /// </summary>
         public virtual Argument[] Arguments => [];
+
+        /// <summary>
+        /// A list of <see cref="Argument.ID"/>s required by this command from earlier in the command path.
+        /// </summary>
+        protected virtual string[] additionalRequiredArgIDs => [];
         /// <summary>
         /// The list of <see cref="Argument"/>s that are required by this command, referenced by their <see cref="Argument.ID"/>s.
         /// </summary>
-        public virtual string[] RequiredArgIDs => [];
+        public string[] RequiredArgIDs =>
+            [
+            .. Arguments.Where(x => !additionalRequiredArgIDs.Contains(x.ID) && x.IsRequired is not null && x.IsRequired!.Value).Select(x => x.ID),
+            .. additionalRequiredArgIDs
+            ];
+
+        /// <summary>
+        /// A list of <see cref="Argument.ID"/>s from earlier in the command path that can be used but are not requried by this command.
+        /// </summary>
+        protected virtual string[] additionalOptionalArgIDs => [];
         /// <summary>
         /// The list of <see cref="Argument"/>s that can be used by this command but are not required, referenced by their <see cref="Argument.ID"/>.
         /// </summary>
-        public virtual string[] OptionalArgIDs => [];
+        public string[] OptionalArgIDs =>
+            [
+            .. Arguments.Where(x => !additionalOptionalArgIDs.Contains(x.ID) && x.IsRequired is not null && !x.IsRequired!.Value).Select(x => x.ID),
+            .. additionalOptionalArgIDs
+            ];
 
         /// <summary>
         /// The possible context types that are required by this command. An empty sequence means this command can be invoked under any context.

@@ -12,10 +12,7 @@ namespace MoneyManager.REPL.Commands
             new MoneyArgument("budgetValue", true)
             ];
 
-        public override string[] RequiredArgIDs => [
-            "setPeriod",
-            "budgetValue"
-            ];
+        protected override string[] additionalRequiredArgIDs => ["setPeriod"];
 
         public override Type[] RequiredContextTypes => [typeof(Category)];
 

@@ -14,10 +14,7 @@ namespace MoneyManager.REPL.Commands
             new DateArgument("fromDate", true)
             ];
 
-        public override string[] RequiredArgIDs => [
-            "getPeriod",
-            "fromDate"
-            ];
+        protected override string[] additionalRequiredArgIDs => ["getPeriod"];
 
         public override Type[] RequiredContextTypes => [typeof(Balanceable)];
 

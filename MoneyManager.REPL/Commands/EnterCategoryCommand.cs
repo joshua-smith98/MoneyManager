@@ -10,8 +10,6 @@
             new StringArgument("categoryName", true)
             ];
 
-        public override string[] RequiredArgIDs => ["categoryName"];
-
         protected override Action<ArgumentValueCollection>? Action =>
             (ArgumentValueCollection args) =>
             {

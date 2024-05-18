@@ -18,18 +18,6 @@ namespace MoneyManager.REPL.Commands
             new StringArgument("transactionCategory", false, "category")
             ];
 
-        public override string[] RequiredArgIDs => [
-            "transactionValue"
-            ];
-
-        public override string[] OptionalArgIDs => [
-            "transactionDate",
-            "transactionPayee",
-            "transactionMemo",
-            "transactionNumber",
-            "transactionCategory"
-            ];
-
         public override Type[] RequiredContextTypes => [typeof(Account)];
 
         protected override Action<ArgumentValueCollection>? Action =>
