@@ -9,7 +9,8 @@ namespace MoneyManager.REPL.Commands
         public override string About => "Gets the total income for the current context.";
 
         public override Command[] SubCommands => [
-            new GetIncomeFromCommand(CommandPath)
+            new GetIncomeFromCommand(CommandPath),
+            new GetIncomeBudgetCommand(CommandPath)
             ];
 
         public override Type[] RequiredContextTypes => [typeof(Balanceable)];
